@@ -1,0 +1,19 @@
+{
+  "eval_id": 2,
+  "eval_name": "add-graphs-section",
+  "prompt": "Add a new section to the acceleration chapter on graphical analysis of motion (reading position-time, velocity-time, and acceleration-time graphs of the same motion) with two worked examples, one figure, and four exercises with answers, in the chapter's existing style. Recompile and make sure it is clean.",
+  "assertions": [
+    "acceleration.tex modified and PDF exists",
+    "PDF grew beyond 37 pages",
+    "Compiles with no TeX errors",
+    "No Overfull box wider than 5pt",
+    "A new section about graphs exists",
+    "Exactly two worked examples added",
+    "At least one figure added",
+    "Four exercises added",
+    "Answers added for the new exercises",
+    "New section uses Elementary/Calculus labels",
+    "Original content preserved",
+    "Exercise numbering continues the chapter series"
+  ]
+}

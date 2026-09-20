@@ -1,0 +1,237 @@
+
+\section{A Model of Stride Time}
+\label{sec:stridemodel}
+
+Webb could measure the hunter's stride length, \SI{3.73}{\metre}, directly from the prints. He could not measure the time between strides: the mud recorded where the feet landed, not when. Without $\tau$, the dot diagram is a row of dots with no speed attached. Webb needed a way to \emph{estimate} $\tau$ from what the prints did record, and that meant a second model.
+
+\subsection{Why height matters}
+
+Watch a child and an adult walking together. To keep up, the child takes more steps, and the time between the child's steps is shorter than between the adult's. The observation suggests that the time between strides depends on the walker's size, and in particular on height: longer legs swing more slowly.
+
+Webb did not know the hunter's height, but he did have the foot length, and taller people tend to have longer feet. That gives a chain of estimates:
+\[
+\text{foot length} \;\longrightarrow\; \text{height} \;\longrightarrow\; \text{(with stride length)}\;\text{time between strides} \;\longrightarrow\; \text{speed}.
+\]
+Each arrow is a step in a model, and each step has its own assumptions. Keep the chain in view; when we question the result in Section~\ref{sec:questioning}, we will be asking which link broke.
+
+\subsection{The Charteris model}
+
+Webb did not have to build these relationships himself. In 1981 three Canadian researchers, John Charteris, Jean-Claude Wall, and John Nottrodt, published a model of exactly this kind, developed to analyse a much older trackway: the \num{3.6}-million-year-old hominin footprints at Laetoli, Tanzania. They measured modern people walking on a track, recording stride length, height, and time between strides for many subjects, and fitted equations to the data. Given a stride length and an estimated height, their equations return an estimated stride time.
+
+Two combinations turned out to organise the data neatly. The \textbf{relative stride length} is the stride length divided by the height, a pure number that says how many body lengths one stride covers. The \textbf{relative speed} is the speed divided by the height, which has units of \si{\per\second} and says how many body lengths per second the walker covers. Both are ratios that let a tall walker and a short walker be compared on the same footing.
+
+\begin{definition}{Relative speed and relative stride length}{relative}
+For a person of height $h$ moving at speed $v$ with stride length $\ell$,
+\[
+\text{relative speed} = \frac{v}{h}\ \ (\text{unit: } \si{\per\second}), \qquad
+\text{relative stride length} = \frac{\ell}{h}\ \ (\text{no unit}).
+\]
+A relative speed of \SI{1}{\per\second} means one body length per second.
+\end{definition}
+
+For example, the walker of Worked Example~\ref{ex:walking}, if \SI{1.75}{\metre} tall, has relative speed $1.30/1.75 = \SI{0.74}{\per\second}$ and relative stride length $1.46/1.75 = 0.83$.
+
+\subsection{The famous result}
+
+Webb estimated the hunter's height from the foot length, obtaining about \SI{194}{\centi\metre}, and fed that height and the \SI{3.73}{\metre} stride length into the Charteris equations. Out came a stride time of \SI{0.360}{\second}. The dot diagram now had its $\tau$, and the speed followed at once:
+\[
+v = \frac{\ell}{\tau} = \frac{\SI{3.73}{\metre}}{\SI{0.360}{\second}} = \SI{10.36}{\metre\per\second}.
+\]
+
+\begin{example}{Comparing the hunter to Usain Bolt}{bolt}
+Webb's model gives the hunter a speed of \SI{10.36}{\metre\per\second}. Usain Bolt ran \SI{100}{\metre} in \SI{9.58}{\second}. How do the two compare?
+
+\solution Bolt's \emph{average} speed over the whole race was found in Worked Example~\ref{ex:convert}: $100/9.58 = \SI{10.44}{\metre\per\second}$. On these numbers the hunter was running at \SI{99}{\percent} of Bolt's record average. Barefoot. Through mud.
+
+\elemtag\ The comparison is a little unfair to Bolt, because \SI{10.44}{\metre\per\second} is his average over a race that started from rest. He needed about a second and a half to get up to speed and was slowing slightly at the finish, so his \emph{instantaneous} speed in the middle of the race was higher; analyses of the Berlin race put his peak at a little over \SI{12}{\metre\per\second}. The hunter's \SI{10.36}{\metre\per\second} is the average over six strides in mid-run, which is closer to a peak than to a race average. So the model's claim is not quite ``as fast as Bolt'' but ``comfortably within the range of world-class sprinting.'' That is still remarkable enough to deserve a hard look. \calctag\ In symbols: Bolt's \num{10.44} is $\frac{1}{9.58}\int_0^{9.58} v\,\dd t$, the mean of a $v(t)$ that starts at zero and rises to a plateau above \num{12}; the hunter's \num{10.36} is the mean over a short window in which $v(t)$ was presumably near its own plateau. Comparing a mean over a whole race with a mean over a few strides is comparing different integrals.\qed
+\end{example}
+
+That is how the ancient sprinter got into the newspapers. Now we ask whether to believe it.
+
+\section{Questioning a Model}
+\label{sec:questioning}
+
+\subsection{Sanity checks}
+
+A model produces more than one number, and every number it produces is a claim that can be checked against what we already know. Table~\ref{tab:boltvshunter} sets the model's description of the hunter beside the measured facts about Bolt's record run.
+
+\begin{table}[htb]
+\centering
+\caption{The model's description of the hunter beside measured values for Usain Bolt's \SI{100}{\metre} record. The stride length and stride time for Bolt are averages over the race, from published analyses of the 2009 Berlin final.}
+\label{tab:boltvshunter}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{lcc}
+\toprule
+ & hunter (model) & Bolt (measured) \\
+\midrule
+stride length & \SI{3.73}{\metre} & \SI{4.88}{\metre} \\
+time between strides & \SI{0.360}{\second} & \SI{0.467}{\second} \\
+strides per second & 2.78 & 2.14 \\
+height & \SI{194}{\centi\metre} (estimated) & \SI{195}{\centi\metre} \\
+speed & \SI{10.36}{\metre\per\second} & \SI{10.44}{\metre\per\second} (race average) \\
+relative speed & \SI{5.34}{\per\second} & \SI{5.35}{\per\second} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Read down the table. Bolt's stride is over a metre longer than the hunter's. On stride length alone we would guess Bolt was much the faster runner. The only reason the model puts the hunter level with him is that it assigns the hunter an extremely short stride time, \SI{0.360}{\second} against Bolt's \SI{0.467}{\second}: nearly \num{2.8} strides every second, where the fastest man ever measured manages \num{2.1}.
+
+Could the hunter simply have been a shorter person taking quicker strides, as the child beside the adult does? No: the model itself says the hunter was \SI{194}{\centi\metre} tall, essentially Bolt's height. The model is describing a man as tall as Bolt, with a stride a metre shorter than Bolt's, turning his legs over thirty percent faster than Bolt. There is no known human like that. And when Webb applied the same model to other trackways at the site, it produced a string of similarly odd numbers, including many implausibly short stride times.
+
+\begin{example}{Checking the model against itself}{sanity}
+Suppose the hunter's legs turned over at Bolt's rate, \num{2.14} strides per second, rather than the model's \num{2.78}. With the measured stride length of \SI{3.73}{\metre}, what speed would that give? What if the hunter had taken Bolt's \emph{stride length} at the model's stride \emph{rate}?
+
+\elem Speed is stride length times strides per second (which is $\ell/\tau$ written with $1/\tau$ as a rate). At Bolt's rate: $\SI{3.73}{\metre} \times \SI{2.14}{\per\second} = \SI{8.0}{\metre\per\second}$. At the model's rate with Bolt's stride: $\SI{4.88}{\metre} \times \SI{2.78}{\per\second} = \SI{13.6}{\metre\per\second}$, faster than any human has ever run. The second calculation shows how extreme the model's stride rate is: combined with a world-record stride, it predicts an impossible speed. The first shows how much of the hunter's \SI{10.36}{\metre\per\second} rests on that one number.
+
+\calc Since $v = \ell\,f$ with $f = 1/\tau$ the stride frequency, $\dd v/\dd f = \ell$: at fixed stride length the speed is proportional to the stride rate, and the sensitivity of the result to the model's estimate of $f$ is the full \SI{3.73}{\metre} per unit of $f$. Going from $f = 2.14$ to $2.78$ (a change of \SI{0.64}{\per\second}) changes $v$ by $3.73 \times 0.64 = \SI{2.4}{\metre\per\second}$. A model output that swings by a quarter of its value when one estimated input moves within the human range is an output to be nervous about.\qed
+\end{example}
+
+\begin{keyidea}[Sanity checks]
+Every model produces side results as well as the result you wanted. Compare them with things you already know: known record speeds, typical human heights, the way children and adults walk. If the side results are absurd, the main result is suspect no matter how carefully it was calculated. A calculation can be arithmetically flawless and still meaningless, because the model behind it does not apply.
+\end{keyidea}
+
+\subsection{Looking inside the model: extrapolation}
+\label{sec:extrap}
+
+The sanity checks say the model went wrong somewhere. Opening the Charteris paper shows where. The data the model was fitted to came from people \emph{walking}. Plotted against relative speed, the measurements run from very slow walking up to a fastest relative speed of about \SI{1.2}{\per\second}: a tall adult walking briskly at about \SI{2}{\metre\per\second}. Figure~\ref{fig:extrap} sketches the situation.
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=12cm,height=7cm,
+  xlabel={relative speed $v/h$ (\si{\per\second})},ylabel={relative stride length $\ell/h$},
+  xmin=0,xmax=6,ymin=0,ymax=2.4,
+  grid=major,grid style={gray!25},
+  axis lines=left,
+]
+% shaded region of data
+\fill[teal!18] (axis cs:0.25,0.35) -- (axis cs:1.25,0.95) -- (axis cs:1.25,1.15) -- (axis cs:0.25,0.55) -- cycle;
+% scattered data points (schematic)
+\addplot[only marks,mark=*,mark size=1.4pt,teal!80!black] coordinates {
+ (0.30,0.46) (0.38,0.50) (0.45,0.58) (0.52,0.60) (0.58,0.66) (0.63,0.70) (0.70,0.74)
+ (0.75,0.80) (0.80,0.82) (0.86,0.86) (0.92,0.90) (0.97,0.92) (1.03,0.98) (1.08,1.00)
+ (1.13,1.03) (1.18,1.08) (0.42,0.54) (0.66,0.72) (0.88,0.85) (1.10,1.05) (0.55,0.62)
+ (0.95,0.93) (0.35,0.47) (0.78,0.79) (1.15,1.06)};
+% fitted line inside data
+\addplot[red!70!black,thick,domain=0.25:1.25,samples=2] {0.28+0.62*x};
+% extrapolated line
+\addplot[red!70!black,thick,dashed,domain=1.25:5.6,samples=2] {0.28+0.62*x};
+\node[teal!60!black,font=\small,anchor=south] at (axis cs:0.75,1.2) {walking data};
+\node[red!70!black,font=\small,anchor=south west] at (axis cs:2.0,1.55) {extrapolated fit};
+\addplot[only marks,mark=*,mark size=2.4pt,red!70!black] coordinates {(5.34,1.92)};
+\node[red!70!black,font=\small,anchor=north] at (axis cs:5.34,1.85) {hunter};
+\addplot[only marks,mark=square*,mark size=2.2pt,slate] coordinates {(5.35,2.50)};
+\draw[dashed,gray] (axis cs:1.25,0) -- (axis cs:1.25,2.4);
+\node[gray!90!black,font=\small,anchor=south west] at (axis cs:1.3,0.1) {no data beyond here};
+\end{axis}
+\end{tikzpicture}
+\caption{A schematic of the situation Webb faced (the data points are illustrative, not the original measurements). The walking data cover relative speeds up to about \SI{1.2}{\per\second}. The hunter's relative stride length, $3.73/1.94 = 1.92$, and the relative speed the model assigned him, \SI{5.34}{\per\second}, lie far to the right, where the fitted relationship was never tested. Bolt's actual values (square, partly off the top of the axes at $\ell/h = 2.50$) do not fall on the extended line either.}
+\label{fig:extrap}
+\end{figure}
+
+Bolt's relative speed is $10.44/1.95 = \SI{5.35}{\per\second}$, and the model's hunter is at \SI{5.34}{\per\second}. Both are more than four times beyond the fastest data point the model was built from. Webb had taken equations fitted to walking and applied them to sprinting. The equations happily returned a number, because equations always do, but the number described nothing that had ever been measured.
+
+\begin{definition}{Interpolation and extrapolation}{extrap}
+Using a model \emph{within} the range of conditions it was built and tested on is \textbf{interpolation}. Using it \emph{outside} that range is \textbf{extrapolation}. Interpolation is usually safe; extrapolation is a hypothesis that the pattern continues, and it needs independent evidence before it can be trusted.
+\end{definition}
+
+\begin{twoviews}{why extrapolation is risky}
+\elem A fitted line summarises the data it passes through. Between two measured points, the line is a sensible guess because the true relationship has no room to wander far. Beyond the last point there is nothing to hold the line in place: the true relationship could bend up, bend down, or stop making sense altogether, and the data cannot tell you which. Walking and running are different gaits, with a different rhythm and a phase of flight in running that walking does not have; there is no reason the walking pattern should hold for running, and Table~\ref{tab:boltvshunter} shows that it does not.
+
+\calc Fitting a straight line $y = a + bx$ to data on an interval $[x_1, x_2]$ pins down $a$ and $b$, but says nothing about the \emph{curvature} $\dd^2 y/\dd x^2$ of the true relationship outside the interval. If the true $y(x)$ has curvature $c$ beyond $x_2$, the error of the linear extrapolation at distance $\Delta$ past $x_2$ grows like $\tfrac12 c\,\Delta^2$: not merely in proportion to how far you extrapolate, but as its square. Webb extrapolated a distance of about $4$ in a variable whose measured range was about $1$, so even a modest curvature in the walking-to-running relationship would swamp the fit. A model's fitted parameters carry no information about derivatives it never sampled.
+\end{twoviews}
+
+\subsection{How the mistake spread}
+
+None of this required specialist knowledge to notice. Any of the sanity checks above would have raised a flag, and so would a glance at the range of the original data. Webb did not make those checks; neither did the scientists who reviewed his paper; and the journalists who wrote the headlines repeated the figure without asking where it came from. A striking number travels fast, and each retelling lends it authority it never earned.
+
+In 2013 two Spanish researchers, Javier Ruiz and Ang\'elica Torices, returned to the trackway with a model built for the purpose: fitted to measurements of people actually \emph{running}, on beaches and in stadiums, and tested against runners of known speed before being applied to the fossil prints. Their estimate for the hunter was
+\[
+v = \SI{7.2 \pm 1.0}{\metre\per\second}.
+\]
+That is a good running speed, roughly \SI{26}{\kilo\metre\per\hour}, the pace of a strong club athlete rather than an Olympic finalist. The ancient sprinter was real, and fast, and not Usain Bolt.
+
+\begin{modelnote}[Three lessons]
+The episode teaches three habits that this book will ask of you repeatedly. First, \emph{know what your model was built from}, and do not push it beyond that range without evidence. Second, \emph{check the outputs} against things you already know before you believe them. Third, \emph{report uncertainty}: Ruiz and Torices wrote $7.2 \pm 1.0$, not $7.2$, and the ``$\pm 1.0$'' is as much a part of the result as the ``$7.2$.'' The next section is about what it means.
+\end{modelnote}
+
+\begin{checkbox}
+A child \SI{1.2}{\metre} tall and an adult \SI{1.8}{\metre} tall walk side by side at \SI{1.4}{\metre\per\second}. Which has the greater relative speed, and what are the two values? Which is closer to the edge of the Charteris walking data?
+\end{checkbox}
+
+\section{Uncertainty and a Better Estimate}
+\label{sec:uncertainty}
+
+No measurement is exact, and no model is either. A tape measure laid across mud can be read to a centimetre or so; a stride length varies from one stride to the next; the relationship between running speed and stride length differs from person to person. Each of these adds some doubt to the final speed, and an honest result says how much.
+
+\begin{definition}{Uncertainty}{uncertainty}
+A result reported as $x \pm \delta x$ means: our best estimate is $x$, and the true value is probably somewhere between $x - \delta x$ and $x + \delta x$. The quantity $\delta x$ is the \textbf{absolute uncertainty}, and it carries the same units as $x$. The \textbf{relative} (or \textbf{percentage}) \textbf{uncertainty} is $\delta x / x$, usually written as a percentage. ``Probably'' is deliberately vague here; in later work it will be given a precise statistical meaning.
+\end{definition}
+
+\subsection{Reading an uncertainty}
+
+\begin{example}{Percentage uncertainty}{percent}
+Ruiz and Torices estimated the hunter's speed as \SI{7.2 \pm 1.0}{\metre\per\second}. (a) What range of speeds does this express? (b) What is the percentage uncertainty? (c) What range of \SI{100}{\metre} times does it correspond to?
+
+\solution (a) From $7.2 - 1.0 = \SI{6.2}{\metre\per\second}$ to $7.2 + 1.0 = \SI{8.2}{\metre\per\second}$. (b) The relative uncertainty is
+\[
+\frac{\delta v}{v} = \frac{\SI{1.0}{\metre\per\second}}{\SI{7.2}{\metre\per\second}} = 0.139 = \SI{14}{\percent}.
+\]
+The units cancel: a percentage uncertainty is a pure number, which is why it is useful for comparing the precision of measurements of different quantities. (c) At \SI{7.2}{\metre\per\second} a \SI{100}{\metre} dash takes $100/7.2 = \SI{13.9}{\second}$; at the two ends of the range, $100/8.2 = \SI{12.2}{\second}$ and $100/6.2 = \SI{16.1}{\second}$. A range from a very good school sprinter to an average one; either way, not \SI{9.58}{\second}.\qed
+\end{example}
+
+Notice that in part (c) the uncertainty in the \emph{time} is not symmetric: \SI{1.7}{\second} below the central value and \SI{2.2}{\second} above it. That is a general feature of pushing an uncertainty through a formula that is not a straight line, and it is the subject of the next example.
+
+\subsection{Propagating an uncertainty}
+
+\begin{example}{Propagating uncertainty to the stride time}{propagate}
+Using the measured stride length \SI{3.73}{\metre} (treat it as exact) and the Ruiz--Torices speed \SI{7.2 \pm 1.0}{\metre\per\second}, find the hunter's time between strides and its uncertainty. Compare with the \SI{0.360}{\second} of Webb's model.
+
+\elem The central value is $\tau = \ell/v = \SI{3.73}{\metre}/\SI{7.2}{\metre\per\second} = \SI{0.518}{\second}$. To find the uncertainty, repeat the calculation at the two ends of the speed range. The \emph{fastest} speed gives the \emph{shortest} stride time, $3.73/8.2 = \SI{0.455}{\second}$, and the slowest gives the longest, $3.73/6.2 = \SI{0.602}{\second}$. So $\tau$ lies between \num{0.455} and \SI{0.602}{\second}: about \SI{0.06}{\second} below the central value and \SI{0.08}{\second} above it. Rounding to one significant figure in the uncertainty, $\tau \approx \SI{0.52 \pm 0.07}{\second}$, with the understanding that the range is slightly lopsided. Webb's \SI{0.360}{\second} lies well outside it, on the fast side, as the sanity checks predicted.
+
+\calc Treat $\tau(v) = \ell/v$ as a function and ask how much it changes when $v$ changes by a small amount $\delta v$. The derivative is
+\[
+\deriv{\tau}{v} = -\frac{\ell}{v^2},
+\]
+so to first order $\delta\tau \approx \left|\deriv{\tau}{v}\right|\delta v = \frac{\ell}{v^2}\,\delta v = \frac{3.73}{(7.2)^2}\times 1.0 = \SI{0.072}{\second}$. This is a single, symmetric estimate that sits between the two elementary bounds (\num{0.063} below, \num{0.084} above) and agrees with them to the precision that matters. The minus sign in the derivative records that a faster speed gives a shorter time. The asymmetry that the elementary route found comes from the second derivative, $\dd^2\tau/\dd v^2 = 2\ell/v^3 > 0$: the curve $\ell/v$ bends upward, so an equal step down in $v$ raises $\tau$ more than an equal step up lowers it. The first-order formula ignores this, which is fine when $\delta v/v$ is small; at \SI{14}{\percent} it is beginning to show.\qed
+\end{example}
+
+\begin{twoviews}{propagating an uncertainty through a formula}
+\elem Recompute the result at the extreme values of the input. If the formula involves one uncertain quantity, two recalculations (at $x - \delta x$ and $x + \delta x$) bracket the answer. The method is transparent and always available, and it automatically reveals when the result is lopsided.
+
+\calc For a result $y = f(x)$ with input uncertainty $\delta x$, the first-order propagation rule is
+\[
+\delta y \approx \left|\deriv{f}{x}\right|\,\delta x .
+\]
+Two special cases are worth memorising. For a product or quotient, such as $v = d/t$ or $\tau = \ell/v$, the \emph{relative} uncertainties add: $\delta v/v \approx \delta d/d + \delta t/t$ when both inputs are uncertain (and the rule for combining independent uncertainties, which adds them in quadrature rather than directly, is a refinement for later). For a power, $y = x^n$ gives $\delta y/y = |n|\,\delta x/x$. The derivative rule is fast and general; the elementary route is its check.
+\end{twoviews}
+
+\subsection{What the revised number says}
+
+Table~\ref{tab:revised} gathers the hunter's revised description. Everything in it is consistent with a tall, fit person running hard: a stride rate of about two per second, a stride of nearly two body lengths, a speed that a good club runner could match.
+
+\begin{table}[htb]
+\centering
+\caption{The hunter as described by the running model of Ruiz and Torices (2013), using Webb's measured stride length. Uncertainties in the derived rows are propagated from the $\pm\SI{1.0}{\metre\per\second}$ in the speed alone.}
+\label{tab:revised}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{lc}
+\toprule
+quantity & value \\
+\midrule
+stride length (measured) & \SI{3.73}{\metre} \\
+speed (model) & \SI{7.2 \pm 1.0}{\metre\per\second} \\
+speed in \si{\kilo\metre\per\hour} & \SI{26 \pm 4}{\kilo\metre\per\hour} \\
+time between strides & \SI{0.52 \pm 0.07}{\second} \\
+strides per second & \SI{1.9 \pm 0.3}{\per\second} \\
+time for \SI{100}{\metre} at this speed & \SIrange{12.2}{16.1}{\second} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The uncertainty is large, about one part in seven, and that is the honest state of knowledge. The prints are twenty thousand years old, one set of them, made in mud whose firmness we can only guess, by a person whose height we can only estimate. A model that claimed to know the speed to three significant figures, as \num{10.36} did, would be claiming more than the evidence can support. The revised estimate is less exciting and more true.
+
+\begin{checkbox}
+The luminescence dating of the prints gave an age of roughly \num{19000} to \num{23000} years. Write this as a central value with an absolute uncertainty, and find the percentage uncertainty. Is the age or the speed known more precisely, in relative terms?
+\end{checkbox}

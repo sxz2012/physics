@@ -1,0 +1,349 @@
+
+===== PAGE 1 =====
+Lesson 1: Velocity Physics 1: Mechanics
+1 Introduction: An Ancient Sprinter
+In 2003, Mary Pappen Jr., a young Mutthi Mutthi Aboriginal Australian girl, discovered footprints in the ground of an
+old, dried-up lakebed.
+A scientist named Steve Webb studied the footprints. He claimed some of them were made by a person running
+barefoot through the mud as fast as a modern day sprinter in the Olympics. News outlets picked up the story, and
+soon people were talking about the ancient sprinter who could rival today’s best. However, a few years later, the
+story was essentially forgotten.
+How did Webb estimate the speed of this ancient sprinter? How reliable was his work, and why did the story seem
+to die away in just a few years? That’s what we’ll examine in this handout as we learn about speed and
+motion.
+2 From Footprints to Dot Diagrams
+After Pappen’s discovery, people studied the footprints in different ways. For example, Webb used a high-tech
+method called ”optically stimulated luminescence” to estimate that the footprints were between 19,000 and 23,000
+years old. This method uses specialized, sensitive equipment and is based on the theories of radioactive decay and
+how electrons move in the small grains of minerals found in dirt.
+A group of Pintubi Aboriginal Australian trackers came to study the footprints as well. Using their lifelong
+experience with human footprints, they realized some of the tracks were made by families walking, but a few were
+made by a group of hunters chasing an animal. One hunter in particular was running fast to cut off the animal’s
+escape. This hunter was the ancient sprinter from Webb’s report.
+To estimate how fast the hunter was running, Webb used neither high tech equipment nor expert judgment.
+Instead, he made measurements with a tape measure and then used a conceptual model. A conceptual model is a
+simpliﬁed way of thinking about a speciﬁc part of the world. Conceptual models can combine measurements,
+equations, diagrams or pictures, graphs, and even computer programs to explain something. They are never
+perfect, but they can still be good enough to help us learn new things.
+© 2023 AoPS Incorporated 1
+===== PAGE 2 =====
+Lesson 1: Velocity Physics 1: Mechanics
+To understand the model Webb used, we can begin with a diagram of the footprints left by the sprinting hunter.
+Webb measured the stride length, which he deﬁned to be the distance between two footfalls of the same foot, so
+that one stride was two steps. He also measured the foot length.
+stride length
+foot length
+Let’s assume the hunter was taking 100 strides per minute, so that time between strides was 60 s
+100 = 0.6 s apart.
+Then the diagram shows where the right foot of the hunter was once every 0.6 s. We can leave the left foot out; it
+isn’t needed in this model.
+We can simplify even more by replacing the footprint with a dot. Here is a diagram with those two simpliﬁcations.
+We’re also zooming out to show six strides now. (The previous diagram showed only two.)
+stride length
+This sort of picture, using dots spaced an equal time apart to represent motion, is called a dot diagram. It’s very
+simpliﬁed, but it represents the core information: the stride length.
+A dot diagram can model anything that moves. For example, imagine a car dripping a drop of wet paint every 0.6 s.
+The dots of paint on the road would form a dot diagram.
+There is no need for the dots to be drawn every 0.6 s. Within a dot diagram, we need the same time between all the
+dots, but that time can be any amount of time we wish. However, if we want to compare two different dot diagrams,
+they should have the same time between dots.
+Additionally, we can use dot diagrams even when there are no actual dots. We can take any object and imagine it
+leaving dots behind as it moves.
+Problem 2.1. Below are dot diagrams for three objects, each moving a different speed. The time between dots
+is the same for each object. Rank the objects from fastest to slowest.
+object A
+object B
+object C
+© 2023 AoPS Incorporated 2
+===== PAGE 3 =====
+Lesson 1: Velocity Physics 1: Mechanics
+Solution: All the dots diagrams have the same time between dots. Object B’s dots are close together, but this is not
+because the dots are being drawn very quickly. The dots are being drawn at the same rate for object B as for
+objects A and C, so the spacing difference must be due to speed differences between the objects.
+We can imagine the ﬁrst dots in each row being laid simultaneously, as if all three objects were starting a race
+together.
+Each row would have its second dot laid at the same time as well. We can highlight those second dots in red to
+visualize them:
+object A
+object B
+object C
+Whichever red dot is furthest along is the object that moved the most at this point in the race. The further an object
+has moved, the faster it must be going.
+Based on which red dot is furthest ahead, the ordering of speeds is A > C > B .
+Takeaway: the further apart the dots, the faster the object was going. This is because a fast-moving object can
+travel further than a slow-moving one in the time between dots being laid down. □
+Exercises
+2.1. Why do you think Webb measured the stride length of the hunter, rather than the step length? Remember that
+a stride is between two prints of the same foot, and a step is between one left footprint and one right
+footprint.
+2.2. In the example problem, do the dot diagrams represent the motion of each object for the same amount of
+time, or do some show the object’s motion over a longer time than others? Explain how you know.
+2.3. How long did it take the hunter to cover the distance in the dot diagram with six dots spaced 0.6 s
+apart?
+2.4. Does a dot diagram tell you which direction the object was moving? Why or why not?
+2.5. Draw a dot diagram for a ball rolling slowly across the ﬂoor, then for one rolling quickly.
+2.6. You are given a dot diagram and can use a ruler to measure the distance between the dots. What other
+information do you need to know before you can ﬁnd the speed of the object that the dot diagram
+represents?
+2.7. One way to generate a dot diagram for a cart is to attach a long, thin strip of paper behind the cart. The cart
+drags the paper forward as it goes. The paper is pulled underneath a “ticker”, a device with a sharp needle that
+© 2023 AoPS Incorporated 3
+===== PAGE 4 =====
+Lesson 1: Velocity Physics 1: Mechanics
+bounces up and down at a regular rate, punching a hole in the paper each time it bounces. These holes function as
+the dots in a dot diagram. A photo and diagram of this setup are shown below:
+You adjust the ticker to tick more slowly, so there is a longer time between it making dots in the paper. Would this
+increase or decrease the spacing between the dots?
+2.8. You want to use the ticker setup described above on a fast car and a slow car, then use the dot diagrams
+generated to compare the cars’ speeds. Should you set the ticker to always tick at the same rate for both cars, or
+should it tick faster for the fast car and slower for the slow car, or should it tick faster for the slow car and slower
+for the fast car?
+2.9. Imagine you want to use the ticker setup to draw a dot diagram for a car that gets faster and faster over time.
+Should you set the ticker to always tick at the same rate, to tick faster and faster over time, or to tick slower and
+slower over time?
+3 Speed: Distance and Time
+We’ve modeled footprints with a dot diagram, and now we want to incorporate speed into the model. To see how
+that can work, let’s start with a problem.
+Problem 3.1. While walking at a steady pace, you take one stride every 1.18 s. Your stride length is 1.54 m. (The
+symbol s is for seconds and m is for meters.) How fast are you going in meters per second?
+Solution: We begin with a dot diagram.
+1.18 s
+1.54 m
+Before doing a calculation, let’s think about the relationship between speed, distance, and time using a simple
+example.
+You travel 30 mi
+h for 2 h. How far do you go? (The mi is miles and h is for hours.)
+© 2023 AoPS Incorporated 4
+===== PAGE 5 =====
+Lesson 1: Velocity Physics 1: Mechanics
+Both traveling for a long time and traveling at high speed result in going further. To ﬁnd the distance traveled, we
+multiply the speed by the time, getting
+
+30 mi
+h
+
+· (2 h) = 60 mi .
+As an equation,
+distance = speed · time. (3.1)
+We want speed, so we can algebraically solve for it, getting
+speed = distance
+time . (3.2)
+This equation says that for a ﬁxed time, the bigger the distance, the faster the speed. For example, imagine two
+objects. The ﬁrst goes 10 m in 2 s and the second goes 1000 m in 2 s. The second object had greater speed.
+Also, making the denominator of a fraction smaller makes the entire fraction bigger. The interpretation here is that
+for a ﬁxed distance, the less time it takes you to travel that distance (smaller denominator), the greater your speed
+(larger entire fraction).
+For example, imagine one object travels 10 m in 2 s and another object travels 10 m in just 0.02 s. The second object
+was traveling at much higher speed.
+Now we’re ready to use this equation with the values in the problem. The distance you travel with each stride is
+1.54 m and the time it takes is 1.18 s, so your speed is
+speed = 1.54 m
+1.18 s = 1 .31 m
+s . (3.3)
+This is about 3 mi/h, meaning it would take about 20 minutes to walk one mile at this speed, or about 13 minutes
+to walk one kilometer. That’s a normal walking speed for most people. □
+Although we didn’t use the dot diagram directly in calculating the speed, drawing and labeling it can help organize
+our thoughts before we do the calculation.
+In this problem, we had to be given the time between strides in order to ﬁnd the speed. If the problem had only said
+that our strides were 1.54 m long but not told us the time between strides, we could have drawn a dot diagram, but
+we couldn’t ﬁnd the speed because we wouldn’t understand how quickly we were taking those strides.
+Webb measured the ancient hunter’s stride length, but not how fast the strides were taken. He could have tried to
+guess the time between strides, but there’s a better method than pure guessing.
+Exercises
+3.1. A dot diagram has dots spaced 0.05 m apart and the time between dots is 10 s. Suggest an animal that
+typically moves at about the speed of the object modeled by this dot diagram.
+3.2. You are traveling at 3.2 m/s with a stride length of 2.08 m. Find the number of seconds between each stride
+you take.
+3.3. A car is traveling at 25 m/s down a freeway. There is some wet paint on one of the wheels, so every time the
+wheel goes around, it leaves a dot. The wheel goes around once every 0.079 s. Find the distance between the dots,
+and interpret what this distance means, i.e. where could it be measured on the car?
+© 2023 AoPS Incorporated 5
+===== PAGE 6 =====
+Lesson 1: Velocity Physics 1: Mechanics
+3.4. Find two different combinations of distance between dots on a dot diagram and time between dots on a dot
+diagram that yield the same speed for the object being modeled. You can make up any numbers you want.
+3.5. You have two dot diagrams. The dots are twice as far apart on diagram A as on diagram B. However, the time
+between recording dots was three times as high for diagram A as it was for diagram B. Which object was moving
+faster?
+3.6. In the problem above, object A was moving at 10 m/s. How fast was object B moving?
+4 A model of stride time
+Although Webb had to estimate the time between strides, he didn’t have to guess blindly.
+Imagine a child and an adult walking together. The child is short, so to keep up with the adult, they have to take
+more steps than the adult, and the time between their steps will be smaller than for the adult. This suggests that
+height affects time between strides.
+Webb didn’t know how tall the ancient hunter was, but he did have one useful piece of information: the foot length.
+Tall people tend to have longer feet, so Webb could use the foot length to guess the hunter’s height. Then he could
+combine the height and stride length to guess the time between the hunter’s strides, and ﬁnally use stride length
+and time between strides to calculate the speed.
+Webb didn’t do all that work on his own. Instead, he relied on a model built decades earlier by three Canadian
+scientists. The Canadian team used data on modern day humans to create a series of equations that take as inputs
+the stride length and foot length and give an estimated time between strides as output. These equations, along
+with some plots they made of the same information, formed their model of human movement.
+When Webb used the Canadian scientists’ equations, he found a time of 0.360 s between strides for the hunter. He
+also measured a stride length of 3.73 m. Combining these, he found a speed of 3.73 m
+0.360 s = 10.36 m/s.
+Problem 4.1. Compare the running speed Webb estimated for the ancient hunter to Usain Bolt’s running speed.
+Bolt holds the world record for the 100 m with a time of 9.58 s.
+Solution: Bolt’s average speed over the entire race was
+100 m
+9.58 s = 10.44 m/s. (4.1)
+According to this calculation, Usain Bolt was just a little bit faster than the ancient hunter, but they ran at almost the
+same speed.
+□
+That summarizes how Webb estimated the hunter’s speed, but we might wonder: how reliable are those
+results?
+Exercises
+4.1. Suggest three different sources of uncertainty in Webb’s calculation.
+4.2. Suggest a reason that the calculation we’ve done here doesn’t give Usain Bolt’s fastest possible sprinting
+speed.
+© 2023 AoPS Incorporated 6
+===== PAGE 7 =====
+Lesson 1: Velocity Physics 1: Mechanics
+5 Questioning a model
+If we want to know whether the model Webb used gives reasonable results, we could look at some of its claims
+besides the speed of the hunter, and see how reasonable they are.
+When we do this, things don’t look great for the model. Usain Bolt’s average stride length in his world record was
+4.88 m, much longer than the 3.73 m stride length of the ancient hunter. With only that information, it would make
+sense to guess that Bolt was running signiﬁcantly faster. It’s only because the model predicted an extremely short
+time between strides for the hunter (0.360 s for the hunter as opposed to 0.467 s for Bolt) that the hunter came out
+around the same speed.
+Perhaps that’s because the hunter was much shorter than Bolt and short people take less time between strides?
+Usain Bolt is 195 cm tall, and the model predicted that the hunter was 194 cm tall - essentially the same
+height.
+Webb applied the same model to several other tracks near the site. None of them came out to have running speeds
+as fast as the hunter, but there were many other unusual numbers, including many instances of very short times
+between the strides.
+When we question our models and test how reasonable their outputs are, we’re doing a sanity check. In this case,
+the model Webb used seems a bit unbelievable, and doesn’t quite pass our sanity checks.
+When we dig deeper into the model, we can see what happened. Here is a plot that the Canadian scientists made
+showing the experimental data they were modeling:
+This plot shows relative speed on the horizontal axis. This is deﬁned as speed divided by height. In other words,
+your relative speed is how many times your own body length you run each second.
+© 2023 AoPS Incorporated 7
+===== PAGE 8 =====
+Lesson 1: Velocity Physics 1: Mechanics
+Usain Bolt’s relative speed was 10.44 m/s
+1.95 m = 5.35 1
+s .
+As we see from the chart, the fastest relative speed used in making the model was the rightmost data point, which
+had a relative speed of about 1.2 1
+s .
+The equations Webb used were made to model humans walking, not running. When Webb took the equations from
+the Canadians’ model and applied them to the hunter, he was able to calculate something, but the calculation
+wasn’t meaningful. It used inputs from beyond the region where the model was intended to work.
+If Steve Webb had understood the Canadians’ model better before using it, he could have realized the model wasn’t
+appropriate for estimating the speed of the hunter. Or, after using the model, he could have done some sanity
+checks and noticed that the results were unrealistic. He could also have asked a colleague with more experience in
+using these models for help. Unfortunately, neither Steve Webb, nor any of the scientists who reviewed his work,
+noticed the mistake.
+From there, the inappropriately calculated speed spread to news stories and books. Journalists and authors
+repeated the ﬁgure without doing a critical check on where it came from.
+In 2013, Javier Ruiz and Ang´elica Torices, two Spanish biologists and paleontologists, re-analyzed the hunter’s
+footprints using a new model that was designed for running speeds. Their model and was tested against real data
+from people running. Ruiz and Torices estimated a running speed of 7.2 ± 1.0 m/s for the hunter. This means that
+they couldn’t tell exactly how fast he was going, but estimated that his speed was probably between 6.2 m/s and
+8.2 m/s. The hunter, while running quite fast, was not running nearly as fast a modern Olympic sprinters.
+This is why when we generate models, we need to test them against real data to determine their reliability. We also
+want to remember the limitations of our models and do sanity checks on our results. Finally, we should report our
+results with uncertainty whenever we can to indicate just how accurate we think our ﬁndings are.
+Exercises
+5.1. Calculate the percentage uncertainty implied by Ruiz and Torices’s estimate of 7.2 ± 1.0 m/s for the hunter’s
+tracks.
+5.2. A child and an adult are walking along together at the same speed. Which has the greater relative
+speed?
+5.3. What was the time between strides that Ruiz and Torices found for the hunter? What was their uncertainty on
+this quantity? (Ignore any uncertainty in the stride length while answering this.)
+6 Conclusions
+Here, we’ve looked at one attempt to model speed. Understanding this model led us to an equation for speed,
+distance, and time, and to the notion of dot diagrams. As we continue solving problems and building new models in
+class, we’ll introduce new technical concepts to deal with those problems and models, including new mathematical
+notation, creating and analyzing graphs, and distinguishing closely related concepts such as speed and
+velocity.
+© 2023 AoPS Incorporated 8
+===== PAGE 9 =====
+Lesson 1: Velocity Physics 1: Mechanics
+7 References
+Ruiz, Javier, and Ang´elica Torices. “Humans running at stadiums and beaches and the accuracy of speed
+estimations from fossil trackways.” Ichnos 20.1 (2013): 31-35.
+Charteris, J., Wall, J. & Nottrodt, J. “Functional reconstruction of gait from the Pliocene hominid footprints at
+Laetoli, northern Tanzania.” Nature 290, 496–498 (1981). https://doi.org/10.1038/290496a0
+Webb, Steve. “Further research of the Willandra Lakes fossil footprint site, southeastern Australia.”Journal of
+human evolution 52.6 (2007): 711-715.
+Webb, Steve, Matthew L. Cupper, and Richard Robins. ”Pleistocene human footprints from the Willandra Lakes,
+southeastern Australia.” Journal of human evolution 50.4 (2006): 405-413.
+“Does this 20,000 years old footprint belong to the fastest man in History?” Paciﬁcans.
+https://paciﬁcans.com/does-this-20000-years-old-footprint-belong-to-the-fastest-man-in-history/
+“Prehistoric Aussie aboriginals could have outrun Usain Bolt” Metro. 2009-10-14.
+https://metro.co.uk/2009/10/14/prehistoric-aussie-aboriginals-could-have-outrun-usain-bolt-490193/
+8 Credits
+footprint photograph, tracks photograph: Michael Amendolia, visitmungo.com.au/ancient-footprints
+ticker tape photograph: Western Washington University, https://physics.wwu.edu/ticker-tape-timer
+ticker tape diagram: Evan Toh, ”Ticker Tape Timer”, YouTube,
+https://www.youtube.com/watch?v=FcvW7PxqgTo
+9 Answers to exercises
+2.1: The left foot is both in front of and slightly to the side of the right foot. If we measured right foot, left foot, right
+foot, etc. we’d measure a zigzag pattern, so instead we measure from right foot to right foot.
+2.2: No. There is the same amount of time between each dot, so more dots means tracking the motion over a
+longer time. Object B was tracked for the most time and object A for the least time.
+2.3: 3.0 s. Note that there are six dots, but only ﬁve gaps between the dots, so the answer is 0.6 s · 5 = 3 .0 s. This is
+called a “fencepost” problem because a fence with six posts only has ﬁve sections.
+2.4: No. If an object were to start from the right and move left, it would create an identical series of dots as an
+object starting from the left and moving right, so we can’t tell from just the dots which way the object moved.
+2.5: The slow-moving ball should have dots closer together, e.g.
+© 2023 AoPS Incorporated 9
+===== PAGE 10 =====
+Lesson 1: Velocity Physics 1: Mechanics
+slow
+fast
+2.6: The time between the dots being laid down.
+2.7: Increase. The slower the ticker, the longer a time the car has to move between dots being made, so it will move
+further and the dots will be spaced further apart.
+2.8: The same for both cars. If the ticker ticked different rates, then the spacing between the dots is not enough to
+compare the speeds. Only if the ticker was always going at the same rate are dot diagrams directly
+comparable.
+2.9: The same rate all the time. If the ticker were to change its ticking rate, that would affect the dot spacing even
+without the cart changing speed. If both the tick rate and cart speed were changing at the same time, we’d have no
+way of knowing what combination of both was causing the pattern in the dots.
+3.1: The speed is 0.005 m/s, or 0.5 cm/s. This is about one foot per minute. It’s about the speed of a garden snail, or
+a slow-crawling sloth.
+3.2: 0.65 s. Since distance = speed · time, we can solve this for time to get time = distance
+speed = 2.08 m
+3.2 m/s = 0.65 s.
+This is a typical time between strides while running long distances.
+3.3: 1.98 m. Using distance = speed · time we have distance = (25 m /s) · (0.079 s) = 1 .98 m. Since this is how far
+the car moves with each revolution of the wheels, it is the circumference of the wheel.
+3.4: Any numbers are acceptable, as long as the distance divided by time comes out the same for the two pairs of
+numbers you chose. You could start with any distance and time, then multiply them both by the same number to
+get another distance and time that works.
+3.5: Object B. We can make up some numbers to understand this. Suppose object A has 2 m between dots and
+object B has 1 m. We could also let object A have 3 s between dots and object B have 1 s. Then object A travels at
+2
+3 m/s and object B travels at 1 m/s. Object B is faster.
+3.6: 15 m/s. Going from A’s dot diagram to B’s, we cut the distance between dots in half, which cuts the speed in
+half. However, we cover that distance in one third the time, which multiplies the speed by 3. Starting with 10 m/s, if
+we cut it in half, then multiply by three, we get 15 m/s.
+4.1: Some possibilities: Webb’s measurement of the stride length wasn’t perfect; different strides have slightly
+different lengths, and nothing can be measured perfectly. It isn’t possible to determine someone’s height perfectly
+from their footprint. Someone could have slightly larger or smaller feet compared to other people the same height
+as them; it’s only a correlation. The model Webb used to go from height and stride length to time between strides
+must have uncertainty. Even people of the same height could use different stride lengths and time between strides
+while traveling the same speed. There’s also no guarantee that the footprint hadn’t eroded some or otherwise
+changed its dimensions in the 20,000 years since it was made.
+© 2023 AoPS Incorporated 10
+===== PAGE 11 =====
+Lesson 1: Velocity Physics 1: Mechanics
+4.2: We calculated Bolt’s average speed over the entire100 m race. Since he has to start stationary at the beginning
+of the race, it takes him a while to get up to his maximum speed, and his average speed is lower than his maximum.
+He also slows down a little bit near the end of the race due to fatigue, again reducing his average below his
+maximum.
+5.1: 13.8% This is found from 1.0 m/s
+7.2 m/s converted to a percentage.
+5.2: The child. Their speeds are the same, but the child is much shorter, so speed divided by height is greater for
+the child.
+5.3: 0.52 ± 0.07 s, or 0.52 ± 0.08 s. We can ﬁnd the time using time = distance
+speed and plugging in Webb’s measured
+stride length and Ruiz and Torices’s estimated speed. To ﬁnd the uncertainty, we can repeat the calculation with the
+approximate lower and upper bounds of Ruiz and Torices’s speed estimate and notice the results are about 0.07 s
+or 0.08 s away from the best guess estimate.
+© 2023 AoPS Incorporated 11
+Art of Problem Solving is an ACS WASC Accredited School.

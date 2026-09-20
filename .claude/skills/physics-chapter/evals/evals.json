@@ -1,0 +1,55 @@
+{
+  "skill_name": "physics-chapter",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Use Handout_Velocity.pdf to write chapter 1 of the book again as chapter/velocity-v2.tex, in the same style as chapter/acceleration.tex (including the Elementary/Calculus two-perspective labels), and compile it to PDF. Refer to the Hewitt book in book/ when needed.",
+      "expected_output": "chapter/velocity-v2.tex and velocity-v2.pdf: 25-40 pages, uses the shared preamble and environments, Two Views boxes and both-route worked examples, TikZ figures, grouped exercises with Hands-on, answers, Hewitt cited; compiles with no errors.",
+      "files": [
+        "Handout_Velocity.pdf",
+        "chapter/acceleration.tex",
+        "book/hewitt-conceptual-physics-12e.txt"
+      ],
+      "assertions": [
+        "velocity-v2.tex and velocity-v2.pdf both exist",
+        "PDF has 25-45 pages (textbook depth)",
+        "Compiles with no TeX errors",
+        "No Overfull box wider than 5pt",
+        "Sets chapter number to 1",
+        "At least 3 Two Views boxes",
+        "At least 8 Elementary and 8 Calculus labelled passages",
+        "At least 10 worked examples",
+        "At least half of worked examples carry both routes",
+        "At least 4 TikZ/pgfplots pictures",
+        "At least 5 Check Your Understanding boxes",
+        "Has Key equations, Key terms, Hands-on, both Answers sections, Sources",
+        "Cites Hewitt in Sources",
+        "At least 30 exercises",
+        "Uses siunitx",
+        "Original prose: fewer than 5 ten-word phrases copied from handout"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Add a new section to chapter/acceleration.tex on graphical analysis of motion (reading position-time, velocity-time, and acceleration-time graphs of the same motion) with two worked examples, one figure, and four exercises with answers, in the chapter's existing style. Recompile and make sure it is clean.",
+      "expected_output": "acceleration.tex gains a section with Elementary/Calculus labelled explanations, a pgfplots figure, worked examples ending in \\qed, exercises appended in the right enumerate series with answers added to the answers section; PDF compiles with no errors or overfull boxes.",
+      "files": [
+        "chapter/acceleration.tex"
+      ],
+      "assertions": [
+        "acceleration.tex modified and PDF exists",
+        "PDF grew beyond 37 pages",
+        "Compiles with no TeX errors",
+        "No Overfull box wider than 5pt",
+        "A new section about graphs exists",
+        "Exactly two worked examples added",
+        "At least one figure added",
+        "Four exercises added",
+        "Answers added for the new exercises",
+        "New section uses Elementary/Calculus labels",
+        "Original content preserved",
+        "Exercise numbering continues the chapter series"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1236 @@
+% ------------------------------------------------------------------
+%  Physics 1: Mechanics  --  Chapter 2: Acceleration
+%  Compile with:  tectonic acceleration.tex   (or pdflatex/xelatex/lualatex)
+% ------------------------------------------------------------------
+\documentclass[11pt,twoside,openany]{book}
+
+% ---------- packages ----------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[letterpaper,top=1in,bottom=1in,inner=1.1in,outer=1.1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{siunitx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,decorations.pathreplacing,positioning,patterns}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary{fillbetween}
+\usepackage[most]{tcolorbox}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+\sisetup{per-mode=symbol,range-units=single,separate-uncertainty=true}
+\DeclareSIUnit{\mile}{mi}
+\newcommand{\mps}{\si{\metre\per\second}}
+\newcommand{\mpss}{\si{\metre\per\second\squared}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\deriv}[2]{\frac{\dd #1}{\dd #2}}
+\newcommand{\dderiv}[2]{\frac{\dd^2 #1}{\dd #2^2}}
+
+% ---------- headers ----------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{\small\thepage\quad Chapter \thechapter\quad Acceleration}
+\fancyhead[RO]{\small Physics 1: Mechanics\quad\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\chaptermark}[1]{}
+\renewcommand{\sectionmark}[1]{}
+
+% ---------- colours ----------
+\definecolor{teal}{RGB}{0,140,150}
+\definecolor{tealpale}{RGB}{232,246,247}
+\definecolor{sand}{RGB}{252,245,230}
+\definecolor{sanddark}{RGB}{190,140,60}
+\definecolor{plum}{RGB}{110,60,130}
+\definecolor{plumpale}{RGB}{243,236,247}
+\definecolor{slate}{RGB}{70,80,95}
+\definecolor{slatepale}{RGB}{240,242,245}
+\definecolor{elemcol}{RGB}{170,90,20}
+\definecolor{elempale}{RGB}{253,238,220}
+\definecolor{calccol}{RGB}{30,90,160}
+\definecolor{calcpale}{RGB}{226,236,250}
+
+% ---------- boxed environments ----------
+\newtcbtheorem[number within=chapter]{example}{Worked Example}{%
+  enhanced,breakable,colback=tealpale,colframe=teal,fonttitle=\bfseries,
+  coltitle=white,attach boxed title to top left={yshift=-2mm,xshift=4mm},
+  boxed title style={colback=teal,sharp corners},
+  top=4mm,left=3mm,right=3mm,bottom=2mm,before skip=10pt,after skip=10pt}{ex}
+
+\newtcbtheorem[number within=chapter]{definition}{Definition}{%
+  enhanced,breakable,colback=plumpale,colframe=plum,fonttitle=\bfseries,
+  coltitle=white,attach boxed title to top left={yshift=-2mm,xshift=4mm},
+  boxed title style={colback=plum,sharp corners},
+  top=4mm,left=3mm,right=3mm,bottom=2mm,before skip=10pt,after skip=10pt}{def}
+
+\newtcolorbox{keyidea}[1][Key Idea]{%
+  enhanced,breakable,colback=sand,colframe=sanddark,fonttitle=\bfseries,
+  title={#1},sharp corners,boxrule=0.6pt,left=3mm,right=3mm,
+  before skip=10pt,after skip=10pt}
+
+\newtcolorbox{modelnote}[1][Modeling Note]{%
+  enhanced,breakable,colback=slatepale,colframe=slate,fonttitle=\bfseries,
+  title={#1},sharp corners,boxrule=0.6pt,left=3mm,right=3mm,
+  before skip=10pt,after skip=10pt}
+
+% "Two Views" box: a concept explained first without calculus, then with it
+\newtcolorbox{twoviews}[1]{%
+  enhanced,breakable,colback=white,colframe=slate!80!black,fonttitle=\bfseries,
+  coltitle=white,colbacktitle=slate!80!black,
+  title={Two Views: #1},sharp corners,boxrule=0.8pt,left=3mm,right=3mm,
+  before skip=10pt,after skip=10pt}
+
+\newcounter{check}[chapter]
+\renewcommand{\thecheck}{\thechapter.\arabic{check}}
+\newtcolorbox{checkbox}{%
+  enhanced,breakable,colback=white,colframe=teal!70!black,
+  fonttitle=\bfseries,coltitle=teal!70!black,
+  title=Check Your Understanding \refstepcounter{check}\thecheck,
+  sharp corners,boxrule=0.6pt,left=3mm,right=3mm,
+  before skip=10pt,after skip=10pt}
+
+% ---------- perspective labels ----------
+\newcommand{\viewtag}[3]{\fcolorbox{#2}{#3}{\footnotesize\textbf{\textcolor{#2}{#1}}}}
+\newcommand{\elemtag}{\viewtag{Elementary}{elemcol}{elempale}}
+\newcommand{\calctag}{\viewtag{Calculus}{calccol}{calcpale}}
+\newcommand{\elem}{\par\medskip\noindent\elemtag\ }
+\newcommand{\calc}{\par\medskip\noindent\calctag\ }
+\newcommand{\elemsub}[1]{\par\medskip\noindent\viewtag{Elementary: #1}{elemcol}{elempale}\ }
+
+\newcommand{\solution}{\par\smallskip\noindent\textbf{Solution.}\ }
+\newcommand{\qed}{\hfill$\blacksquare$}
+
+% ---------- drawing helpers ----------
+% \dotrow{label}{spacing}{count}{y}
+\newcommand{\dotrow}[4]{%
+  \node[anchor=east] at (-0.3,#4) {#1};
+  \foreach \i in {0,...,\numexpr#3-1\relax}{\fill (\i*#2,#4) circle (2.2pt);}}
+
+\setlist[enumerate]{itemsep=4pt,topsep=4pt}
+
+\begin{document}
+\setcounter{chapter}{1}
+
+\chapter{Acceleration}
+
+\begin{tcolorbox}[enhanced,colback=white,colframe=teal,sharp corners,boxrule=1pt,
+  title=\textbf{In this chapter},coltitle=white,colbacktitle=teal,left=3mm,right=3mm]
+By the end of this chapter you should be able to
+\begin{itemize}[itemsep=2pt,topsep=2pt]
+  \item state the two competing hypotheses about \emph{free fall} that Galileo set out to test, write each both as a proportionality and as a \emph{differential equation}, and explain why a pair of hypotheses is only worth testing if they make different predictions;
+  \item describe velocity and acceleration two ways: as ratios of changes over shrinking intervals, and as \emph{derivatives}; describe displacement two ways: as average velocity times time, and as an \emph{integral};
+  \item explain why Galileo studied balls on an \emph{inclined plane} rather than falling stones, and how ringing bells let him measure position at equal time intervals;
+  \item draw a \emph{motion diagram} and interpret each arrow both as average velocity times the interval and as an integral of velocity;
+  \item state Galileo's \emph{odd-number rule}, explain the constant \emph{second difference} both as a pattern in a table and as the discrete form of the second derivative, and derive the rule from $x = \tfrac12 a t^2$;
+  \item show that the total distance covered from rest grows as $t^2$, both by adding odd numbers and by integrating a constant acceleration twice, and use $\Delta y \propto t^2$ to solve problems about falling objects;
+  \item obtain $\Delta y = -\tfrac12 g t^2$ from $v_y = -g t$ both by the area of a triangle and by integration, dispose of the rival hypothesis both by a bounding argument and by solving $\dd s/\dd t = k s$, and explain what the data settle;
+  \item define \emph{acceleration}, compute it from data and from formulas, and give its units;
+  \item apply the \emph{constant-acceleration model} to objects dropped from rest and thrown straight upward, locating the top of the flight both by symmetry and by setting a derivative to zero.
+\end{itemize}
+\end{tcolorbox}
+
+\begin{tcolorbox}[enhanced,colback=slatepale,colframe=slate,sharp corners,boxrule=0.6pt,
+  title=\textbf{How to read this chapter: two perspectives},coltitle=white,colbacktitle=slate,left=3mm,right=3mm]
+Every idea in this chapter can be understood with elementary mathematics alone: ratios, averages, tables of differences, and the areas of rectangles and triangles. That is how Galileo did it. Every idea can also be understood with calculus, which was invented partly \emph{for} this problem a generation after Galileo. Neither view is the ``real'' one; each illuminates the other. Throughout, explanations and solutions are labelled
+\begin{center}
+\elemtag\quad for the route using only elementary mathematics, and \qquad \calctag\quad for the route using derivatives and integrals.
+\end{center}
+When a worked example carries both labels, the two routes are independent: read one, then the other, and check that they agree. When you solve the exercises, try to do the same.
+\end{tcolorbox}
+
+\section{Galileo's Problem}
+
+Hold a stone at arm's length and let it go. It falls, and everyone who has ever watched a stone fall agrees on one thing: it gets faster as it goes. Drop it from a table and it lands with a tap; drop it from a rooftop and it lands with a crack. How much faster, and according to what rule, is a harder question, and for nearly two thousand years after Aristotle there was no agreed answer.
+
+Part of the difficulty was practical. To study motion you need to measure positions and times, and in the sixteenth century there were no stopwatches, no cameras, and no electronic sensors of any kind. The best clocks of the day were driven by the steady flow of water and could not reliably resolve intervals shorter than a second or so. A stone dropped from head height reaches the ground in a little over half a second. By the time anyone could react, the fall was already over.
+
+Part of the difficulty was also mathematical. The natural language for describing how one quantity changes with another, the calculus, would not be invented until decades after Galileo's death. He had to reason with geometry and ratios, and he did so brilliantly. We will follow his elementary reasoning closely, and set beside it the calculus that makes the same reasoning short.
+
+This was the problem faced by the Italian physicist Galileo Galilei in the late sixteenth and early seventeenth centuries. Galileo wanted to describe motion mathematically, and he began with the simplest cases he could find. One of the simplest is \emph{free fall}.
+
+\begin{definition}{Free fall}{freefall}
+An object is in \textbf{free fall} when it moves under the influence of gravity alone, free of every other influence: no hand holding it, no string, no surface, and no appreciable air resistance. A dropped stone is a good approximation to free fall for the first few metres. A feather is not, because air resistance matters for a feather almost immediately.
+\end{definition}
+
+\subsection{Two hypotheses}
+
+By Galileo's time, scholars had proposed two different rules for how a falling stone gains speed. Both were reasonable, and both agreed with the everyday observation that the stone speeds up. They disagreed about \emph{what} the speed depends on.
+
+Before stating them, we need two conventions. First, when this book says ``speed'' or ``velocity'' without qualification, it means the \emph{instantaneous} speed or velocity, the reading of a speedometer at one moment, not the average over some interval. When we mean an average, we will say so. Second, we set up a coordinate $y$ that increases \emph{upward}, so that a falling stone has a negative velocity $v_y < 0$ and a negative displacement $\Delta y < 0$. That sounds fussy, but it will keep us out of trouble when we come to objects that go up and then come down.
+
+The first hypothesis says that the stone's velocity is proportional to \emph{how far it has fallen}:
+\begin{equation}
+v_y \overset{?}{\propto} \Delta y.
+\label{eq:hypA}
+\end{equation}
+The second says that velocity is proportional to \emph{how long it has been falling}:
+\begin{equation}
+v_y \overset{?}{\propto} t.
+\label{eq:hypB}
+\end{equation}
+The question marks are there to remind us that these are hypotheses, not established facts.
+
+\begin{definition}{Proportionality}{prop}
+Two quantities $A$ and $B$ are \textbf{proportional}, written $A \propto B$, when doubling one doubles the other, tripling one triples the other, and in general multiplying one by any number multiplies the other by the same number. Equivalently, $A = kB$ for some constant $k$ whose value is fixed but often unimportant. The symbol $\propto$ is read ``is proportional to.''
+\end{definition}
+
+Take hypothesis~\eqref{eq:hypA} literally. It says that if a stone is moving at $v_y = \SI{-3}{\metre\per\second}$ after falling $\Delta y = \SI{-1}{\metre}$, it will be moving at \SI{-6}{\metre\per\second} after falling \SI{-2}{\metre}, and at \SI{-45}{\metre\per\second} after falling \SI{-15}{\metre}. Multiply the distance fallen by fifteen and the velocity is multiplied by fifteen. The particular numbers are not the point; the \emph{relationship} is. Hypothesis~\eqref{eq:hypB} makes the same kind of claim about time: a stone that has been falling for twice as long is moving twice as fast.
+
+\begin{twoviews}{the two hypotheses}
+\elem Hypothesis~\eqref{eq:hypA} says: \emph{for every metre the stone falls, it gains the same amount of speed.} Hypothesis~\eqref{eq:hypB} says: \emph{for every second the stone falls, it gains the same amount of speed.} Suppose you drop a stone and it hits the ground at some speed, and you want it to hit twice as fast. Hypothesis~\eqref{eq:hypA} says: hold it twice as high. Hypothesis~\eqref{eq:hypB} says: hold it high enough that it takes twice as long to land.
+
+\calc Write $s = -\Delta y$ for the distance fallen (a positive number) and $v = -v_y = \dd s/\dd t$ for the downward speed. Then the two hypotheses are two \emph{differential equations}, equations that relate a function to its own rate of change:
+\[
+\text{\eqref{eq:hypA}:}\quad \deriv{s}{t} = k\,s, \qquad\qquad \text{\eqref{eq:hypB}:}\quad \deriv{s}{t} = g\,t,
+\]
+with $k$ and $g$ positive constants. Differentiating each once more shows what they say about the acceleration $\dd v/\dd t$. For \eqref{eq:hypB}, $\dd v/\dd t = g$: the acceleration is \emph{constant}. For \eqref{eq:hypA}, by the chain rule $\dd v/\dd t = k\,\dd s/\dd t = k v$: the acceleration is \emph{proportional to the speed}, and grows without limit. These are different kinds of motion, not merely different formulas.
+\end{twoviews}
+
+Do the two instructions ``hold it twice as high'' and ``let it fall twice as long'' amount to the same thing?
+
+\begin{example}{Are the two hypotheses really different?}{different}
+Do the hypotheses $v_y \propto \Delta y$ and $v_y \propto t$ make different predictions? If so, describe a situation in which they disagree. If not, show that they always agree.
+
+\elem Suppose the stone falls a distance $\Delta y_1$ in a time $t_1$, at which moment its velocity is $v_{y1}$. Let it keep falling until it has covered twice that distance, $2\Delta y_1$.
+
+Hypothesis~\eqref{eq:hypA} says the velocity is now $2 v_{y1}$. What does the clock say? The stone has fallen through two segments, each of length $\Delta y_1$. Everyone agrees that the stone is moving faster in the second segment than in the first, so the second segment takes \emph{less} time than the first. The time to fall $2\Delta y_1$ is therefore some $t_2 < 2 t_1$. If we then let the stone keep falling until the clock reads $2t_1$, it gets faster still. So under hypothesis~\eqref{eq:hypA}, at time $2t_1$ the velocity is \emph{more} than $2 v_{y1}$.
+
+Hypothesis~\eqref{eq:hypB} says that at time $2t_1$ the velocity is \emph{exactly} $2 v_{y1}$.
+
+These are different predictions for the same measurement, so the hypotheses are genuinely different. An experiment that measured velocity at time $2t_1$ could tell them apart.
+
+\calc Under \eqref{eq:hypB}, $v = gt$, so $v(2t_1) = 2g t_1 = 2v(t_1)$ exactly. Under \eqref{eq:hypA}, $\dd v/\dd t = kv$, whose solution (Worked Example~\ref{ex:exponential}) is $v(t) = v(t_1)\,e^{k(t - t_1)}$ once the stone is moving. Then $v(2t_1) = v(t_1)\,e^{k t_1}$, and since $e^{x} > 1 + x$ for $x > 0$, this exceeds $v(t_1)(1 + kt_1)$. Whether that exceeds $2v(t_1)$ depends on $kt_1$, but the point is that the ratio $v(2t_1)/v(t_1)$ is $e^{kt_1}$ under one hypothesis and exactly $2$ under the other; the two agree only by coincidence, for one special $t_1$, and disagree for every other. A single pair of speed measurements at $t_1$ and $2t_1$ distinguishes them.\qed
+\end{example}
+
+\begin{modelnote}[Why bother checking?]
+This may seem like a detour. Why not just go and measure? Because if two hypotheses made \emph{all} the same predictions, no measurement could ever favour one over the other. Scientists would then regard them as two ways of saying the same thing, and testing would be pointless. Worked Example~\ref{ex:different} shows that a measurement \emph{can} distinguish them, which is what makes the question scientific. A hypothesis that cannot be tested, even in principle, is not doing scientific work, a point we first met in Chapter~1.
+\end{modelnote}
+
+\begin{example}{Using a proportionality}{propuse}
+Assume for the moment that $v_y \propto \Delta y$. A dropped stone is measured to be moving at \SI{5.0}{\metre\per\second} after falling \SI{2.0}{\metre}. How fast would it be moving after falling \SI{12}{\metre}?
+
+\elem Under this hypothesis, multiplying the distance fallen by a factor multiplies the speed by the same factor. The distance is multiplied by $12/2 = 6$, so the speed is too:
+\[
+6 \times \SI{5.0}{\metre\per\second} = \SI{30}{\metre\per\second}.
+\]
+The constant of proportionality was never needed.
+
+\calc The hypothesis is the differential equation $\dd s/\dd t = ks$. The measurement fixes the constant: $k = v/s = (\SI{5.0}{\metre\per\second})/(\SI{2.0}{\metre}) = \SI{2.5}{\per\second}$. Then at $s = \SI{12}{\metre}$, $v = ks = (\SI{2.5}{\per\second})(\SI{12}{\metre}) = \SI{30}{\metre\per\second}$. Same answer, and now we also know $k$, which will matter when we ask how long the fall takes. (Whether this hypothesis is \emph{true} is a separate question, and the answer, as we will see, is no.)\qed
+\end{example}
+
+Galileo wanted to know which hypothesis, if either, was right. He had no way to measure velocity directly, and times were nearly as hard. Before he could say anything quantitative about free fall, he needed a way to slow the motion down. Before \emph{we} go further, we need the vocabulary of rates.
+
+\section{Velocity and Acceleration: Ratios and Derivatives}
+\label{sec:calculus}
+
+In Chapter~1 we defined average velocity over an interval as $\bar v_x = \Delta x/\Delta t$, and we said that instantaneous velocity is ``the velocity at one moment.'' This section makes that phrase precise in both languages.
+
+\begin{twoviews}{instantaneous velocity and acceleration}
+\elem The \textbf{instantaneous velocity} at an instant $t$ is the average velocity $\Delta x/\Delta t$ over a very short interval around $t$, so short that shrinking it further no longer changes the answer to the precision you care about. On a position--time graph it is the slope of the curve at that point, which you can estimate with a ruler laid along the curve. The \textbf{instantaneous acceleration} is the same construction one level up: $\Delta v_x/\Delta t$ over a very short interval, the slope of the velocity--time graph. Over a finite interval these ratios are the \textbf{average} velocity and \textbf{average} acceleration, the slopes of the chords joining the endpoints.
+
+\calc Calculus gives the shrinking-interval idea a name and a set of rules. If position is a function $x(t)$, then
+\[
+v_x(t) = \lim_{\Delta t \to 0}\frac{\Delta x}{\Delta t} = \deriv{x}{t},
+\qquad
+a_x(t) = \lim_{\Delta t \to 0}\frac{\Delta v_x}{\Delta t} = \deriv{v_x}{t} = \dderiv{x}{t}.
+\]
+Velocity is the derivative of position; acceleration is the derivative of velocity, which makes it the second derivative of position. The rules of differentiation (power rule, chain rule, and so on) let you write $v_x(t)$ and $a_x(t)$ down exactly from a formula for $x(t)$, with no shrinking intervals to compute.
+\end{twoviews}
+
+\begin{definition}{Instantaneous velocity and acceleration}{derivs}
+For motion along a line with position $x(t)$,
+\[
+v_x = \deriv{x}{t}, \qquad a_x = \deriv{v_x}{t} = \dderiv{x}{t}.
+\]
+Elementary form: $v_x \approx \Delta x/\Delta t$ and $a_x \approx \Delta v_x/\Delta t$ over a sufficiently short interval. Graphical form: slope of the position--time graph and slope of the velocity--time graph, respectively.
+\end{definition}
+
+Derivatives take you from position to velocity to acceleration. The reverse direction, from velocity back to displacement, is just as important.
+
+\begin{twoviews}{displacement from velocity}
+\elem If the velocity is constant, displacement is velocity times time: $\Delta x = v_x\,\Delta t$, the area of a rectangle of height $v_x$ and width $\Delta t$ on the velocity--time graph. If the velocity changes, chop the interval into pieces short enough that the velocity is nearly constant on each, multiply, and add. The sum is the total area between the velocity--time graph and the time axis, counted negative where the graph is below the axis. For a graph made of straight lines, that area is a rectangle, a triangle, or a trapezium, and you can find it with school geometry. In every case $\Delta x = \bar v_x\,\Delta t$, where $\bar v_x$ is the average velocity over the interval.
+
+\calc ``Chop, multiply, add, and let the pieces shrink'' is the definition of the definite integral. Because $v_x = \dd x/\dd t$, the fundamental theorem of calculus gives
+\begin{equation}
+\Delta x = x(t_2) - x(t_1) = \int_{t_1}^{t_2} v_x(t)\,\dd t,
+\qquad
+\Delta v_x = v_x(t_2) - v_x(t_1) = \int_{t_1}^{t_2} a_x(t)\,\dd t.
+\label{eq:ftc}
+\end{equation}
+The average velocity over an interval is by definition $\bar v_x = \frac{1}{\Delta t}\int_{t_1}^{t_2} v_x\,\dd t$, so $\Delta x = \bar v_x\,\Delta t$ holds exactly, for any motion whatsoever. Integration rules let you evaluate the area exactly even when the graph is curved.
+\end{twoviews}
+
+\begin{keyidea}[Slopes and areas]
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\small
+\begin{tabular}{lll}
+\toprule
+ & down: slope (ratio or derivative) & up: area (average times time or integral) \\
+\midrule
+position $x(t)$ & $v_x \approx \dfrac{\Delta x}{\Delta t}$, \; $v_x = \dfrac{\dd x}{\dd t}$ & \\[6pt]
+velocity $v_x(t)$ & $a_x \approx \dfrac{\Delta v_x}{\Delta t}$, \; $a_x = \dfrac{\dd v_x}{\dd t}$ & $\Delta x = \bar v_x\,\Delta t = \displaystyle\int v_x\,\dd t$ \\[6pt]
+acceleration $a_x(t)$ & & $\Delta v_x = \bar a_x\,\Delta t = \displaystyle\int a_x\,\dd t$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+A dot diagram, a position--time graph, a velocity--time graph, and an acceleration--time graph are four views of one motion, connected by these operations.
+\end{keyidea}
+
+\begin{example}{From position to velocity to acceleration}{diff}
+A cart on a track has position $x(t) = (\SI{0.20}{\metre\per\second\squared})\,t^2$ measured from its release point. Find its velocity and acceleration at $t = \SI{3.0}{\second}$.
+
+\elem Compute average velocities over shrinking intervals centred on $t = \SI{3.0}{\second}$, using $x(t) = 0.20\,t^2$:
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{ccccc}
+\toprule
+interval (s) & $x$ at start (m) & $x$ at end (m) & $\Delta x$ (m) & $\Delta x/\Delta t$ (m/s) \\
+\midrule
+2.0 to 4.0 & 0.800 & 3.200 & 2.400 & 1.200 \\
+2.5 to 3.5 & 1.250 & 2.450 & 1.200 & 1.200 \\
+2.9 to 3.1 & 1.682 & 1.922 & 0.240 & 1.200 \\
+\bottomrule
+\end{tabular}
+\end{center}
+The ratio has already settled at \SI{1.20}{\metre\per\second}, so that is the velocity at \SI{3.0}{\second}. (For a $t^2$ position the centred ratio is exact at every width, a special property of parabolas.) Repeating the calculation at $t = \SI{2.0}{\second}$ and $t = \SI{4.0}{\second}$ gives \SI{0.80}{\metre\per\second} and \SI{1.60}{\metre\per\second}: the velocity rises by \SI{0.40}{\metre\per\second} in each second, so the acceleration is \SI{0.40}{\metre\per\second\squared}.
+
+\calc Differentiate once:
+\[
+v_x = \deriv{x}{t} = 2\times(\SI{0.20}{\metre\per\second\squared})\,t = (\SI{0.40}{\metre\per\second\squared})\,t,
+\]
+and again:
+\[
+a_x = \deriv{v_x}{t} = \SI{0.40}{\metre\per\second\squared}.
+\]
+At $t = \SI{3.0}{\second}$, $v_x = \SI{1.2}{\metre\per\second}$ and $a_x = \SI{0.40}{\metre\per\second\squared}$. The acceleration has no $t$ in it: it is the same at every instant, which the table only suggested. A position that grows as $t^2$ means a velocity that grows as $t$ and an acceleration that is constant. Hold on to that chain; it is the whole chapter in one line.\qed
+\end{example}
+
+\begin{example}{From velocity to displacement}{integ}
+A cyclist's velocity along a straight road is $v_x(t) = (\SI{0.75}{\metre\per\second\squared})\,t$ for the first \SI{8.0}{\second} of a sprint from rest. How far does the cyclist travel in those \SI{8.0}{\second}?
+
+\elem The velocity--time graph is a straight line from $(0, 0)$ to $(\SI{8.0}{\second}, \SI{6.0}{\metre\per\second})$. The displacement is the area of the triangle under it:
+\[
+\Delta x = \tfrac12 \times \text{base} \times \text{height} = \tfrac12 \times \SI{8.0}{\second} \times \SI{6.0}{\metre\per\second} = \SI{24}{\metre}.
+\]
+Equivalently, a velocity that rises steadily from $0$ to \SI{6.0}{\metre\per\second} has average value \SI{3.0}{\metre\per\second}, and $\SI{3.0}{\metre\per\second} \times \SI{8.0}{\second} = \SI{24}{\metre}$.
+
+\calc By Equation~\eqref{eq:ftc},
+\[
+\Delta x = \int_0^{8.0} (\SI{0.75}{\metre\per\second\squared})\,t\,\dd t
+ = (\SI{0.75}{\metre\per\second\squared})\left[\tfrac12 t^2\right]_0^{8.0}
+ = 0.75 \times 32\ \si{\metre} = \SI{24}{\metre}.
+\]
+The $\tfrac12$ that appears when you integrate $t$ is the same $\tfrac12$ as in the area of a triangle. Whenever a velocity--time graph is straight, the two routes are the same calculation written in two notations; the integral earns its keep when the graph is curved.\qed
+\end{example}
+
+\begin{checkbox}
+An object's position is $x(t) = (\SI{4.0}{\metre\per\second\cubed})\,t^3$. Find its velocity and acceleration at $t = \SI{2.0}{\second}$, by differentiating and also by computing $\Delta x/\Delta t$ over the interval from \SI{1.9}{\second} to \SI{2.1}{\second}. Is the acceleration constant?
+\end{checkbox}
+
+\begin{checkbox}
+Assume $v_y \propto \Delta y$, that is, $\dd s/\dd t = k s$. At the instant a stone is released from rest, $s = 0$, so its velocity is zero. Consider what the hypothesis says about the stone one tiny moment later. Can the stone ever start moving? Now make the same argument for $v \propto t$. What is different?
+\end{checkbox}
+
+\section{Slowing Motion Down: The Inclined Plane}
+
+\subsection{Why a ramp?}
+
+Galileo's solution was to stop studying stones that fall straight down and to study instead a ball rolling down a straight, gently sloping ramp, an \emph{inclined plane}. A ball on a ramp also gets faster and faster as it goes, but it does so slowly enough to watch. Where a dropped stone crosses a metre in less than half a second, a ball on a shallow ramp may take several seconds to cover the same distance.
+
+The gamble in this approach is the assumption that rolling down a ramp obeys the \emph{same kind of rule} as free fall. Galileo assumed that it did: either $v_x \propto \Delta x$ or $v_x \propto t$, with the constant of proportionality smaller for the ramp than for free fall. (We have switched from $y$ to $x$ because the ramp is nearly horizontal, but there is no rule in physics about what to call your coordinates. Choose whatever is convenient and say what you chose.) Galileo was not trying to find the constant. He was trying to find the \emph{form} of the rule, and for that the ramp would do.
+
+\begin{modelnote}[The inclined plane as a model of free fall]
+Replacing a falling stone with a rolling ball is a modelling decision, and like every model it might have failed. Galileo justified it with a second experiment: he tilted the ramp at different angles and found that the same rule held at every angle, with the ball speeding up faster on steeper ramps. In the language of Section~\ref{sec:calculus}, the acceleration $\dd v/\dd t$ was constant on every ramp, and larger on steeper ramps. The steepest possible ramp is vertical, and a ball on a vertical ``ramp'' is simply falling. If the rule is the same at every angle short of vertical, it is a reasonable bet that it holds at vertical too. The bet has since been checked directly with modern equipment, and it holds.
+\end{modelnote}
+
+\subsection{Measuring time with bells}
+
+The ramp slowed the ball, but Galileo still had to measure where the ball was at known times, and his clocks were poor. One ingenious solution, which we will analyse because it is simple, uses no clock at all. Whether Galileo actually used it is uncertain; historians have argued both ways.
+
+Hang a row of small bells above the ramp so that the rolling ball strikes each one as it passes. Release the ball and listen. If the bells ring at irregular intervals, slide them along the ramp and try again. Keep adjusting until the rings come in a perfectly regular rhythm, like the beat of a song. Humans are remarkably good at judging whether a sequence of sounds is evenly spaced in time; a trained musician can detect deviations of a few hundredths of a second. Once the rhythm is even, the same amount of time $\tau$ passes between every pair of neighbouring bells, and no clock is needed to know it. Figure~\ref{fig:ramp} shows the arrangement.
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \coordinate (A) at (0,2.4);
+  \coordinate (B) at (11,0.6);
+  \fill[slate!15] (A) -- (B) -- (11,0.3) -- (0,2.1) -- cycle;
+  \draw[thick] (A) -- (B);
+  \draw[thick] (0,2.1) -- (11,0.3);
+  \draw[thick] (A) -- (0,2.1);
+  \draw[thick] (B) -- (11,0.3);
+  \draw[thick] (0.4,2.1) -- (0.4,0) -- (10.6,0) -- (10.6,0.3);
+  \draw[fill=slate!10] (-0.2,-0.05) rectangle (11.2,-0.25);
+  \shade[ball color=teal!80] ($ (A)!0.03!(B) + (0,0.27) $) circle (0.25);
+  \node[font=\small,anchor=south] at ($ (A)!0.03!(B) + (0,0.6) $) {release};
+  \draw[very thick,slate] (-0.2,3.6) -- (11.2,3.6);
+  \foreach \s/\n in {0.0625/1, 0.25/2, 0.5625/3, 0.97/4}{
+    \coordinate (P) at ($ (A)!\s!(B) $);
+    \coordinate (M) at ($ (P) + (0,0.5) $);
+    \coordinate (T) at ($ (P) + (0,3.6) $);
+    \draw[slate] (M) -- (M |- T);
+    \begin{scope}[shift={(M)}]
+      \filldraw[fill=sanddark!55,draw=sanddark!80!black,line width=0.5pt]
+        (-0.2,0) -- (-0.14,0.22) arc (180:0:0.14 and 0.16) -- (0.2,0) -- cycle;
+      \fill[sanddark!80!black] (0,0) circle (1.4pt);
+      \node[font=\small,anchor=south] at (0,0.45) {bell \n};
+    \end{scope}
+  }
+  \path ($ (A)!0.0!(B) $) coordinate (R0);
+  \path ($ (A)!0.0625!(B) $) coordinate (R1);
+  \path ($ (A)!0.25!(B) $) coordinate (R2);
+  \path ($ (A)!0.5625!(B) $) coordinate (R3);
+  \path ($ (A)!0.97!(B) $) coordinate (R4);
+  \draw[<->,>=Stealth,red!70!black] ($ (R0) + (0,-0.55) $) -- node[below,font=\small]{$d$} ($ (R1) + (0,-0.55) $);
+  \draw[<->,>=Stealth,red!70!black] ($ (R1) + (0,-0.55) $) -- node[below,font=\small]{$3d$} ($ (R2) + (0,-0.55) $);
+  \draw[<->,>=Stealth,red!70!black] ($ (R2) + (0,-0.55) $) -- node[below,font=\small]{$5d$} ($ (R3) + (0,-0.55) $);
+  \draw[<->,>=Stealth,red!70!black] ($ (R3) + (0,-0.55) $) -- node[below,font=\small]{$7d$} ($ (R4) + (0,-0.55) $);
+\end{tikzpicture}
+\caption{A ball rolling down an inclined plane rings a row of bells. The bells have been slid along the ramp until the rings come in an even rhythm, so equal times pass between neighbouring bells. Notice that the bells are \emph{not} equally spaced: the gaps grow as the ball speeds up. The labels $d$, $3d$, $5d$, $7d$ anticipate Galileo's result in Section~\ref{sec:oddrule}.}
+\label{fig:ramp}
+\end{figure}
+
+\begin{example}{Were the bells equally spaced?}{bellspacing}
+Once the bells ring in an even rhythm, are they equally far apart along the ramp? If not, how does the spacing change down the ramp?
+
+\elem The bells mark the ball's position at equally spaced instants of time. That is precisely what a dot diagram does (Chapter~1), so the bells \emph{are} a dot diagram, built out of brass instead of ink. In a dot diagram, wider spacing means higher average speed over that interval. The ball speeds up as it rolls, so it covers more ramp between each pair of bells than between the previous pair. The bells must therefore be placed farther and farther apart down the ramp, exactly as Figure~\ref{fig:ramp} shows.
+
+\calc The gap between bell $n-1$ and bell $n$ is the displacement over that interval, which by Equation~\eqref{eq:ftc} is
+\[
+\Delta x_n = \int_{(n-1)\tau}^{n\tau} v_x(t)\,\dd t.
+\]
+Since $v_x$ is increasing, the integrand is larger throughout each interval than in the previous one, and an integral of a larger function over an interval of the same width is larger. So $\Delta x_1 < \Delta x_2 < \Delta x_3 < \cdots$: the gaps grow.
+
+Either way: had the bells been placed at \emph{equal} distances instead, the ball would have reached each successive bell sooner than the last, and the rings would have come faster and faster, like a bouncing ball settling on the floor.\qed
+\end{example}
+
+\subsection{From dot diagrams to motion diagrams}
+
+Figure~\ref{fig:motiondiag} redraws the bell positions as a plain dot diagram. It shows the increasing spacing at a glance, but like every dot diagram it hides one thing: the direction of motion. Reading Figure~\ref{fig:motiondiag}(a) alone, you cannot tell whether the ball was speeding up to the right or slowing down to the left.
+
+The fix is simple. Draw an arrow from each dot to the next, as in Figure~\ref{fig:motiondiag}(b). The arrows show where the ball went, and their lengths show how far it went in each interval.
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \node[anchor=east] at (-0.6,1.4) {(a)};
+  \foreach \p in {0,0.7,2.8,6.3,11.2}{\fill (\p,1.4) circle (2.4pt);}
+  \node[anchor=east] at (-0.6,0) {(b)};
+  \foreach \p in {0,0.7,2.8,6.3,11.2}{\fill (\p,0) circle (2.4pt);}
+  \draw[->,>=Stealth,thick,teal] (0,0) -- (0.62,0);
+  \draw[->,>=Stealth,thick,teal] (0.7,0) -- (2.72,0);
+  \draw[->,>=Stealth,thick,teal] (2.8,0) -- (6.22,0);
+  \draw[->,>=Stealth,thick,teal] (6.3,0) -- (11.12,0);
+  \node[font=\small,anchor=north] at (0.35,-0.15) {$d$};
+  \node[font=\small,anchor=north] at (1.75,-0.15) {$3d$};
+  \node[font=\small,anchor=north] at (4.55,-0.15) {$5d$};
+  \node[font=\small,anchor=north] at (8.75,-0.15) {$7d$};
+\end{tikzpicture}
+\caption{(a) The bell positions of Figure~\ref{fig:ramp} as a dot diagram, with equal time $\tau$ between dots. (b) The same diagram with arrows added, making it a \emph{motion diagram}. Each arrow is the displacement over one interval: average velocity times $\tau$, or equivalently $\int v_x\,\dd t$ over the interval.}
+\label{fig:motiondiag}
+\end{figure}
+
+\begin{definition}{Motion diagram}{motiondiag}
+A \textbf{motion diagram} is a dot diagram with an arrow drawn from each dot to the next. Each arrow represents the \emph{displacement} of the object during one time interval $\tau$. \elemtag\ Its length is $\bar v_{x,n}\,\tau$, proportional to the average velocity in that interval; its direction is the direction of motion. \calctag\ Its length is $\int_{(n-1)\tau}^{n\tau} v_x\,\dd t$. Arrows that grow along the diagram mean the object is speeding up; arrows that shrink mean it is slowing down. The \emph{change} in arrow length from one interval to the next is $\Delta\bar v_x\,\tau$, so it measures the acceleration.
+\end{definition}
+
+A motion diagram is a small upgrade to a tool you already have, but it makes changing speeds far easier to reason about, and we will use it throughout this chapter.
+
+\begin{checkbox}
+A ball starts at the bottom of a ramp moving quickly to the right and rolls \emph{up} the ramp, slowing as it goes. Sketch its motion diagram with five dots. Then sketch a motion diagram for a ball that rolls down one ramp, crosses a short flat section, and rolls up a second ramp, coming to rest at the top. On each diagram, say where the acceleration is positive, negative, or zero (take rightward as positive).
+\end{checkbox}
+
+\section{Galileo's Results: The Odd-Number Rule}
+\label{sec:oddrule}
+
+Galileo repeated the ramp experiment many times. He used ramps of different lengths and tilted them at different angles. In some runs he set the bells to ring in a quick rhythm and in others a slow one. In every run he measured the distance from the release point to each bell.
+
+The raw distances were different every time, as you would expect: a steeper ramp or a slower rhythm makes the ball travel farther between bells. Galileo did something clever with those numbers. Instead of reporting the distances in inches or centimetres, he reported each of them \emph{relative to the distance from the release point to the first bell}. If the ball rolled \SI{2}{\centi\metre} to reach the first bell and \SI{6}{\centi\metre} more to reach the second, he recorded that the second gap was three times the first. On a different ramp, the ball might roll \SI{3}{\centi\metre} to the first bell and \SI{9}{\centi\metre} more to the second; the centimetres had changed, but the ratio was again three.
+
+Expressed this way, every run told the same story. Call the distance to the first bell $d$. Then the distance from the first bell to the second was always $3d$, from the second to the third always $5d$, from the third to the fourth always $7d$, and so on through $9d$, $11d$, $13d$. The gaps between bells are the successive \emph{odd} multiples of $d$.
+
+\begin{keyidea}[Galileo's odd-number rule]
+An object that starts from rest and speeds up in this way covers distances in the ratio
+\[
+1 : 3 : 5 : 7 : 9 : \cdots
+\]
+in successive equal intervals of time. If it covers a distance $d$ in the first interval, it covers $3d$ in the second, $5d$ in the third, and $(2n-1)\,d$ in the $n$th.
+\end{keyidea}
+
+\subsection{What stays constant}
+
+The gaps between bells grow down the ramp, so the ball's velocity is certainly changing. But look at \emph{how} the gaps grow. From the first gap to the second, the distance increases from $d$ to $3d$, an increase of $2d$. From the second to the third, it increases from $3d$ to $5d$, again $2d$. From $5d$ to $7d$: $2d$. The \emph{increase} in the gap is the same at every step, all the way down the ramp.
+
+Table~\ref{tab:differences} sets this out. The positions of the bells are the ball's positions at equal time intervals. The gaps between neighbouring bells, which are the changes in position, are called the \textbf{first differences}. The changes in the gaps, one row further along, are the \textbf{second differences}. For Galileo's ball the first differences grow steadily while the second differences are constant.
+
+\begin{table}[htb]
+\centering
+\caption{Positions, first differences, and second differences for a ball rolling from rest with bells ringing at equal time intervals $\tau$. Positions are measured from the release point in units of $d$. The last two columns show what each difference becomes when divided by the appropriate power of $\tau$.}
+\label{tab:differences}
+\renewcommand{\arraystretch}{1.25}
+\small
+\begin{tabular}{cccccc}
+\toprule
+bell $n$ & position $x_n$ & first difference & second difference & $\dfrac{\text{first diff.}}{\tau} = \bar v$ & $\dfrac{\text{second diff.}}{\tau^2} = a$ \\
+\midrule
+0 (release) & $0$   &       &      &  & \\
+1       & $d$   & $d$   &      & $d/\tau$ & \\
+2       & $4d$  & $3d$  & $2d$ & $3d/\tau$ & $2d/\tau^2$ \\
+3       & $9d$  & $5d$  & $2d$ & $5d/\tau$ & $2d/\tau^2$ \\
+4       & $16d$ & $7d$  & $2d$ & $7d/\tau$ & $2d/\tau^2$ \\
+5       & $25d$ & $9d$  & $2d$ & $9d/\tau$ & $2d/\tau^2$ \\
+6       & $36d$ & $11d$ & $2d$ & $11d/\tau$ & $2d/\tau^2$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{twoviews}{constant acceleration}
+\elem The gap in each interval, divided by $\tau$, is the average velocity in that interval. A constant second difference means these average velocities go up by the same amount, $2d/\tau$, from each interval to the next. Velocity that increases by equal amounts in equal times is what we mean by \textbf{constant acceleration}, and the acceleration is the increase per interval divided by the interval: $a = (2d/\tau)/\tau = 2d/\tau^2$. Galileo could read the acceleration straight off his table of bell positions.
+
+\calc A first difference divided by $\tau$ approximates the first derivative $\dd x/\dd t$; a second difference divided by $\tau^2$ approximates the second derivative $\dd^2 x/\dd t^2$. Constant second differences are the finite-step signature of a constant second derivative: $\dd^2 x/\dd t^2 = a$. For this particular motion the approximation is exact, as Worked Example~\ref{ex:oddcalc} shows, because the position is a quadratic in $t$ and second differences of a quadratic are exactly constant.
+\end{twoviews}
+
+You will also see constant acceleration called \emph{uniform acceleration}; the two phrases mean the same thing.
+
+\begin{definition}{Acceleration; constant acceleration}{accel}
+\textbf{Acceleration} is the rate at which velocity changes with time:
+\[
+\bar a = \frac{\Delta v}{\Delta t}\ \text{(average)}, \qquad a = \deriv{v}{t} = \dderiv{x}{t}\ \text{(instantaneous)}.
+\]
+Any change of velocity counts, whether the object speeds up, slows down, or changes direction. The acceleration is \textbf{constant} (or \emph{uniform}) when the velocity changes by the same amount in every equal interval of time, equivalently when $\dd v/\dd t$ has the same value at every instant.
+\end{definition}
+
+\begin{example}{The odd-number rule from the position formula}{oddcalc}
+An object starts from rest at $x = 0$ with constant acceleration $a$, so that (as we will show two ways in Section~\ref{sec:rewriting}) its position is $x(t) = \tfrac12 a t^2$. Bells ring at $t = \tau, 2\tau, 3\tau, \ldots$ Show that the gaps between bells obey the odd-number rule and that the second difference is constant.
+
+\elem The position at bell $n$ is $x_n = \tfrac12 a (n\tau)^2 = \tfrac12 a\tau^2\,n^2$. Write $d = \tfrac12 a\tau^2$; then $x_n = n^2 d$: $d, 4d, 9d, 16d, \ldots$ The gaps are the differences of consecutive squares, $4d - d = 3d$, $9d - 4d = 5d$, $16d - 9d = 7d$, and in general
+\[
+x_n - x_{n-1} = \left[n^2 - (n-1)^2\right]d = (2n-1)\,d,
+\]
+the odd multiples of $d$. The second differences are $(2n+1)d - (2n-1)d = 2d$, constant. Since $d = \tfrac12 a\tau^2$, the constant second difference is $2d = a\tau^2$, and $a = 2d/\tau^2$.
+
+\calc Check first that $x = \tfrac12 a t^2$ has the right derivatives: $\dd x/\dd t = at$, which is zero at $t = 0$ (starts from rest), and $\dd^2 x/\dd t^2 = a$ (constant acceleration). Now the gap between bells is an integral of the velocity:
+\[
+\Delta x_n = \int_{(n-1)\tau}^{n\tau} a t\,\dd t = \tfrac12 a\left[t^2\right]_{(n-1)\tau}^{n\tau} = \tfrac12 a\tau^2\,(2n-1),
+\]
+which is the odd-number rule with $d = \tfrac12 a\tau^2$. The second difference is $\Delta x_{n+1} - \Delta x_n = \tfrac12 a\tau^2 \cdot 2 = a\tau^2$. Dividing by $\tau^2$ returns exactly $a = \dd^2 x/\dd t^2$: for a quadratic position the discrete second difference and the continuous second derivative agree perfectly, whatever $\tau$ is.\qed
+\end{example}
+
+For the rest of this chapter we concentrate on the case Galileo studied: constant acceleration along a straight line, starting from rest. Section~\ref{sec:accelgeneral} broadens the idea.
+
+\begin{example}{A motion diagram for constant acceleration}{scalediagram}
+Draw a motion diagram, to scale, for an object that starts from rest and moves horizontally to the right with constant acceleration. Show six intervals and label the displacements.
+
+\solution Choose a length to represent $d$ and lay out arrows of length $d$, $3d$, $5d$, $7d$, $9d$, $11d$ end to end. The result is shown below, with $d$ drawn as \SI{0.3}{\centi\metre}.
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \foreach \p in {0,0.3,1.2,2.7,4.8,7.5,10.8}{\fill (\p,0) circle (2.2pt);}
+  \draw[->,>=Stealth,thick,teal] (0,0) -- (0.24,0);
+  \draw[->,>=Stealth,thick,teal] (0.3,0) -- (1.14,0);
+  \draw[->,>=Stealth,thick,teal] (1.2,0) -- (2.64,0);
+  \draw[->,>=Stealth,thick,teal] (2.7,0) -- (4.74,0);
+  \draw[->,>=Stealth,thick,teal] (4.8,0) -- (7.44,0);
+  \draw[->,>=Stealth,thick,teal] (7.5,0) -- (10.74,0);
+  \node[font=\small,anchor=north] at (0.15,-0.15) {$d$};
+  \node[font=\small,anchor=north] at (0.75,-0.15) {$3d$};
+  \node[font=\small,anchor=north] at (1.95,-0.15) {$5d$};
+  \node[font=\small,anchor=north] at (3.75,-0.15) {$7d$};
+  \node[font=\small,anchor=north] at (6.15,-0.15) {$9d$};
+  \node[font=\small,anchor=north] at (9.15,-0.15) {$11d$};
+\end{tikzpicture}
+\end{center}
+\elemtag\ Each arrow is $2d$ longer than the one before it. That constant growth in the arrows is what constant acceleration looks like on a motion diagram. \calctag\ The $n$th arrow has length $\int_{(n-1)\tau}^{n\tau} at\,\dd t = \tfrac12 a\tau^2(2n-1)$; the dots sit at $x_n = \tfrac12 a(n\tau)^2$, the parabola of Figure~\ref{fig:vtgraph}(b) sampled at equal time steps.\qed
+\end{example}
+
+\subsection{From the ramp back to free fall}
+
+Galileo confirmed the odd-number rule on ramps, but his real interest was falling objects, and he applied the rule to free fall as well. If a stone dropped near the ground falls a distance $d$ in its first second, it falls $3d$ in the next second and $5d$ in the second after that.
+
+Nothing in the rule singles out one second as the interval. The bells could ring every \SI{0.2}{\second} or every \SI{2}{\second}; the rhythm was whatever was convenient. So the rule holds for \emph{any} fixed time interval $\tau$. An object that starts from rest with constant acceleration and covers \SI{1}{\metre} in its first \SI{0.2}{\second} covers \SI{3}{\metre} in its next \SI{0.2}{\second}, and \SI{5}{\metre} in the \SI{0.2}{\second} after that. Only the value of $d = \tfrac12 a\tau^2$ changes when you change the interval.
+
+\begin{example}{Falling by the odd-number rule}{oddfall}
+Near the surface of Earth, an object dropped from rest falls the first metre in about \SI{0.45}{\second}, if air resistance can be ignored. (a) How far does it fall between \SI{0.90}{\second} and \SI{1.35}{\second} after release? (b) How long does it take to fall \SI{4}{\metre}? (c) What acceleration do these numbers imply?
+
+\elem Take the time interval to be $\tau = \SI{0.45}{\second}$, so that $d = \SI{1}{\metre}$.
+
+(a) The interval from \SI{0.90}{\second} to \SI{1.35}{\second} is the \emph{third} interval of \SI{0.45}{\second}. By the odd-number rule the object falls $5d = \SI{5}{\metre}$ during it.
+
+(b) After the first interval the object has fallen \SI{1}{\metre}; after the second it has fallen a further $3d = \SI{3}{\metre}$, for a total of \SI{4}{\metre}. So it takes two intervals, $2 \times \SI{0.45}{\second} = \SI{0.90}{\second}$, to fall \SI{4}{\metre}. Notice that quadrupling the distance only doubled the time.
+
+(c) $a = 2d/\tau^2 = 2(\SI{1}{\metre})/(\SI{0.45}{\second})^2 = \SI{9.9}{\metre\per\second\squared}$.
+
+\calc Let $s(t) = \tfrac12 a t^2$ be the distance fallen. (c) first: $s(0.45) = 1$ gives $a = 2/(0.45)^2 = \SI{9.9}{\metre\per\second\squared}$. (a) The distance fallen in the interval is
+\[
+\int_{0.90}^{1.35} a t\,\dd t = \tfrac12 a\left[(1.35)^2 - (0.90)^2\right] = \tfrac12 (9.88)(1.8225 - 0.81) = \SI{5.0}{\metre}.
+\]
+(b) Solve $\tfrac12 a t^2 = 4$: $t = \sqrt{8/9.88} = \SI{0.90}{\second}$. The two routes agree, and we will meet this value of $a$ again under its usual name, $g$.\qed
+\end{example}
+
+\begin{checkbox}
+Using only the results of Worked Example~\ref{ex:oddfall}, roughly how long does an object take to fall \SI{2}{\metre} from rest? You cannot yet answer exactly with the elementary route, but you can bracket the answer between two values, and you should be able to say which of the two it is closer to. We will compute it precisely in Worked Example~\ref{ex:sqrt}.
+\end{checkbox}
+
+\section{Rewriting Galileo's Result}
+\label{sec:rewriting}
+
+The odd-number rule describes the distance covered in \emph{each} interval. It is often more useful to know the \emph{total} distance covered since release. That turns out to follow a rule at least as elegant, and it can be reached by two roads: by adding up Galileo's odd numbers, or by integrating a constant acceleration twice.
+
+\subsection{Road one: adding odd numbers}
+
+\begin{example}{Total distance to the $n$th bell}{squares}
+Find the total distance travelled from release to the first, second, third, and fourth bells. Is there a pattern? Will it continue to hold for as long as the odd-number rule does?
+
+\elemsub{pictures} At the first bell the total is $d$. To reach the second bell the ball travels a further $3d$, so the total is $d + 3d = 4d$. At the third bell, $d + 3d + 5d = 9d$; at the fourth, $9d + 7d = 16d$. The position column of Table~\ref{tab:differences} continues the list: $25d$, $36d$. The totals are $1, 4, 9, 16, 25, 36$ times $d$, the \emph{square numbers}. It appears that the total distance to bell $n$ is $n^2 d$.
+
+Checking bell 7 and bell 8 would add confidence, but checking can never prove that the pattern holds for \emph{every} bell; we would have to stop somewhere. To be sure, we need an argument that works for any $n$. Picture $n^2$ as the number of dots in an $n \times n$ square grid, as in Figure~\ref{fig:grid} with $n = 6$. To enlarge it to a $7 \times 7$ grid, add a column of $6$ dots down the right side, a row of $6$ dots along the top, and one more dot in the corner: $6 + 6 + 1 = 13$ new dots, which is exactly the seventh odd number. In general, going from an $n \times n$ grid to an $(n+1)\times(n+1)$ grid adds $n + n + 1 = 2n + 1$ dots. The numbers $2n + 1$ for $n = 0, 1, 2, \ldots$ are precisely the odd numbers $1, 3, 5, \ldots$. So adding successive odd multiples of $d$ always produces successive square multiples of $d$, no matter how far down the ramp we go.
+
+\elemsub{algebra} The same fact as a \emph{telescoping sum}: since $k^2 - (k-1)^2 = 2k - 1$,
+\begin{align*}
+\sum_{k=1}^{n}(2k-1)\,d &= d\sum_{k=1}^{n}\left[k^2 - (k-1)^2\right] \\
+ &= d\left[(1 - 0) + (4 - 1) + (9 - 4) + \cdots + \big(n^2 - (n-1)^2\big)\right] = n^2 d.
+\end{align*}
+Every term cancels against its neighbour except the last, $n^2$, and the first, $0$.
+
+\calc The telescoping sum is the discrete cousin of the fundamental theorem of calculus: summing the \emph{differences} of a quantity gives its total change, just as integrating a \emph{derivative} does. In the continuous version, the gaps become $v\,\dd t$ and the sum becomes $\int_0^t v\,\dd t' = x(t) - x(0)$. Road two, below, carries this out.\qed
+\end{example}
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[x=0.55cm,y=0.55cm]
+  \foreach \i in {0,...,5}{\foreach \j in {0,...,5}{\fill (\i,\j) circle (2.6pt);}}
+  \foreach \k in {0,...,5}{\fill[red!75!black] (6,\k) circle (2.6pt); \fill[red!75!black] (\k,6) circle (2.6pt);}
+  \fill[red!75!black] (6,6) circle (2.6pt);
+  \draw[gray!60,dashed] (-0.5,-0.5) rectangle (5.5,5.5);
+  \node[anchor=north,font=\small] at (2.5,-0.7) {$6\times 6 = 36$ dots};
+  \node[anchor=west,font=\small,red!75!black,align=left] at (7,3) {$6 + 6 + 1 = 13$\\ new dots};
+\end{tikzpicture}
+\caption{Why the odd numbers add up to squares. A $6\times 6$ grid holds $36$ dots. Adding a column, a row, and a corner (in red) adds $2\times 6 + 1 = 13$ dots and makes a $7\times 7$ grid of $49$. The same construction works for every $n$.}
+\label{fig:grid}
+\end{figure}
+
+\subsection{Road two: integrating twice}
+
+\begin{twoviews}{distance under constant acceleration}
+\elem Suppose the acceleration is a constant $a$ and the object starts from rest. After a time $t$ its velocity has grown by $a$ for each unit of time, so $v = at$. The velocity--time graph is a straight line from $(0,0)$ to $(t, at)$, and the distance covered is the area of the triangle beneath it:
+\[
+\Delta x = \tfrac12 \times t \times at = \tfrac12 a t^2.
+\]
+Equivalently, the average velocity is the average of the start and end values, $\tfrac12(0 + at)$, and distance is average velocity times time. Bell $n$ rings at $t = n\tau$, where $\Delta x = \tfrac12 a n^2 \tau^2 = n^2 d$, exactly road one's answer.
+
+\calc Integrate the constant acceleration once, using Equation~\eqref{eq:ftc} and $v_x(0) = 0$:
+\begin{equation}
+v_x(t) = v_x(0) + \int_0^t a\,\dd t' = a t.
+\label{eq:vat}
+\end{equation}
+Integrate again, with $x(0) = 0$:
+\begin{equation}
+x(t) = x(0) + \int_0^t v_x(t')\,\dd t' = \int_0^t a t'\,\dd t' = \tfrac12 a t^2.
+\label{eq:halfat2}
+\end{equation}
+Check by differentiating: $\dd x/\dd t = at = v_x$ and $\dd v_x/\dd t = a$, as required. The $\tfrac12$ is the same $\tfrac12$ as in the area of the triangle. Two entirely different arguments, one counting dots and one integrating, land on the same formula, which is the kind of agreement that makes physicists trust a result.
+\end{twoviews}
+
+\begin{keyidea}[Galileo's law of falling bodies]
+An object that starts from rest and moves with constant acceleration $a$ has
+\[
+v = a t, \qquad \Delta x = \tfrac12 a t^2, \qquad\text{so}\qquad \Delta x \propto t^2.
+\]
+Doubling the time quadruples the distance; tripling the time multiplies the distance by nine. Equivalently, the time to cover a distance grows as the \emph{square root} of the distance: $t = \sqrt{2\Delta x/a}$.
+\end{keyidea}
+
+A proportionality is a tool for scaling one measurement into another, and $\Delta y \propto t^2$ is used so often that its scaling rule deserves to be written out. If $\Delta y = k t^2$ for some constant $k$ (we now know $k = \tfrac12 a$), then for two different falls,
+\[
+\frac{\Delta y_1}{\Delta y_2} = \frac{k t_1^2}{k t_2^2} = \frac{t_1^2}{t_2^2}
+\qquad\Longrightarrow\qquad
+t_2 = t_1 \sqrt{\frac{\Delta y_2}{\Delta y_1}}.
+\]
+The constant $k$ cancels, so we never need its value: the ratio of the distances fixes the ratio of the times.
+
+\begin{example}{How long to fall two metres?}{sqrt}
+An object in free fall covers \SI{1}{\metre} in its first \SI{0.45}{\second}. How long does it take to fall a total of \SI{2}{\metre}?
+
+\elem Take $\Delta y_1 = \SI{1}{\metre}$, $t_1 = \SI{0.45}{\second}$, and $\Delta y_2 = \SI{2}{\metre}$. Then
+\[
+t_2 = t_1\sqrt{\frac{\Delta y_2}{\Delta y_1}} = \SI{0.45}{\second}\times\sqrt{2} = \SI{0.64}{\second}.
+\]
+This is the value Check Your Understanding~2.4 asked you to estimate. It lies between \SI{0.45}{\second} (for \SI{1}{\metre}) and \SI{0.90}{\second} (for \SI{4}{\metre}), and closer to the first, as the square root predicts.
+
+\calc From $s(t) = \tfrac12 a t^2$ with $a = \SI{9.88}{\metre\per\second\squared}$ (Worked Example~\ref{ex:oddfall}), solve $s = 2$: $t = \sqrt{2s/a} = \sqrt{4/9.88} = \SI{0.64}{\second}$. Here the calculus route needs the value of $a$ and the elementary route does not; the elementary route needs a reference fall and the calculus route does not. Each is convenient in different circumstances.\qed
+\end{example}
+
+\begin{example}{Scaling a model cliff}{cliff}
+You are filming a scene in which a hero leaps from a tall cliff. Rather than endanger anyone, you toss a small action figure off a model cliff that is $1/16$ the height of the real one. The figure lands far too quickly to look right, so you plan to play the clip in slow motion. By what factor should you slow it down?
+
+\elem The real fall covers \num{16} times the distance of the model fall. Since distance grows as the square of time, the real fall takes $\sqrt{16} = 4$ times as long. Play the clip at one-quarter speed, so that it lasts four times as long, and the timing of the fall will match a real cliff.
+
+\calc With $t = \sqrt{2h/g}$, the ratio of fall times is $t_{\text{real}}/t_{\text{model}} = \sqrt{h_{\text{real}}/h_{\text{model}}} = \sqrt{16} = 4$; $g$ cancels, so it does not matter that the model and the real cliff are on the same planet. (The illusion is not perfect. The figure's arms and the dust it raises will also be slowed by a factor of four, and those do not scale the same way, which is one reason model shots in old films often look ``wrong.'')\qed
+\end{example}
+
+\begin{modelnote}[Leonardo's rule, and why it cannot be right]
+About a century before Galileo, Leonardo da Vinci proposed a similar-looking rule for free fall: if an object falls $d$ in the first interval, it falls $2d$ in the second, $3d$ in the third, and so on, with the odd numbers $1, 3, 5, \ldots$ replaced by $1, 2, 3, \ldots$. \elemtag\ This rule cannot be tested against Galileo's, because it cannot be tested at all: it contradicts itself. Take intervals of \SI{1}{\second}. In \SI{4}{\second} the object falls $d_1 + 2d_1 + 3d_1 + 4d_1 = 10d_1$, and in \SI{2}{\second} it falls $3d_1$, a ratio of $10/3$. Now describe the \emph{same} fall with \SI{2}{\second} intervals: it falls $d_2$ in the first two seconds and $2d_2$ in the next two, a ratio of $3$. Two descriptions of one motion give two different answers for how much farther the object gets in \SI{4}{\second} than in \SI{2}{\second}. At most one can be right, so the rule is internally inconsistent. \calctag\ Leonardo's totals are $d\sum_{k=1}^n k = \tfrac12 n(n+1)d$. With $n = t/\tau$ and $d$ proportional to some power of $\tau$, no choice makes this a function of $t$ alone; the extra $+n$ always leaves a trace of the arbitrary $\tau$. Galileo's totals, $n^2 d = \tfrac12 a(n\tau)^2 = \tfrac12 a t^2$, depend only on $t$ (Exercise~\ref{ex:leonardo}). A rule for a real motion must not care how finely you chop the time.
+\end{modelnote}
+
+\begin{checkbox}
+An object falls from rest. By what factor does the distance fallen increase when the time of fall is multiplied by \num{3}? By what factor does the time of fall increase when the distance is multiplied by \num{9}? By \num{2}?
+\end{checkbox}
+
+\section{Judging the Hypotheses}
+\label{sec:judging}
+
+We began with two hypotheses about \emph{velocity}, $v_y \propto \Delta y$ and $v_y \propto t$. What Galileo measured was \emph{distance}: $\Delta y \propto t^2$. To decide between the hypotheses, we work out what each predicts for distance as a function of time and compare with the data.
+
+\subsection{What \texorpdfstring{$v_y \propto t$}{v proportional to t} predicts}
+
+Take the second hypothesis first and make it specific. Write
+\begin{equation}
+v_y = \deriv{y}{t} = -g\,t.
+\label{eq:vgt}
+\end{equation}
+The minus sign is there because the object falls downward, which we chose to be the negative direction; with it, the constant $g$ is positive. The constant $g$ is called the \textbf{free-fall acceleration}, or the \emph{acceleration due to gravity}, and it is exactly what its name says: the velocity changes by $g$ every second, $a_y = \dd v_y/\dd t = -g$. It is not a constant of nature. It has the same value for every object at a given place, but different values on different planets, and it varies slightly from place to place on Earth. Near Earth's surface its average value is
+\[
+g \approx \SI{9.8}{\metre\per\second\squared},
+\]
+and we will see where that number comes from shortly. Many textbooks, Hewitt's among them, round it to \SI{10}{\metre\per\second\squared} to make the arithmetic transparent; we will do the same when the point is the idea rather than the digits.
+
+\begin{example}{Displacement when velocity grows in proportion to time}{derive}
+Suppose an object's velocity is $v_y = -g t$. Find its displacement $\Delta y$ after a time $t$.
+
+\elem Draw the velocity--time graph, Figure~\ref{fig:vtgraph}(a). It is a straight line through the origin with slope $-g$. Pick a particular time $t_1$. Because the velocity changes \emph{steadily} from $0$ to $-gt_1$, its average over the interval is the average of the two endpoint values,
+\[
+v_{y,\text{avg}} = \frac{0 + (-g t_1)}{2} = -\frac{g t_1}{2},
+\]
+and displacement is average velocity times time:
+\[
+\Delta y_1 = v_{y,\text{avg}}\, t_1 = -\frac{g t_1}{2}\, t_1 = -\frac{1}{2} g t_1^2.
+\]
+Geometrically, the region between the line and the time axis from $0$ to $t_1$ is a triangle of base $t_1$ and height $g t_1$, area $\tfrac12 g t_1^2$, lying below the axis. The same reasoning works for any time.
+
+\calc Equation~\eqref{eq:ftc} gives, in one line,
+\[
+\Delta y = \int_0^{t} v_y(t')\,\dd t' = \int_0^{t}(-g t')\,\dd t' = -g\left[\tfrac12 t'^2\right]_0^{t} = -\tfrac12 g t^2.
+\]
+Check by differentiating: $\dd(-\tfrac12 g t^2)/\dd t = -gt = v_y$. Both routes give
+\begin{equation}
+\Delta y = -\tfrac12 g t^2.
+\label{eq:halfgt2}
+\end{equation}
+A graph of $\Delta y$ against $t$ is a parabola, Figure~\ref{fig:vtgraph}(b), whose tangent slope at any instant is the velocity read from Figure~\ref{fig:vtgraph}(a).\qed
+\end{example}
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  name=vt,
+  width=7.2cm,height=6.2cm,
+  xlabel={time $t$ (s)},ylabel={velocity $v_y$ (m/s)},
+  xmin=0,xmax=1.05,ymin=-10.5,ymax=0.5,
+  xtick={0,0.2,0.4,0.6,0.8,1.0},
+  grid=major,grid style={gray!25},
+  title={(a) velocity--time},title style={font=\small},
+  axis lines=left,
+]
+\addplot[name path=line,teal,thick,domain=0:1,samples=2] {-9.8*x};
+\path[name path=zero] (axis cs:0,0) -- (axis cs:1,0);
+\addplot[teal!25] fill between[of=line and zero,soft clip={domain=0:0.6}];
+\draw[dashed,red!70!black] (axis cs:0.6,0) -- (axis cs:0.6,-5.88);
+\draw[dashed,red!70!black] (axis cs:0,-5.88) -- (axis cs:0.6,-5.88);
+\node[red!70!black,font=\small,anchor=north] at (axis cs:0.6,-6.1) {$t_1$};
+\node[red!70!black,font=\small,anchor=east] at (axis cs:0,-5.88) {$-g t_1$};
+\node[teal!60!black,font=\small,anchor=north west] at (axis cs:0.12,-0.6) {area $= \Delta y$};
+\end{axis}
+\begin{axis}[
+  at={(vt.right of south east)},anchor=left of south west,xshift=1.2cm,
+  width=7.2cm,height=6.2cm,
+  xlabel={time $t$ (s)},ylabel={displacement $\Delta y$ (m)},
+  xmin=0,xmax=1.05,ymin=-5.2,ymax=0.3,
+  xtick={0,0.2,0.4,0.6,0.8,1.0},
+  grid=major,grid style={gray!25},
+  title={(b) displacement--time},title style={font=\small},
+  axis lines=left,
+]
+\addplot[teal,thick,domain=0:1,samples=60] {-4.9*x^2};
+\draw[dashed,red!70!black] (axis cs:0.6,0) -- (axis cs:0.6,-1.764);
+\draw[dashed,red!70!black] (axis cs:0,-1.764) -- (axis cs:0.6,-1.764);
+\node[red!70!black,font=\small,anchor=north] at (axis cs:0.6,-1.9) {$t_1$};
+\node[red!70!black,font=\small,anchor=east] at (axis cs:0,-1.764) {$-\tfrac12 g t_1^2$};
+\end{axis}
+\end{tikzpicture}
+\caption{(a) If $v_y = -gt$, the velocity--time graph is a straight line of slope $-g$, drawn here with $g = \SI{9.8}{\metre\per\second\squared}$. The shaded triangle under the line up to $t_1$ is, in elementary terms, an area $\tfrac12 \times t_1 \times g t_1$; in calculus terms, the integral $\int_0^{t_1} v_y\,\dd t$. Either way it is the magnitude of the displacement. (b) The resulting displacement--time graph is the parabola $\Delta y = -\tfrac12 g t^2$, whose slope at any instant is the velocity in (a).}
+\label{fig:vtgraph}
+\end{figure}
+
+\begin{modelnote}[Oresme and the mean-speed rule]
+The step ``average velocity equals half the final velocity'' has a long history. In the fourteenth century, scholars at Merton College, Oxford, stated what is now called the \emph{mean-speed theorem}: a body whose speed increases uniformly covers the same distance as a body moving throughout at the mean of its initial and final speeds. Nicole Oresme, working in Paris around 1350, proved it with a picture essentially identical to Figure~\ref{fig:vtgraph}(a), representing speed by the height of a line and distance by the area beneath it: the elementary route of Worked Example~\ref{ex:derive}. In modern terms he had computed $\int_0^t (v_0 + a t')\,\dd t' = (v_0 + \tfrac12 a t)\,t$, the integral of a linear function, three centuries before Newton and Leibniz gave the integral its name. Oresme therefore had $\Delta y \propto t^2$ long before Galileo, but as a mathematical consequence of an assumed rule, not as a measured fact about falling stones. Galileo's contribution was to put the rule at risk in an experiment.
+\end{modelnote}
+
+\subsection{What \texorpdfstring{$v_y \propto \Delta y$}{v proportional to distance} predicts}
+
+\begin{example}{The rival hypothesis, and why it fails}{exponential}
+Let $s$ be the distance fallen, and suppose hypothesis~\eqref{eq:hypA} holds: $v = ks$ with $k > 0$. What kind of motion does this predict, and does it match Galileo's data?
+
+\elem Two things follow without any calculus. First, if the stone is released from rest, $s = 0$ and so $v = ks = 0$. A moment later the stone has not moved, so $s$ is still zero, so $v$ is still zero. Under this rule nothing can start falling (Check Your Understanding~2.2).
+
+Second, grant the stone some small initial distance $s_0$ and ask how long it takes to double, from $s_0$ to $2s_0$. Throughout that stretch its speed lies between $ks_0$ and $2ks_0$. Covering a distance $s_0$ at a speed of at least $ks_0$ takes at most $s_0/(ks_0) = 1/k$; at a speed of at most $2ks_0$ it takes at least $s_0/(2ks_0) = 1/(2k)$. So the doubling time lies between $1/(2k)$ and $1/k$ \emph{no matter what $s_0$ is}. Going from \SI{1}{\metre} to \SI{2}{\metre} would take the same time as going from \SI{100}{\metre} to \SI{200}{\metre}. Galileo's data say instead that $t \propto \sqrt{s}$, so the first doubling takes $(\sqrt2 - 1)\sqrt{2/g} = \SI{0.19}{\second}$ and the second takes $(\sqrt2 - 1)\sqrt{200/g} = \SI{1.9}{\second}$, ten times longer. The hypothesis is contradicted.
+
+\calc The hypothesis is the differential equation $\dd s/\dd t = k s$: the rate of growth of $s$ is proportional to $s$ itself. Separate the variables and integrate:
+\[
+\frac{\dd s}{s} = k\,\dd t \qquad\Longrightarrow\qquad \ln s = k t + C \qquad\Longrightarrow\qquad s(t) = s_0\, e^{k t},
+\]
+where $s_0 = s(0)$. Check: $\dd s/\dd t = k s_0 e^{kt} = k s$. The distance fallen grows \emph{exponentially}. If $s_0 = 0$ the solution is $s(t) = 0$ for all time: the stone never moves, which is the calculus form of the first elementary argument. If $s_0 > 0$, the time to double is found from $e^{kt} = 2$, giving $t = (\ln 2)/k \approx 0.69/k$, a fixed number independent of $s_0$, which is the calculus form of the second; it even sits inside the elementary bounds $1/(2k) < 0.69/k < 1/k$. Under Galileo's law, by contrast, $s = \tfrac12 g t^2$ gives a doubling time $(\sqrt2 - 1)\sqrt{2s_0/g}$ that grows with $s_0$. The two predictions could hardly be more different, and the data side with Galileo.\qed
+\end{example}
+
+\subsection{The verdict}
+
+Equation~\eqref{eq:halfgt2} says that if $v_y = -gt$, then $\Delta y = -\tfrac12 g t^2$, which is $\Delta y \propto t^2$. That is exactly what Galileo measured. His inclined-plane data are just what we should expect if a falling or rolling object gains the same amount of velocity in every second, that is, if the acceleration is constant. This is the \textbf{constant-acceleration model} of free fall, and it is the model we adopt. The rival hypothesis predicts exponential growth, cannot start from rest, and is ruled out by the data. There are situations in nature where a rate really is proportional to the quantity itself, such as the growth of a bacterial colony or the decay of a radioactive sample, but free fall, rolling down a ramp, and the other motions we study this week are not among them.
+
+\begin{keyidea}[The constant-acceleration model of free fall]
+An object released from rest near Earth's surface, with air resistance negligible, has
+\[
+a_y = -g, \qquad v_y = -g t, \qquad \Delta y = -\tfrac12 g t^2, \qquad g \approx \SI{9.8}{\metre\per\second\squared}.
+\]
+\elemtag\ The downward speed grows by $g$ in every second, and the distance fallen is average speed times time, $\tfrac12(gt)\,t$. \calctag\ Each formula is the integral of the one before it: $v_y = \int a_y\,\dd t$, $\Delta y = \int v_y\,\dd t$. If you care only about magnitudes, write $v = gt$ for the speed and $d = \tfrac12 g t^2$ for the distance fallen.
+\end{keyidea}
+
+\subsection{Finding the value of \texorpdfstring{$g$}{g}}
+
+Worked Example~\ref{ex:oddfall} took it on trust that an object falls its first metre in about \SI{0.45}{\second}, and in part (c) already extracted an acceleration from it. With Equation~\eqref{eq:halfgt2} the same calculation is one line: rearranging $d = \tfrac12 g t^2$ gives $g = 2d/t^2$, so
+\[
+g = \frac{2 \times \SI{1.00}{\metre}}{(\SI{0.45}{\second})^2} = \SI{9.9}{\metre\per\second\squared},
+\]
+consistent with the accepted \SI{9.8}{\metre\per\second\squared} given that \SI{0.45}{\second} was quoted to only two figures. (The exact time to fall \SI{1.00}{\metre} at $g = \SI{9.80}{\metre\per\second\squared}$ is \SI{0.452}{\second}.) Table~\ref{tab:freefall} lists speeds and distances for the first five seconds of a fall from rest.
+
+\begin{table}[htb]
+\centering
+\caption{Free fall from rest, with $g = \SI{9.8}{\metre\per\second\squared}$ and air resistance ignored. The speed column grows by the same \SI{9.8}{\metre\per\second} every second ($v = gt = \int_0^t g\,\dd t'$); the distance column grows as $t^2$ ($d = \tfrac12 g t^2 = \int_0^t gt'\,\dd t'$). Compare the rightmost column with the odd-number rule.}
+\label{tab:freefall}
+\renewcommand{\arraystretch}{1.2}
+\small
+\begin{tabular}{cccc}
+\toprule
+time of fall $t$ (s) & speed $gt$ (m/s) & distance fallen $\tfrac12 g t^2$ (m) & fallen in that second (m) \\
+\midrule
+0 & 0    & 0     &  \\
+1 & 9.8  & 4.9   & 4.9 \\
+2 & 19.6 & 19.6  & 14.7 \\
+3 & 29.4 & 44.1  & 24.5 \\
+4 & 39.2 & 78.4  & 34.3 \\
+5 & 49.0 & 122.5 & 44.1 \\
+$t$ & $9.8\,t$ & $4.9\,t^2$ & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{example}{How deep is the well?}{well}
+You drop a stone into a well and hear the splash \SI{2.5}{\second} later. Ignoring the time for the sound to travel back up, how deep is the well? How fast is the stone moving when it hits the water?
+
+\elem The stone gains \SI{9.8}{\metre\per\second} of speed every second for \SI{2.5}{\second}, so its speed at impact is
+\[
+v = g t = \SI{9.8}{\metre\per\second\squared} \times \SI{2.5}{\second} = \SI{25}{\metre\per\second}.
+\]
+Its speed rose steadily from $0$ to \SI{24.5}{\metre\per\second}, so its average speed was \SI{12.25}{\metre\per\second}, and the depth is average speed times time: $\SI{12.25}{\metre\per\second} \times \SI{2.5}{\second} = \SI{31}{\metre}$.
+
+\calc $d = \int_0^{2.5} gt\,\dd t = \tfrac12 g (2.5)^2 = \tfrac12 \times 9.8 \times 6.25 = \SI{31}{\metre}$, and $v = \dd d/\dd t = gt = \SI{25}{\metre\per\second}$ at $t = \SI{2.5}{\second}$.
+
+Sanity check: \SI{25}{\metre\per\second} is \SI{90}{\kilo\metre\per\hour}, a highway speed, and \SI{31}{\metre} is about a ten-storey building. Both are plausible for a deep well. Ignoring the sound's return trip is a modelling choice; Exercise~\ref{ex:wellsound} asks you to test it. A more careful analysis lowers the depth by a few metres, so the choice was reasonable for a first estimate.\qed
+\end{example}
+
+\begin{checkbox}
+Imagine a falling rock fitted with a speedometer, released from rest. Using $g \approx \SI{10}{\metre\per\second\squared}$, what does the speedometer read \SI{5}{\second} after release? \SI{6}{\second} after? \SI{6.5}{\second} after? Does the rock fall \SI{50}{\metre} in the first \SI{5}{\second}? If not, why not?
+\end{checkbox}
+
+\subsection{How fast, how far, and how quickly ``how fast'' changes}
+
+Much of the confusion students have about falling objects comes from mixing up \emph{how fast} with \emph{how far}. ``How fast'' is velocity, $v = gt$. ``How far'' is distance, $d = \tfrac12 g t^2$. They are different quantities with different units, and Table~\ref{tab:freefall} shows how differently they behave: after one second the object is moving at \SI{9.8}{\metre\per\second} but has fallen only \SI{4.9}{\metre}, because it was moving slower than \SI{9.8}{\metre\per\second} for the whole second except the last instant.
+
+Acceleration adds a third layer, and it is the layer people find hardest. \elemtag\ Velocity is a rate: how much position changes per second. Acceleration is the rate at which \emph{that rate} changes: how much velocity changes per second. It is not velocity, and it is not even a change in velocity; it is a change in velocity \emph{per unit time}. \calctag\ Velocity is the first derivative of position; acceleration is the second. A falling object has an acceleration of \SI{9.8}{\metre\per\second\squared} at the instant of release, when its velocity is zero, and the same acceleration five seconds later, when its velocity is \SI{49}{\metre\per\second}. The velocity keeps changing; the acceleration never does. In symbols: $\dd v_y/\dd t = -g$ at every $t$, while $v_y = -gt$ is a different number at every $t$.
+
+\section{Acceleration in General}
+\label{sec:accelgeneral}
+
+Galileo's ramps and stones all started from rest and sped up. Definition~\ref{def:accel} is broader than that, and this section explores what else it covers.
+
+\subsection{Units}
+
+Acceleration is a change in velocity divided by a time, so its unit is a velocity unit divided by a time unit. In SI that is metres per second, per second:
+\[
+\frac{\si{\metre\per\second}}{\si{\second}} = \si{\metre\per\second\squared},
+\]
+read ``metres per second squared.'' The second appears twice, once inside the velocity and once for the interval over which the velocity changes. Nothing is really being squared; the notation is shorthand for ``per second, per second,'' and it helps to read it that way. In everyday contexts you will also meet mixed units such as kilometres per hour per second: a car whose speed rises by \SI{5}{\kilo\metre\per\hour} in each second has an acceleration of \SI{5}{\kilo\metre\per\hour\per\second}.
+
+\begin{example}{The acceleration of a car}{car}
+A car goes from rest to \SI{100}{\kilo\metre\per\hour} in \SI{8.0}{\second}. Find its average acceleration in \si{\metre\per\second\squared}, and compare it with $g$.
+
+\elem First convert the final speed: $\SI{100}{\kilo\metre\per\hour} \div 3.6 = \SI{27.8}{\metre\per\second}$. Then
+\[
+\bar a = \frac{\Delta v}{\Delta t} = \frac{\SI{27.8}{\metre\per\second} - 0}{\SI{8.0}{\second}} = \SI{3.5}{\metre\per\second\squared}.
+\]
+The car gains \SI{3.5}{\metre\per\second} of speed in each second, a bit more than a third of $g$. A falling stone out-accelerates almost any car.
+
+\calc We say \emph{average} acceleration because the instantaneous $\dd v/\dd t$ almost certainly varied during those eight seconds; the chord slope $\Delta v/\Delta t$ cannot tell us how. What Equation~\eqref{eq:ftc} does guarantee is that $\int_0^{8.0} a(t)\,\dd t = \SI{27.8}{\metre\per\second}$ whatever the shape of $a(t)$, so the average of $a(t)$ over the interval, $\frac{1}{8.0}\int_0^{8.0} a\,\dd t$, is exactly \SI{3.5}{\metre\per\second\squared}. Average acceleration is the mean value of the instantaneous acceleration, in the precise sense of the mean value of a function.\qed
+\end{example}
+
+\subsection{Speeding up, slowing down, turning}
+
+Acceleration applies to \emph{decreases} in velocity just as much as to increases. When a driver brakes, the car's velocity decreases by some amount each second, and that rate of decrease is an acceleration, directed opposite to the motion. In everyday speech this is often called \emph{deceleration}. In physics it is simply acceleration with a sign: if the car is moving in the positive direction and slowing down, $\Delta v_x/\Delta t < 0$ and $\dd v_x/\dd t < 0$. You feel the difference as a passenger. When the car speeds up you are pressed back into your seat; when it brakes you lurch forward.
+
+Because velocity is a vector, a change in \emph{direction} is also a change in velocity. A car rounding a curve at a steady \SI{60}{\kilo\metre\per\hour} is accelerating, even though its speedometer never moves, because its velocity vector is changing direction at every instant, and the rate of change of a changing vector is not zero. This is why physics insists on the distinction between speed and velocity. A car has three controls that change its velocity, and all three produce acceleration: the accelerator pedal, the brake, and the steering wheel.
+
+Here is a test you can perform on a bus. If the bus moves at constant velocity along a smooth road, you can stand in the aisle without holding on, and you can flip a coin and catch it exactly as if the bus were parked. It is only when the bus \emph{accelerates}, by speeding up, braking, or turning, that you have trouble keeping your feet. Your body is a fine acceleration detector and a poor velocity detector.
+
+\begin{checkbox}
+A racing car flashes past you at a steady \SI{300}{\kilo\metre\per\hour} along a straight. What is its acceleration? Which has the larger acceleration: an airliner that goes from \SI{1000}{\kilo\metre\per\hour} to \SI{1005}{\kilo\metre\per\hour} in \SI{10}{\second}, or a skateboard that goes from rest to \SI{5}{\kilo\metre\per\hour} in \SI{1}{\second}?
+\end{checkbox}
+
+\subsection{Thrown straight up}
+
+So far our objects have only fallen. Throw a ball straight up and it rises, slows, stops for an instant at the top, and falls back. What is its acceleration during all this?
+
+The answer is the surprising part: it is $g$ downward the whole time, on the way up, at the top, and on the way down. Nothing about gravity changes when the ball changes direction.
+
+\begin{twoviews}{motion of a ball thrown straight up}
+\elem On the way up the ball loses \SI{9.8}{\metre\per\second} of upward speed every second, which is exactly what ``acceleration of \SI{9.8}{\metre\per\second\squared} downward'' means for an object moving upward. So after a time $t$ its velocity is the launch velocity minus $gt$:
+\[
+v_y = v_0 - g t.
+\]
+At the top its velocity passes through zero; its acceleration does not. On the way down it gains \SI{9.8}{\metre\per\second} of downward speed every second, exactly as if it had been dropped from rest at that height. The velocity falls steadily from $v_0$ to $v_0 - gt$, so the average velocity is $v_0 - \tfrac12 gt$, and the height is average velocity times time:
+\[
+y = \left(v_0 - \tfrac12 g t\right) t = v_0 t - \tfrac12 g t^2.
+\]
+
+\calc Start from $a_y = \dd v_y/\dd t = -g$ and integrate once, with $v_y(0) = v_0$:
+\begin{equation}
+v_y(t) = v_0 + \int_0^t (-g)\,\dd t' = v_0 - g t.
+\label{eq:thrown}
+\end{equation}
+Integrate again, with $y(0) = 0$ at the launch point:
+\begin{equation}
+y(t) = \int_0^t (v_0 - g t')\,\dd t' = v_0 t - \tfrac12 g t^2.
+\label{eq:thrown2}
+\end{equation}
+Equation~\eqref{eq:vgt} is the special case $v_0 = 0$. The two views give identical formulas; the calculus view makes it clear that they follow from the single fact $\dd^2 y/\dd t^2 = -g$ and two starting values.
+\end{twoviews}
+
+Figure~\ref{fig:thrown} shows the velocity--time graph for a ball thrown up at \SI{15}{\metre\per\second}: a straight line of slope $-g$ that starts positive, crosses zero at the top of the flight, and continues negative on the way down. One consequence, visible in the graph's symmetry, is that the ball passes any given height at the same speed going up as coming down; only the direction differs.
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=11cm,height=6.5cm,
+  xlabel={time $t$ (s)},ylabel={velocity $v_y$ (m/s)},
+  xmin=0,xmax=3.2,ymin=-17,ymax=17,
+  grid=major,grid style={gray!25},
+  axis x line=middle,axis y line=left,
+  xlabel style={at={(axis description cs:1,0.5)},anchor=west},
+]
+\addplot[teal,thick,domain=0:3.06,samples=2] {15-9.8*x};
+\addplot[only marks,mark=*,mark size=2.2pt,red!70!black] coordinates {(1.53,0)};
+\node[red!70!black,font=\small,anchor=south west] at (axis cs:1.55,0.8) {top of flight, $v_y = 0$};
+\node[teal!60!black,font=\small,anchor=west] at (axis cs:0.05,12.5) {rising};
+\node[teal!60!black,font=\small,anchor=east] at (axis cs:3.0,-12.5) {falling};
+\draw[red!70!black,thick] (axis cs:0.4,11.08) -- (axis cs:1.4,11.08) -- (axis cs:1.4,1.28);
+\node[red!70!black,font=\small,anchor=west] at (axis cs:1.45,6.5) {slope $= \dd v_y/\dd t = -g$};
+\end{axis}
+\end{tikzpicture}
+\caption{Velocity--time graph for a ball thrown straight up at \SI{15}{\metre\per\second}. The line has the same slope, $-g$, throughout: the acceleration is constant even though the velocity changes sign. The ball is momentarily at rest at $t = \SI{1.53}{\second}$ and returns to the hand at $t = \SI{3.06}{\second}$. The area above the axis (rising) equals the area below it (falling), so the net displacement over the flight is zero.}
+\label{fig:thrown}
+\end{figure}
+
+\begin{example}{A ball thrown upward}{upward}
+A ball leaves your hand moving straight up at \SI{15}{\metre\per\second}. (a) How long does it take to reach the top of its flight? (b) How high does it rise? (c) When does it return to your hand, and how fast is it moving then? Use $g = \SI{9.8}{\metre\per\second\squared}$ and ignore air resistance.
+
+\elem (a) The ball loses \SI{9.8}{\metre\per\second} every second and has \SI{15}{\metre\per\second} to lose, so it reaches the top, where its speed is zero, after
+\[
+t_{\text{top}} = \frac{v_0}{g} = \frac{\SI{15}{\metre\per\second}}{\SI{9.8}{\metre\per\second\squared}} = \SI{1.53}{\second}.
+\]
+(b) During the rise the velocity decreases steadily from \SI{15}{\metre\per\second} to zero, so the average velocity is \SI{7.5}{\metre\per\second} and the height gained is $\SI{7.5}{\metre\per\second} \times \SI{1.53}{\second} = \SI{11.5}{\metre}$. (c) The fall from the top back to hand height is a drop from rest through \SI{11.5}{\metre}, the mirror image of the rise, so it takes another \SI{1.53}{\second}: the ball returns at $t = \SI{3.06}{\second}$, moving at $gt = \SI{15}{\metre\per\second}$ downward, the launch speed reversed.
+
+\calc (a) The top of the flight is where the height $y(t)$ is a maximum, and a maximum of a differentiable function occurs where its derivative vanishes. Since $\dd y/\dd t = v_y$, the condition is $v_y = 0$: from Equation~\eqref{eq:thrown}, $t_{\text{top}} = v_0/g = \SI{1.53}{\second}$. It is a maximum and not a minimum because the second derivative, $\dd^2 y/\dd t^2 = -g$, is negative.
+
+(b) Substitute into Equation~\eqref{eq:thrown2}:
+\[
+y_{\text{top}} = v_0 t_{\text{top}} - \tfrac12 g t_{\text{top}}^2 = \frac{v_0^2}{g} - \frac{v_0^2}{2g} = \frac{v_0^2}{2g} = \frac{(15)^2}{2(9.8)}\ \si{\metre} = \SI{11.5}{\metre}.
+\]
+The formula $y_{\text{top}} = v_0^2/2g$ is worth remembering: doubling the launch speed quadruples the height.
+
+(c) The ball is back at hand height when $y = 0$: $v_0 t - \tfrac12 g t^2 = t\,(v_0 - \tfrac12 g t) = 0$. One root is $t = 0$, the launch; the other is $t = 2v_0/g = \SI{3.06}{\second}$, exactly twice $t_{\text{top}}$, which is the symmetry the elementary route assumed. Its velocity then is $v_y = v_0 - g(2v_0/g) = -v_0 = \SI{-15}{\metre\per\second}$.\qed
+\end{example}
+
+\begin{twoviews}{velocity as a function of height}
+Sometimes you know how far an object has moved but not how long it took. Both routes below eliminate the time from the thrown-ball formulas.
+
+\elem From $v_y = v_0 - gt$, the time is $t = (v_0 - v_y)/g$. Substitute into $\Delta y = v_0 t - \tfrac12 g t^2$ and simplify (Exercise~\ref{ex:elimt}):
+\[
+\Delta y = \frac{(v_0 - v_y)}{g}\cdot\frac{v_0 + v_y}{2} = \frac{v_0^2 - v_y^2}{2g},
+\qquad\text{that is,}\qquad v_y^2 = v_0^2 - 2g\,\Delta y.
+\]
+The middle expression has a nice reading: $\Delta y$ is the time of flight times the average of the initial and final velocities.
+
+\calc The chain rule converts the acceleration into a statement about velocity and position:
+\[
+a_y = \deriv{v_y}{t} = \deriv{v_y}{y}\deriv{y}{t} = v_y\deriv{v_y}{y}.
+\]
+With $a_y = -g$, this reads $v_y\,\dd v_y = -g\,\dd y$, and integrating from launch ($v_0$, $y = 0$) to any later point gives $\tfrac12 v_y^2 - \tfrac12 v_0^2 = -g\,\Delta y$, the same relation. Time has disappeared. Setting $v_y = 0$ recovers $y_{\text{top}} = v_0^2/2g$ at once, and setting $\Delta y = 0$ shows that the ball returns at speed $|v_0|$. You will meet this relation again in the chapter on energy, where $\tfrac12 v^2$ and $g\,\Delta y$ acquire names of their own.
+\end{twoviews}
+
+\begin{modelnote}[Hang time]
+Great jumpers seem to hang in the air. Ask friends to guess how long a basketball player stays airborne on a vertical leap and they may say two or three seconds. The constant-acceleration model says otherwise. No player is known to have raised their body's centre more than about \SI{1.25}{\metre} in a standing jump. Treating the descent as a fall from rest, $t = \sqrt{2d/g} = \sqrt{2(1.25)/9.8} = \SI{0.50}{\second}$ down, and by symmetry the same up: a record-setting hang time of one second. A typical student's \SI{0.5}{\metre} leap gives a hang time of about \SI{0.64}{\second}. Nothing the jumper does with arms or legs while airborne can change it, because once the feet leave the floor the only thing acting is gravity, and $\dd^2 y/\dd t^2 = -g$ has no term for arm-waving.
+\end{modelnote}
+
+\begin{keyidea}[Acceleration is not velocity]
+An object can have zero velocity and nonzero acceleration (a ball at the top of its flight: $v_y = 0$ but $\dd v_y/\dd t = -g$), or large velocity and zero acceleration (a car cruising at a steady speed on a straight road: $v_x$ large but $\dd v_x/\dd t = 0$). Velocity says how fast and in what direction the object is moving \emph{now}. Acceleration says how that is \emph{changing}. Keep the two ideas separate, remember that one is the rate of change of the other, and most of this chapter's difficulties disappear.
+\end{keyidea}
+
+\section{Where \texorpdfstring{$g$}{g} Comes From, and Where It Differs}
+
+The free-fall acceleration is a property of the place, not of the falling object. Galileo's discovery, confirmed countless times since, is that when air resistance is small enough to ignore, \emph{all} objects at a given place fall with the same acceleration, whatever their mass, size, or material. A coin and a feather dropped in a vacuum tube land together. (Why this should be so is a question for the next chapters, where we meet force and mass.)
+
+The value of $g$ depends on where you are. On Earth it varies by about half a percent between the equator and the poles, and decreases slowly with altitude. On other worlds the differences are dramatic, as Table~\ref{tab:gvalues} shows.
+
+\begin{table}[htb]
+\centering
+\caption{Approximate free-fall acceleration at the surface of several bodies in the solar system, and the resulting time to fall \SI{1}{\metre} from rest, $t = \sqrt{2d/g}$.}
+\label{tab:gvalues}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{lcc}
+\toprule
+body & $g$ (\si{\metre\per\second\squared}) & time to fall \SI{1}{\metre} (s) \\
+\midrule
+Moon    & 1.6  & 1.1 \\
+Mars    & 3.7  & 0.74 \\
+Earth   & 9.8  & 0.45 \\
+Jupiter (cloud tops) & 25 & 0.28 \\
+Sun (visible surface) & 274 & 0.085 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Everything in this chapter transfers to those places unchanged except the number. On the Moon the odd-number rule still holds, $\Delta y$ is still proportional to $t^2$, the differential equation is still $\dd^2 y/\dd t^2 = -g$, and a dropped hammer and feather still land together, as the Apollo~15 astronauts demonstrated on camera in 1971. Only $g$ is different, and so a fall that takes \SI{0.45}{\second} on Earth takes \SI{1.1}{\second} there.
+
+It took people nearly two thousand years, from Aristotle to Galileo, to separate ``how fast'' from ``how far'' from ``how quickly how fast changes,'' and another half-century after Galileo for Newton and Leibniz to invent the calculus that makes the three a single idea viewed through one derivative, then two. Galileo did it with a ramp, some bells, and a willingness to let a measurement overrule an argument. If the distinction takes you a few hours, you are in good company.
+
+\section{Summary}
+
+\subsection*{Key ideas}
+\begin{itemize}
+  \item \textbf{Free fall} is motion under gravity alone. A falling object speeds up; the question Galileo asked was \emph{according to what rule}.
+  \item \textbf{Velocity} is the rate of change of position and \textbf{acceleration} is the rate of change of velocity. \elemtag\ $v \approx \Delta x/\Delta t$ and $a \approx \Delta v/\Delta t$ over short intervals; slopes of the position--time and velocity--time graphs. \calctag\ $v_x = \dd x/\dd t$ and $a_x = \dd v_x/\dd t = \dd^2 x/\dd t^2$.
+  \item \textbf{Displacement} is recovered from velocity. \elemtag\ Average velocity times time; the area under the velocity--time graph, found by geometry when the graph is made of straight lines. \calctag\ $\Delta x = \int v_x\,\dd t$, and likewise $\Delta v_x = \int a_x\,\dd t$.
+  \item Two hypotheses competed. \elemtag\ Same speed gained per metre fallen, versus same speed gained per second. \calctag\ $\dd s/\dd t = ks$ versus $\dd s/\dd t = gt$. They make different predictions, which is what makes them testable.
+  \item A \textbf{proportionality} $A \propto B$ means $A = kB$ for a fixed constant $k$. Ratios of one quantity fix ratios of the other, and $k$ cancels.
+  \item Galileo slowed the motion down with an \textbf{inclined plane} and, in one reconstruction, measured equal time intervals $\tau$ with a row of \textbf{bells} adjusted to ring in an even rhythm. The bells are a dot diagram. Adding arrows makes a \textbf{motion diagram}; each arrow is average velocity times $\tau$, or $\int v_x\,\dd t$ over the interval.
+  \item \textbf{Odd-number rule:} from rest, the distances covered in successive equal time intervals are in the ratio $1:3:5:7:\cdots$. \elemtag\ The gaps (\emph{first differences}) grow by the same amount $2d$ each time; constant \emph{second differences} mean the velocity gains equal amounts in equal times, which is \textbf{constant acceleration}, with $a = 2d/\tau^2$. \calctag\ Second differences over $\tau^2$ approximate $\dd^2 x/\dd t^2$, and for $x = \tfrac12 a t^2$ they equal it exactly.
+  \item The total distance from rest is $\Delta x = \tfrac12 a t^2$, so $\Delta x \propto t^2$. \elemtag\ Adding the odd numbers gives the squares (a grid of dots, or a telescoping sum); or, the area of the triangle under $v = at$. \calctag\ Integrate $a$ twice. Multiply the time by $n$ and the distance is multiplied by $n^2$; multiply the distance by $n$ and the time by $\sqrt{n}$.
+  \item From $v_y = -gt$ follows $\Delta y = -\tfrac12 g t^2$, which matches Galileo's data. \elemtag\ Average of the endpoint velocities times time. \calctag\ $\int_0^t (-gt')\,\dd t'$. The rival hypothesis fails: \elemtag\ it cannot start from rest, and it would make every doubling of distance take the same time; \calctag\ its solution is $s = s_0 e^{kt}$. \emph{Constant acceleration} is the hypothesis that survives.
+  \item \textbf{Acceleration} has SI unit \si{\metre\per\second\squared}. It covers speeding up, slowing down, and changing direction. It is a rate of a rate, and it is not the same as velocity.
+  \item The \textbf{free-fall acceleration} near Earth's surface is $g \approx \SI{9.8}{\metre\per\second\squared}$, the same for all objects at a given place when air resistance is negligible, but different on different worlds.
+  \item An object thrown straight up has $a_y = -g$ throughout, so $v_y = v_0 - gt$ and $y = v_0 t - \tfrac12 g t^2$. The top of the flight is at $t = v_0/g$, height $v_0^2/2g$: \elemtag\ where the speed lost equals the launch speed; \calctag\ where $\dd y/\dd t = 0$. It passes each height at the same speed going up and coming down, since $v_y^2 = v_0^2 - 2g\,\Delta y$.
+\end{itemize}
+
+\subsection*{Key equations}
+\begin{center}
+\renewcommand{\arraystretch}{2.4}
+\small
+\begin{tabular}{lll}
+\toprule
+ & \elemtag & \calctag \\
+\midrule
+velocity & $v_x \approx \dfrac{\Delta x}{\Delta t}$ (short interval) & $v_x = \dfrac{\dd x}{\dd t}$ \\
+acceleration & $a_x \approx \dfrac{\Delta v_x}{\Delta t}$, \quad $\bar a = \dfrac{\Delta v}{\Delta t}$ & $a_x = \dfrac{\dd v_x}{\dd t} = \dfrac{\dd^2 x}{\dd t^2}$ \\
+displacement & $\Delta x = \bar v_x\,\Delta t$ = area under $v$--$t$ graph & $\Delta x = \displaystyle\int_{t_1}^{t_2} v_x\,\dd t$ \\
+constant $a$ from rest & $v = at$, \quad $\Delta x = \tfrac12(0 + at)\,t = \tfrac12 a t^2$ & $v = \displaystyle\int_0^t a\,\dd t'$, \quad $\Delta x = \displaystyle\int_0^t at'\,\dd t'$ \\
+from bell data & $a = \dfrac{\text{second difference}}{\tau^2} = \dfrac{2d}{\tau^2}$ & second difference $= a\tau^2$ exactly \\
+scaling a fall & $\dfrac{\Delta x_1}{\Delta x_2} = \dfrac{t_1^2}{t_2^2}$, \quad $t_2 = t_1\sqrt{\Delta x_2/\Delta x_1}$ & $t = \sqrt{2\Delta x/a}$ \\
+free fall from rest & $v = gt$, \quad $d = \tfrac12 g t^2$, \quad $t = \sqrt{2d/g}$ & $a_y = -g$, \; $v_y = -gt$, \; $\Delta y = -\tfrac12 g t^2$ \\
+average velocity & $v_{\text{avg}} = \tfrac12(v_{\text{initial}} + v_{\text{final}})$ (constant $a$) & $\bar v = \dfrac{1}{\Delta t}\displaystyle\int v\,\dd t$ (any motion) \\
+thrown vertically & $v_y = v_0 - gt$, \quad $y = (v_0 - \tfrac12 gt)\,t$ & $y = \displaystyle\int_0^t (v_0 - gt')\,\dd t' = v_0 t - \tfrac12 g t^2$ \\
+top of flight & $t_{\text{top}} = v_0/g$, \quad $y_{\text{top}} = v_0^2/2g$ & where $\dd y/\dd t = 0$ \\
+velocity vs height & $v_y^2 = v_0^2 - 2g\,\Delta y$ (eliminate $t$) & $v_y\,\dd v_y = -g\,\dd y$ (chain rule) \\
+rejected hypothesis & doubling time between $1/2k$ and $1/k$ & $\dfrac{\dd s}{\dd t} = ks \Rightarrow s = s_0 e^{kt}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Key terms}
+free fall \textperiodcentered\ hypothesis \textperiodcentered\ proportionality \textperiodcentered\ instantaneous velocity \textperiodcentered\ derivative \textperiodcentered\ integral \textperiodcentered\ differential equation \textperiodcentered\ inclined plane \textperiodcentered\ motion diagram \textperiodcentered\ odd-number rule \textperiodcentered\ first difference \textperiodcentered\ second difference \textperiodcentered\ acceleration \textperiodcentered\ constant (uniform) acceleration \textperiodcentered\ square numbers \textperiodcentered\ telescoping sum \textperiodcentered\ velocity--time graph \textperiodcentered\ area under the graph \textperiodcentered\ mean-speed theorem \textperiodcentered\ exponential growth \textperiodcentered\ free-fall acceleration $g$ \textperiodcentered\ constant-acceleration model \textperiodcentered\ deceleration \textperiodcentered\ hang time
+
+\section{Exercises}
+
+Exercises marked $\star$ require more thought or more than one step. Unless told otherwise, take $g = \SI{9.8}{\metre\per\second\squared}$ and ignore air resistance. Wherever an exercise can be solved both ways, solve it by an \elemtag\ route and a \calctag\ route and check that they agree; the answers at the end often show both.
+
+\subsection*{Two hypotheses}
+\begin{enumerate}[label=\textbf{\thechapter.\arabic*},series=exercises,leftmargin=*]
+  \item Explain in your own words why it was worth checking that $v_y \propto \Delta y$ and $v_y \propto t$ make different predictions before trying to test them.
+  \item Suppose $v_y \propto \Delta y$. A dropped stone is moving at \SI{5}{\metre\per\second} after falling \SI{2}{\metre}. How fast is it moving after falling \SI{12}{\metre}?
+  \item Suppose instead that $v_y \propto t$. The same stone is moving at \SI{5}{\metre\per\second} after falling \SI{2}{\metre}. After falling \SI{12}{\metre}, is it moving faster than, slower than, or at the same speed as your answer to the previous exercise? Explain without calculating.
+  \item Write each of the following hypotheses in words (``the stone gains the same speed for every \ldots'') and as a differential equation for the distance fallen $s(t)$, and state what each says about the acceleration: (a) $v \propto s$; (b) $v \propto t$; (c) $v \propto t^2$; (d) $v \propto \sqrt{s}$.
+  \item A scientist proposes that the speed of a falling object is proportional to the \emph{square} of the time, $v \propto t^2$. Describe an experiment, using measurements of speed at two different times, that would distinguish this from $v \propto t$. Then find what this hypothesis predicts for $s(t)$, and say how a distance measurement could test it.
+\end{enumerate}
+
+\subsection*{Ratios, derivatives, and integrals}
+\begin{enumerate}[label=\textbf{\thechapter.\arabic*},resume=exercises,leftmargin=*]
+  \item A particle's position is $x(t) = 3t^2 - 2t + 5$ (metres, with $t$ in seconds). Find $v_x(t)$ and $a_x(t)$. At what time is the particle momentarily at rest? Check your velocity at $t = \SI{1}{\second}$ by computing $\Delta x/\Delta t$ over the interval from \SI{0.9}{\second} to \SI{1.1}{\second}.
+  \item A particle's position is $x(t) = t^3 - 6t^2 + 9t$ (SI units). (a) Find its velocity and acceleration as functions of time. (b) When is the velocity zero? (c) When is the acceleration zero? (d) Is the acceleration constant?
+  \item Verify by differentiation that $y(t) = -\tfrac12 g t^2$ satisfies $\dd y/\dd t = -gt$ and $\dd^2 y/\dd t^2 = -g$, and that $y(t) = v_0 t - \tfrac12 g t^2$ satisfies $\dd^2 y/\dd t^2 = -g$ with $y(0) = 0$ and $\dd y/\dd t\,(0) = v_0$.
+  \item A car's velocity is $v_x(t) = 2.0\,t$ (\si{\metre\per\second}, $t$ in seconds) for $0 \le t \le \SI{6}{\second}$. Find the displacement over those six seconds \elemtag\ from the area of the triangle under the velocity--time graph and \calctag\ by integration.
+  \item A train's velocity is $v_x(t) = 20 - 0.5\,t$ (\si{\metre\per\second}) as it brakes. (a) What is its acceleration? (b) When does it stop? (c) Find how far it travels before stopping, both as the area of a triangle and as an integral.
+  \item $\star$ An object's acceleration is $a_x(t) = 6t$ (\si{\metre\per\second\squared}, $t$ in seconds), and it starts from rest at $x = 0$. Integrate twice to find $v_x(t)$ and $x(t)$. Does this object obey the odd-number rule? Test it with $\tau = \SI{1}{\second}$ by computing first and second differences.
+  \item $\star$ Show that for \emph{any} motion with constant acceleration $a$ (not necessarily from rest) the average velocity over an interval equals the average of the initial and final velocities: \elemtag\ by the area of a trapezium under the velocity--time graph; \calctag\ by evaluating $\frac{1}{\Delta t}\int_{t_1}^{t_2} (v_1 + a(t - t_1))\,\dd t$. Then give an example of a non-constant acceleration for which this rule fails.
+\end{enumerate}
+
+\subsection*{Motion diagrams}
+\begin{enumerate}[label=\textbf{\thechapter.\arabic*},resume=exercises,leftmargin=*]
+  \item Draw a dot diagram for a ball that begins at the bottom of an inclined plane moving quickly and slows down as it rolls up. The ball should move to the right.
+  \item Add arrows to your diagram from the previous exercise to turn it into a motion diagram.
+  \item Draw a motion diagram for a ball that rolls down an inclined plane, continues along a short flat section of track, then rolls up a second inclined plane, slowing down and stopping at the top.
+  \item Two motion diagrams are made with the same time interval. In diagram~A every arrow is the same length. In diagram~B each arrow is longer than the one before by a fixed amount. Describe the acceleration of each object.
+  \item In a motion diagram of a ball rolling down a ramp with $\tau = \SI{0.5}{\second}$, the arrows have lengths \SI{2}{\centi\metre}, \SI{6}{\centi\metre}, \SI{10}{\centi\metre}, \SI{14}{\centi\metre}. Is the acceleration constant? Find its value.
+  \item $\star$ Galileo's bells were adjusted until they rang in an even rhythm. Suppose instead a student places the bells at \emph{equal} distances of \SI{20}{\centi\metre} along a ramp and records the time of each ring. Using $x = \tfrac12 a t^2$, find the ring times $t_n$ in terms of $a$, sketch ring number against time, and explain the shape of the graph.
+\end{enumerate}
+
+\subsection*{The odd-number rule}
+\begin{enumerate}[label=\textbf{\thechapter.\arabic*},resume=exercises,leftmargin=*]
+  \item A ball rolling from rest reaches the first bell \SI{8.0}{\centi\metre} from the release point. Where should the second, third, and fourth bells be placed, measured from the release point, for the rings to come evenly?
+  \item An object falls \SI{1}{\metre} in its first \SI{0.45}{\second}. How far does it fall during the fourth interval of \SI{0.45}{\second}, from $t = \SI{1.35}{\second}$ to $t = \SI{1.80}{\second}$? How far has it fallen in total by $t = \SI{1.80}{\second}$? Answer by the odd-number rule, then confirm by evaluating $\tfrac12 g t^2$.
+  \item An object starting from rest with constant acceleration covers \SI{3}{\centi\metre} in the first \SI{0.1}{\second}. How far does it travel in the second \SI{0.1}{\second}? In the first \SI{0.3}{\second} altogether? What is its acceleration?
+  \item A student records a rolling ball's position every \SI{0.2}{\second}: \num{0}, \num{2}, \num{8}, \num{18}, \num{32}~cm. (a) Compute the first and second differences. (b) Is the acceleration constant? (c) Find the acceleration in \si{\metre\per\second\squared} from the second difference. (d) Confirm by fitting $x = \tfrac12 a t^2$ to the last data point.
+  \item Explain why the ``fallen in that second'' column of Table~\ref{tab:freefall} is another statement of the odd-number rule, and why each entry is also $\int_{n-1}^{n} gt\,\dd t$.
+  \item $\star$ Show, by writing out the first few terms, that the odd-number rule gives the same total distance at $t = \SI{4}{\second}$ whether you use \SI{1}{\second} intervals or \SI{2}{\second} intervals. Then show in general that $n^2 d = \tfrac12 a t^2$ no matter what $\tau$ is chosen, so the total depends only on $t$. Why does this matter?\label{ex:leonardo}
+\end{enumerate}
+
+\subsection*{Distance proportional to time squared}
+\begin{enumerate}[label=\textbf{\thechapter.\arabic*},resume=exercises,leftmargin=*]
+  \item How long does an object in free fall from rest take to fall \SI{20}{\metre}? \SI{80}{\metre}? \SI{320}{\metre}? \SI{1280}{\metre}? (Use the fact that it falls \SI{1}{\metre} in \SI{0.45}{\second}.)
+  \item Explain the pattern in your answers to the previous exercise and relate it to $\Delta y \propto t^2$.
+  \item Show by algebra that $(n+1)^2 - n^2 = 2n + 1$, and use it to write out the telescoping sum $\sum_{k=1}^{n}(2k-1) = n^2$ for $n = 4$ term by term, showing which terms cancel.\label{ex:algebra}
+  \item A model cliff for a film is $1/9$ the height of the real cliff. By what factor should the clip be slowed down so that a falling object looks realistic?
+  \item An object falls \SI{1}{\metre} in \SI{0.45}{\second} on Earth. On the Moon, where $g$ is about one-sixth as large, how long does the same \SI{1}{\metre} fall take? (Hint: $d = \tfrac12 g t^2$ with $d$ fixed.)
+  \item $\star$ Before Galileo, Leonardo da Vinci proposed that a falling object covers $d$, $2d$, $3d$, $4d, \ldots$ in successive equal intervals. Show that this rule is self-contradictory by finding a case where it makes two different predictions for the distance fallen in a given time. (Compare \SI{1}{\second} intervals with \SI{2}{\second} intervals over a total of \SI{4}{\second}.)
+\end{enumerate}
+
+\subsection*{Free-fall acceleration}
+\begin{enumerate}[label=\textbf{\thechapter.\arabic*},resume=exercises,leftmargin=*]
+  \item A cat steps off a ledge and lands \SI{0.50}{\second} later. (a) How fast is it moving when it lands? (b) What was its average speed during the fall? (c) How high is the ledge? Find (c) both as average speed times time and as $\int_0^{0.5} gt\,\dd t$.
+  \item A stone is dropped from a bridge and hits the water \SI{3.0}{\second} later. How high is the bridge, and how fast is the stone moving at impact? Give the speed in \si{\metre\per\second} and \si{\kilo\metre\per\hour}.
+  \item How long does it take an object dropped from rest to reach a speed of \SI{30}{\metre\per\second}? How far has it fallen by then?
+  \item Using Equation~\eqref{eq:halfgt2}, find the time for an object to fall \SI{2.0}{\metre} from rest, and compare with Worked Example~\ref{ex:sqrt}.
+  \item Sketch, on the same axes, velocity--time graphs for a stone dropped on Earth and a stone dropped on the Moon. How do the two lines differ, and what does that difference represent?
+  \item Explain why an object dropped from rest falls only \SI{4.9}{\metre} in its first second even though its speed at the end of that second is \SI{9.8}{\metre\per\second}. Give an \elemtag\ explanation using average speed and a \calctag\ explanation using $\int_0^1 gt\,\dd t$.
+  \item $\star$ In Worked Example~\ref{ex:well} we ignored the time for the sound of the splash to travel back up the well. Sound travels at about \SI{343}{\metre\per\second}. (a) Using the depth found in that example, estimate how long the sound takes to climb the well. (b) Subtract this from the \SI{2.5}{\second} and recompute the depth. (c) Was ignoring the sound a reasonable modelling choice? What if the total time had been \SI{10}{\second}?\label{ex:wellsound}
+  \item $\star$ A student measures the time for a ball to fall \SI{1.50}{\metre} from rest and gets \SI{0.58}{\second}. (a) What value of $g$ does this imply? (b) The student's reaction time introduces an uncertainty of about \SI{\pm 0.05}{\second}. What range of values of $g$ is consistent with the measurement? (c) Suggest one way to reduce the uncertainty.
+  \item $\star$ Solve $\dd s/\dd t = ks$ with $s(0) = s_0 > 0$ and show that the time for $s$ to double is $\ln 2/k$ regardless of $s_0$. Confirm that this lies between the elementary bounds $1/(2k)$ and $1/k$ found in Worked Example~\ref{ex:exponential}. Then, using $s = \tfrac12 g t^2$, find the time for the distance fallen to double from $s_0$ to $2s_0$ and show that it \emph{does} depend on $s_0$. Which behaviour does Table~\ref{tab:freefall} show?
+\end{enumerate}
+
+\subsection*{Acceleration in general}
+\begin{enumerate}[label=\textbf{\thechapter.\arabic*},resume=exercises,leftmargin=*]
+  \item A car can go from rest to \SI{90}{\kilo\metre\per\hour} in \SI{10}{\second}. What is its average acceleration in \si{\kilo\metre\per\hour\per\second} and in \si{\metre\per\second\squared}?
+  \item In \SI{2.5}{\second} a car increases its speed from \SI{60}{\kilo\metre\per\hour} to \SI{65}{\kilo\metre\per\hour} while a bicycle goes from rest to \SI{5}{\kilo\metre\per\hour}. Which has the greater acceleration? Find each.
+  \item A car travelling at \SI{30}{\metre\per\second} brakes to a stop in \SI{5.0}{\second}. Find its acceleration, including the sign, taking the direction of motion as positive. Then find the stopping distance both from the average velocity and by integrating $v_x(t)$.
+  \item Express $g = \SI{9.8}{\metre\per\second\squared}$ in kilometres per hour per second. Interpret the result in a sentence.
+  \item A train starts from rest and accelerates uniformly at \SI{0.50}{\metre\per\second\squared} for \SI{60}{\second}. (a) What is its speed at the end? (b) Find how far it has travelled using the average-velocity rule. (c) Check with $\Delta x = \int v\,\dd t$.
+  \item A sprinter accelerates from rest to \SI{10}{\metre\per\second} in the first \SI{2.5}{\second} of a race. Treating the acceleration as constant, find its value and the distance covered in those \SI{2.5}{\second}.
+  \item Can an object have zero velocity and nonzero acceleration at the same instant? Nonzero velocity and zero acceleration? Give an example of each or explain why it is impossible.
+  \item You are in a car moving at a steady \SI{50}{\kilo\metre\per\hour} around a roundabout. Is the car accelerating? Explain using the definition of acceleration.
+  \item A ball is thrown straight up at \SI{20}{\metre\per\second}. Using $g \approx \SI{10}{\metre\per\second\squared}$, (a) find $t_{\text{top}}$ both by counting the speed lost per second and by setting $\dd y/\dd t = 0$; (b) find the maximum height; (c) find its velocity and speed \SI{3}{\second} after launch; (d) find when it returns to the launch height, by symmetry and by solving $y(t) = 0$.
+  \item $\star$ A ball thrown straight up passes a window \SI{5.0}{\metre} above the launch point on the way up and again on the way down. Use $v_y^2 = v_0^2 - 2g\,\Delta y$ to explain why its speed is the same at both passes, and use the symmetry of Figure~\ref{fig:thrown} to explain why the time between the passes equals twice the time from the window to the top.
+  \item A student measures a standing vertical jump of \SI{0.60}{\metre}. Find the student's hang time. Why can the student not lengthen it by pumping their arms while airborne?
+  \item $\star$ Complete the elementary derivation of $v_y^2 = v_0^2 - 2g\,\Delta y$: eliminate $t$ between $v_y = v_0 - gt$ and $\Delta y = v_0 t - \tfrac12 g t^2$ and simplify.\label{ex:elimt}
+\end{enumerate}
+
+\subsection*{Hands-on}
+\begin{enumerate}[label=\textbf{\thechapter.\arabic*},resume=exercises,leftmargin=*]
+  \item Build Galileo's experiment. Prop a board or length of track at a shallow angle and mark the release point. Using a phone's slow-motion video or a metronome app, find where the ball is at equal time intervals and mark those positions. Measure the gaps between marks and compute the first and second differences. How close do you get to $1:3:5:7$? Compute $a = 2d/\tau^2$. What are the main sources of error?
+  \item Measure $g$ with a drop. Hold a ball at a measured height of \SI{1.5}{\metre} or more and film its release and landing at your phone's highest frame rate. Count frames to find the fall time, then compute $g = 2d/t^2$. Repeat five times and report the mean and the spread as $g \pm \delta g$. Compare with \SI{9.8}{\metre\per\second\squared}.
+  \item Measure your own hang time. Film a standing vertical jump and count frames from when your feet leave the floor until they land. Compare with the prediction $2\sqrt{2d/g}$ from your measured jump height $d$ (the rise of your hips, not your reach).
+  \item Without using equations, write a short message to a friend explaining the difference between velocity and acceleration, and why a ball at the very top of its flight has one of them but not the other.
+\end{enumerate}
+
+\section*{Answers to Check Your Understanding}
+\begin{description}[leftmargin=2em,itemsep=2pt]
+  \item[2.1] \calctag\ $v_x = 12t^2 = \SI{48}{\metre\per\second}$ and $a_x = 24t = \SI{48}{\metre\per\second\squared}$ at $t = \SI{2.0}{\second}$. \elemtag\ $x(2.1) - x(1.9) = 4(9.261 - 6.859) = \SI{9.608}{\metre}$ over \SI{0.2}{\second}: \SI{48.04}{\metre\per\second}, agreeing to three figures. The acceleration is not constant: it grows in proportion to $t$.
+  \item[2.2] No. At release $s = 0$ so the velocity is zero. One moment later the stone has not moved (its velocity was zero), so $s$ is still zero, so the velocity is still zero. By this hypothesis the stone hangs in the air forever; in calculus terms, $s(t) = 0$ is the solution of $\dd s/\dd t = ks$ with $s(0) = 0$. Under $v \propto t$, the velocity is also zero at $t = 0$, but a moment later $t$ has increased, so the velocity is no longer zero and the stone begins to move. Time advances on its own; displacement does not.
+  \item[2.3] Ball rolling up: dots that start far apart and get closer together toward the right, with arrows pointing right and shrinking; acceleration negative throughout. Down, flat, up: arrows pointing along the track that grow on the first ramp (acceleration positive), stay the same length on the flat section (zero), and shrink on the second ramp (negative), ending at a final dot with no arrow.
+  \item[2.4] Between \SI{0.45}{\second} and \SI{0.90}{\second}, and closer to \SI{0.45}{\second}, since quadrupling the distance only doubled the time; doubling the distance should increase the time by less than a factor of \num{1.5}. The exact value is \SI{0.64}{\second}.
+  \item[2.5] Nine; three; $\sqrt{2} \approx 1.41$.
+  \item[2.6] \SI{50}{\metre\per\second}, \SI{60}{\metre\per\second}, and \SI{65}{\metre\per\second}, from $v = gt$. No: it falls \SI{125}{\metre}. \elemtag\ Its speed was below \SI{50}{\metre\per\second} for the whole five seconds except the last instant, so the average speed was only \SI{25}{\metre\per\second}, and $25 \times 5 = 125$. \calctag\ $\int_0^5 10t\,\dd t = \tfrac12 (10)(25) = \SI{125}{\metre}$.
+  \item[2.7] Zero, because its velocity is not changing. The skateboard: both gain \SI{5}{\kilo\metre\per\hour}, but the skateboard does so in one-tenth the time, so its acceleration is ten times larger (\SI{5}{\kilo\metre\per\hour\per\second} versus \SI{0.5}{\kilo\metre\per\hour\per\second}). The airliner is moving far faster, but acceleration is about change, not speed.
+\end{description}
+
+\section*{Answers to Selected Exercises}
+\begin{description}[leftmargin=2.6em,itemsep=3pt,style=sameline]
+  \item[2.1] If the two hypotheses made the same predictions for every experiment, every result would confirm both or contradict both, and no experiment could tell us which was right. Only hypotheses that disagree somewhere can be tested against each other.
+  \item[2.2] \SI{30}{\metre\per\second}: the distance is multiplied by six, so the speed is too.
+  \item[2.3] Slower. The stone is always speeding up, so covering six times the distance takes \emph{less} than six times as long; under $v_y \propto t$ its speed is therefore multiplied by less than six.
+  \item[2.4] (a) Same speed gained per metre fallen; $\dd s/\dd t = ks$; acceleration $= kv$, proportional to speed. (b) Same speed gained per second; $\dd s/\dd t = gt$; acceleration $= g$, constant. (c) $\dd s/\dd t = ct^2$; acceleration $= 2ct$, growing linearly. (d) $\dd s/\dd t = c\sqrt{s}$; acceleration $= \frac{c}{2\sqrt{s}}\cdot c\sqrt{s} = c^2/2$, constant. (Case (d) is the $v$--$s$ form of constant acceleration, since $v^2 = 2as$.)
+  \item[2.5] Measure the speed at time $t_1$ and at $2t_1$. If the speed doubles, $v \propto t$; if it quadruples, $v \propto t^2$. Integrating $v = ct^2$ gives $s = \tfrac13 c t^3$, so doubling the time would multiply the distance by \num{8} rather than \num{4}.
+  \item[2.6] $v_x = 6t - 2$, $a_x = 6$ (\si{\metre\per\second\squared}). At rest when $6t - 2 = 0$: $t = \tfrac13\,\si{\second}$. Check: $[x(1.1) - x(0.9)]/0.2 = (6.43 - 5.63)/0.2 = \SI{4.0}{\metre\per\second} = 6(1) - 2$.
+  \item[2.7] (a) $v_x = 3t^2 - 12t + 9 = 3(t-1)(t-3)$; $a_x = 6t - 12$. (b) $t = \SI{1}{\second}$ and $t = \SI{3}{\second}$. (c) $t = \SI{2}{\second}$. (d) No.
+  \item[2.9] Triangle of base \SI{6}{\second} and height \SI{12}{\metre\per\second}, area \SI{36}{\metre}; $\int_0^6 2.0\,t\,\dd t = [t^2]_0^6 = \SI{36}{\metre}$.
+  \item[2.10] (a) \SI{-0.5}{\metre\per\second\squared}. (b) $t = \SI{40}{\second}$. (c) Triangle: $\tfrac12 \times 40 \times 20 = \SI{400}{\metre}$; $\int_0^{40}(20 - 0.5t)\,\dd t = 800 - 400 = \SI{400}{\metre}$.
+  \item[2.11] $v_x = 3t^2$, $x = t^3$. Positions at $t = 1, 2, 3, 4$: $1, 8, 27, 64$; gaps $1, 7, 19, 37$; second differences $6, 12, 18$, not constant. The odd-number rule fails because the acceleration is not constant.
+  \item[2.12] Trapezium of parallel sides $v_1$, $v_2$ and width $\Delta t$ has area $\tfrac12(v_1 + v_2)\Delta t$. Integral:
+  \[
+  \frac{1}{\Delta t}\left[v_1 \Delta t + \tfrac12 a\,\Delta t^2\right] = v_1 + \tfrac12 a\,\Delta t = \tfrac12(v_1 + v_2), \quad\text{since } v_2 = v_1 + a\,\Delta t.
+  \] Counterexample: $v = t^2$ on $[0,1]$ has average $\tfrac13$, but the average of the endpoint velocities is $\tfrac12$.
+  \item[2.13] The ball starts fast and slows, so the dots start \emph{far apart} on the left and become closer together toward the right.
+  \item[2.14] Arrows pointing right, each shorter than the one before.
+  \item[2.16] A: zero acceleration (constant velocity). B: constant nonzero acceleration, since the velocity grows by the same amount in each interval.
+  \item[2.17] Yes. First differences \num{2}, \num{6}, \num{10}, \SI{14}{\centi\metre}; second differences all \SI{4}{\centi\metre}; so $a = 2d/\tau^2$ $= 2(0.02)/(0.5)^2$, which is \SI{0.16}{\metre\per\second\squared}.
+  \item[2.18] $t_n = \sqrt{2 x_n/a} = \sqrt{2(0.20\,n)/a} \propto \sqrt{n}$. Ring number against time is a parabola opening upward: rings come faster and faster because the ball is speeding up.
+  \item[2.19] \SI{32}{\centi\metre}, \SI{72}{\centi\metre}, and \SI{128}{\centi\metre} from release (gaps of \num{8}, \num{24}, \num{40}, and \SI{56}{\centi\metre}).
+  \item[2.20] \SI{7}{\metre} in the fourth interval; \SI{16}{\metre} in total ($1 + 3 + 5 + 7$). Check: $\tfrac12(9.88)(1.80)^2 = \SI{16.0}{\metre}$ and $\tfrac12(9.88)[(1.80)^2 - (1.35)^2] = \SI{7.0}{\metre}$.
+  \item[2.21] \SI{9}{\centi\metre} in the second interval; \SI{27}{\centi\metre} in \SI{0.3}{\second} ($3 + 9 + 15$, or $9 \times 3$); $a = 2(0.03)/(0.1)^2 = \SI{6}{\metre\per\second\squared}$.
+  \item[2.22] (a) First differences \num{2}, \num{6}, \num{10}, \SI{14}{\centi\metre}; second differences all \SI{4}{\centi\metre}. (b) Yes. (c) $a = \SI{0.04}{\metre}/(\SI{0.2}{\second})^2 = \SI{1.0}{\metre\per\second\squared}$. (d) $\SI{0.32}{\metre} = \tfrac12 a (\SI{0.8}{\second})^2$ gives $a = \SI{1.0}{\metre\per\second\squared}$.
+  \item[2.23] The entries \num{4.9}, \num{14.7}, \num{24.5}, \num{34.3}, \num{44.1} are $1, 3, 5, 7, 9$ times \SI{4.9}{\metre}, the distance fallen in the first second. Each is $\int_{n-1}^{n} gt\,\dd t = \tfrac12 g\,[n^2 - (n-1)^2] = \tfrac12 g\,(2n-1)$.
+  \item[2.24] With \SI{1}{\second} intervals and first-interval distance $d_1$: total after \SI{4}{\second} is $(1+3+5+7)d_1 = 16d_1$, after \SI{2}{\second} is $4d_1$; ratio \num{4}. With \SI{2}{\second} intervals and first-interval distance $d_2 = 4d_1$: total after \SI{4}{\second} is $(1+3)d_2 = 4d_2 = 16d_1$; ratio again \num{4}. In general $n^2 d = n^2\cdot\tfrac12 a\tau^2 = \tfrac12 a (n\tau)^2 = \tfrac12 a t^2$, with $\tau$ gone. A rule that gave different answers for different $\tau$ could not describe a real motion; Leonardo's rule fails this test.
+  \item[2.25] \SI{2.0}{\second}, \SI{4.0}{\second}, \SI{8.0}{\second}, \SI{16}{\second} (more precisely \num{2.01}, \num{4.02}, \num{8.05}, \num{16.1}).
+  \item[2.26] Each time the distance is multiplied by \num{4}, the time is multiplied by \num{2}, because $\Delta y \propto t^2$ and $4 = 2^2$.
+  \item[2.27] $(n+1)^2 - n^2 = n^2 + 2n + 1 - n^2 = 2n + 1$. For $n = 4$: $(1 - 0) + (4 - 1) + (9 - 4) + (16 - 9) = 16$; the $1$, $4$, and $9$ each appear once with each sign and cancel.
+  \item[2.28] By a factor of \num{3}: the real fall covers \num{9} times the distance and so takes $\sqrt{9} = 3$ times as long.
+  \item[2.29] About \SI{1.1}{\second}. With $d$ fixed, $t \propto 1/\sqrt{g}$, so the time is $\sqrt{6} \approx 2.45$ times longer than \SI{0.45}{\second}.
+  \item[2.30] See the Modeling Note on Leonardo's rule. With \SI{1}{\second} intervals the object goes $10/3$ times as far in \SI{4}{\second} as in \SI{2}{\second}; with \SI{2}{\second} intervals it goes \num{3} times as far. One motion cannot have two ratios.
+  \item[2.31] (a) \SI{4.9}{\metre\per\second}. (b) \SI{2.45}{\metre\per\second}. (c) $2.45 \times 0.5 = \SI{1.2}{\metre}$; $\int_0^{0.5} 9.8t\,\dd t = 4.9(0.25) = \SI{1.2}{\metre}$.
+  \item[2.32] \SI{44}{\metre}; \SI{29}{\metre\per\second}, about \SI{106}{\kilo\metre\per\hour}.
+  \item[2.33] \SI{3.1}{\second}; \SI{46}{\metre}.
+  \item[2.34] $t = \sqrt{2(2.0)/9.8} = \SI{0.64}{\second}$, in agreement.
+  \item[2.35] Both are straight lines through the origin; the Moon's line is about six times shallower. The slope is the acceleration, $g$.
+  \item[2.36] \elemtag\ Its speed starts at zero and reaches \SI{9.8}{\metre\per\second} only at the last instant, so its average speed over the second is \SI{4.9}{\metre\per\second}, and average speed times one second is \SI{4.9}{\metre}. \calctag\ $\int_0^1 gt\,\dd t = \tfrac12 g = \SI{4.9}{\metre}$, the area of a triangle, half the \SI{9.8}{\metre} rectangle it would cover at the final speed throughout.
+  \item[2.37] (a) $31/343 \approx \SI{0.09}{\second}$. (b) Fall time \SI{2.41}{\second}, depth $\tfrac12 (9.8)(2.41)^2 \approx \SI{28}{\metre}$. (c) Reasonable: a change of about \SI{3}{\metre} on \SI{31}{\metre}, comparable to the uncertainty in timing a splash by ear. For \SI{10}{\second} the naive depth would be \SI{490}{\metre} and the sound delay about \SI{1.4}{\second}, a correction of nearly a third; the model would then need the sound included.
+  \item[2.38] (a) $g = 2(1.50)/(0.58)^2 = \SI{8.9}{\metre\per\second\squared}$. (b) From $t = \SI{0.53}{\second}$ to \SI{0.63}{\second}: $g$ between about \SI{7.6}{} and \SI{10.7}{\metre\per\second\squared}. (c) Drop from a greater height so the timing error is a smaller fraction of the fall time, use video or an electronic timer, or average many trials.
+  \item[2.39] $s = s_0 e^{kt}$; $s = 2s_0$ when $e^{kt} = 2$, i.e. $t = \ln 2/k \approx 0.69/k$, independent of $s_0$, and indeed $0.5/k < 0.69/k < 1/k$. For $s = \tfrac12 g t^2$, $t(s) = \sqrt{2s/g}$ and the doubling time is $\sqrt{4s_0/g} - \sqrt{2s_0/g} = (\sqrt2 - 1)\sqrt{2s_0/g}$, which grows with $s_0$. The table shows the second behaviour: doubling from \SI{4.9}{\metre} to \SI{9.8}{\metre} takes \SI{0.41}{\second}, but from \SI{44.1}{\metre} to \SI{88.2}{\metre} takes \SI{1.24}{\second}.
+  \item[2.40] \SI{9}{\kilo\metre\per\hour\per\second}; \SI{2.5}{\metre\per\second\squared}.
+  \item[2.41] Equal: both gain \SI{5}{\kilo\metre\per\hour} in \SI{2.5}{\second}, an acceleration of \SI{2}{\kilo\metre\per\hour\per\second} each.
+  \item[2.42] \SI{-6.0}{\metre\per\second\squared}. Negative because the velocity decreases. Stopping distance: average velocity \SI{15}{\metre\per\second} for \SI{5}{\second}, \SI{75}{\metre}; $\int_0^5 (30 - 6t)\,\dd t = 150 - 75 = \SI{75}{\metre}$.
+  \item[2.43] About \SI{35}{\kilo\metre\per\hour\per\second}: a falling object gains \SI{35}{\kilo\metre\per\hour} of speed every second, far faster than any car.
+  \item[2.44] (a) \SI{30}{\metre\per\second}. (b) Average velocity \SI{15}{\metre\per\second} for \SI{60}{\second}: \SI{900}{\metre}. (c) $\int_0^{60} 0.5t\,\dd t = 0.25 \times 3600 = \SI{900}{\metre}$.
+  \item[2.45] \SI{4.0}{\metre\per\second\squared}; \SI{12.5}{\metre}.
+  \item[2.46] Yes to both. A ball at the top of its flight has zero velocity and acceleration $g$. A car cruising at constant velocity on a straight road has nonzero velocity and zero acceleration.
+  \item[2.47] Yes. Its speed is constant, but its direction changes continuously, so its velocity vector changes, and any change in velocity is an acceleration.
+  \item[2.48] (a) \SI{2}{\second}: it loses \SI{10}{\metre\per\second} per second and has \SI{20}{\metre\per\second} to lose; or $\dd y/\dd t = 20 - 10t = 0$. (b) $y(2) = 40 - 20 = \SI{20}{\metre}$ (average velocity \SI{10}{\metre\per\second} for \SI{2}{\second}). (c) $v_y = 20 - 30 = \SI{-10}{\metre\per\second}$, speed \SI{10}{\metre\per\second}, moving down. (d) \SI{4}{\second}, twice the time to the top; or $20t - 5t^2 = 0$ gives $t = \SI{4}{\second}$.
+  \item[2.49] $v_y^2 = v_0^2 - 2g(5.0)$ has the same value whichever way the ball is moving, so the speed $|v_y|$ is the same at both passes. The velocity--time line is symmetric about the instant of zero velocity, so the time from window to top equals the time from top to window.
+  \item[2.50] $2\sqrt{2(0.60)/9.8} = \SI{0.70}{\second}$. Once airborne, the only influence on the jumper is gravity; moving arms or legs changes the jumper's shape but not the motion of the body as a whole.
+  \item[2.51] From $t = (v_0 - v_y)/g$:
+  \begin{align*}
+  \Delta y &= v_0\frac{v_0 - v_y}{g} - \tfrac12 g\frac{(v_0 - v_y)^2}{g^2} = \frac{(v_0 - v_y)}{2g}\left[2v_0 - (v_0 - v_y)\right] \\
+  &= \frac{(v_0 - v_y)(v_0 + v_y)}{2g} = \frac{v_0^2 - v_y^2}{2g}.
+  \end{align*}
+  \item[2.52--2.55] Answers depend on your own measurements. Typical ramp results give second differences constant to within \SIrange{10}{20}{\percent}; typical phone-video drops give $g$ within a few percent of \SI{9.8}{\metre\per\second\squared} once several trials are averaged; typical hang times are \SIrange{0.4}{0.6}{\second}.
+\end{description}
+
+\section*{Sources and Further Reading}
+\begin{itemize}[itemsep=3pt]
+  \item P.~G. Hewitt, \emph{Conceptual Physics}, 12th ed. (Pearson, 2014). Chapter~2 on Galileo's inclined-plane experiments; Chapter~3, Sections 3.4 (``Acceleration'') and 3.5 (``Free Fall''), on the definition and units of acceleration, Galileo's inclined planes, free-fall speed and distance, objects thrown upward, and hang time. Several Check Your Understanding questions and exercises, and the free-fall tables, are adapted from this book, with $g$ taken as \SI{9.8}{\metre\per\second\squared} rather than Hewitt's rounded \SI{10}{\metre\per\second\squared} except where noted. Hewitt's treatment is deliberately non-mathematical and corresponds to the \elemtag\ route throughout; the \calctag\ route is our addition, and every result here reduces to his when derivatives and integrals are read as slopes and areas.
+  \item Galileo Galilei, \emph{Discourses and Mathematical Demonstrations Relating to Two New Sciences} (Leiden, 1638), Third Day. Galileo's own statement of the odd-number rule and the times-squared law, and his description of the inclined-plane experiment and water clock.
+  \item S. Drake, ``The Role of Music in Galileo's Experiments,'' \emph{Scientific American} 232 (June 1975), 98--104. The argument, based on Galileo's working notes, that he used musical rhythm to mark equal time intervals on the inclined plane.
+  \item M. Clagett, \emph{Nicole Oresme and the Medieval Geometry of Qualities and Motions} (University of Wisconsin Press, 1968). Oresme's geometric proof of the mean-speed theorem, about two hundred years before Galileo.
+  \item Museo Galileo, Florence. The replica inclined plane with bells is described at \url{https://catalogue.museogalileo.it/object/InclinedPlane.html}.
+  \item The Apollo~15 hammer-and-feather demonstration (1971) is available on video from NASA and shows the two objects landing together on the Moon.
+\end{itemize}
+
+\end{document}

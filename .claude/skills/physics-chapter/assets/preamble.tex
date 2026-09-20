@@ -1,0 +1,114 @@
+% ------------------------------------------------------------------
+%  Physics 1: Mechanics  --  Chapter N: TITLE
+%  Compile with:  tectonic <chapter>.tex   (or pdflatex/xelatex/lualatex)
+% ------------------------------------------------------------------
+\documentclass[11pt,twoside,openany]{book}
+
+% ---------- packages ----------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[letterpaper,top=1in,bottom=1in,inner=1.1in,outer=1.1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{siunitx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,decorations.pathreplacing,positioning,patterns}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary{fillbetween}
+\usepackage[most]{tcolorbox}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+\sisetup{per-mode=symbol,range-units=single,separate-uncertainty=true}
+\DeclareSIUnit{\mile}{mi}
+\newcommand{\mps}{\si{\metre\per\second}}
+\newcommand{\mpss}{\si{\metre\per\second\squared}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\deriv}[2]{\frac{\dd #1}{\dd #2}}
+\newcommand{\dderiv}[2]{\frac{\dd^2 #1}{\dd #2^2}}
+
+% ---------- headers ----------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{\small\thepage\quad Chapter \thechapter\quad CHAPTERTITLE}
+\fancyhead[RO]{\small Physics 1: Mechanics\quad\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\chaptermark}[1]{}
+\renewcommand{\sectionmark}[1]{}
+
+% ---------- colours ----------
+\definecolor{teal}{RGB}{0,140,150}
+\definecolor{tealpale}{RGB}{232,246,247}
+\definecolor{sand}{RGB}{252,245,230}
+\definecolor{sanddark}{RGB}{190,140,60}
+\definecolor{plum}{RGB}{110,60,130}
+\definecolor{plumpale}{RGB}{243,236,247}
+\definecolor{slate}{RGB}{70,80,95}
+\definecolor{slatepale}{RGB}{240,242,245}
+\definecolor{elemcol}{RGB}{170,90,20}
+\definecolor{elempale}{RGB}{253,238,220}
+\definecolor{calccol}{RGB}{30,90,160}
+\definecolor{calcpale}{RGB}{226,236,250}
+
+% ---------- boxed environments ----------
+\newtcbtheorem[number within=chapter]{example}{Worked Example}{%
+  enhanced,breakable,colback=tealpale,colframe=teal,fonttitle=\bfseries,
+  coltitle=white,attach boxed title to top left={yshift=-2mm,xshift=4mm},
+  boxed title style={colback=teal,sharp corners},
+  top=4mm,left=3mm,right=3mm,bottom=2mm,before skip=10pt,after skip=10pt}{ex}
+
+\newtcbtheorem[number within=chapter]{definition}{Definition}{%
+  enhanced,breakable,colback=plumpale,colframe=plum,fonttitle=\bfseries,
+  coltitle=white,attach boxed title to top left={yshift=-2mm,xshift=4mm},
+  boxed title style={colback=plum,sharp corners},
+  top=4mm,left=3mm,right=3mm,bottom=2mm,before skip=10pt,after skip=10pt}{def}
+
+\newtcolorbox{keyidea}[1][Key Idea]{%
+  enhanced,breakable,colback=sand,colframe=sanddark,fonttitle=\bfseries,
+  title={#1},sharp corners,boxrule=0.6pt,left=3mm,right=3mm,
+  before skip=10pt,after skip=10pt}
+
+\newtcolorbox{modelnote}[1][Modeling Note]{%
+  enhanced,breakable,colback=slatepale,colframe=slate,fonttitle=\bfseries,
+  title={#1},sharp corners,boxrule=0.6pt,left=3mm,right=3mm,
+  before skip=10pt,after skip=10pt}
+
+% "Two Views" box: a concept explained first without calculus, then with it
+\newtcolorbox{twoviews}[1]{%
+  enhanced,breakable,colback=white,colframe=slate!80!black,fonttitle=\bfseries,
+  coltitle=white,colbacktitle=slate!80!black,
+  title={Two Views: #1},sharp corners,boxrule=0.8pt,left=3mm,right=3mm,
+  before skip=10pt,after skip=10pt}
+
+\newcounter{check}[chapter]
+\renewcommand{\thecheck}{\thechapter.\arabic{check}}
+\newtcolorbox{checkbox}{%
+  enhanced,breakable,colback=white,colframe=teal!70!black,
+  fonttitle=\bfseries,coltitle=white,
+  title=Check Your Understanding \refstepcounter{check}\thecheck,
+  sharp corners,boxrule=0.6pt,left=3mm,right=3mm,
+  before skip=10pt,after skip=10pt}
+
+% ---------- perspective labels ----------
+\newcommand{\viewtag}[3]{\fcolorbox{#2}{#3}{\footnotesize\textbf{\textcolor{#2}{#1}}}}
+\newcommand{\elemtag}{\viewtag{Elementary}{elemcol}{elempale}}
+\newcommand{\calctag}{\viewtag{Calculus}{calccol}{calcpale}}
+\newcommand{\elem}{\par\medskip\noindent\elemtag\ }
+\newcommand{\calc}{\par\medskip\noindent\calctag\ }
+\newcommand{\elemsub}[1]{\par\medskip\noindent\viewtag{Elementary: #1}{elemcol}{elempale}\ }
+
+\newcommand{\solution}{\par\smallskip\noindent\textbf{Solution.}\ }
+\newcommand{\qed}{\hfill$\blacksquare$}
+
+% ---------- drawing helpers ----------
+% \dotrow{label}{spacing}{count}{y}
+\newcommand{\dotrow}[4]{%
+  \node[anchor=east] at (-0.3,#4) {#1};
+  \foreach \i in {0,...,\numexpr#3-1\relax}{\fill (\i*#2,#4) circle (2.2pt);}}
+
+\setlist[enumerate]{itemsep=4pt,topsep=4pt}
+

@@ -1,0 +1,1309 @@
+% ------------------------------------------------------------------
+%  Physics 1: Mechanics  --  Chapter 1: Velocity
+%  Compile with:  tectonic velocity.tex   (or pdflatex/xelatex/lualatex)
+% ------------------------------------------------------------------
+\documentclass[11pt,twoside,openany]{book}
+
+% ---------- packages ----------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[letterpaper,top=1in,bottom=1in,inner=1.1in,outer=1.1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{siunitx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,decorations.pathreplacing,positioning,patterns}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary{fillbetween}
+\usepackage[most]{tcolorbox}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+\sisetup{per-mode=symbol,range-units=single,separate-uncertainty=true}
+\DeclareSIUnit{\mile}{mi}
+\newcommand{\mps}{\si{\metre\per\second}}
+\newcommand{\mpss}{\si{\metre\per\second\squared}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\deriv}[2]{\frac{\dd #1}{\dd #2}}
+\newcommand{\dderiv}[2]{\frac{\dd^2 #1}{\dd #2^2}}
+
+% ---------- headers ----------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{\small\thepage\quad Chapter \thechapter\quad Velocity}
+\fancyhead[RO]{\small Physics 1: Mechanics\quad\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\chaptermark}[1]{}
+\renewcommand{\sectionmark}[1]{}
+
+% ---------- colours ----------
+\definecolor{teal}{RGB}{0,140,150}
+\definecolor{tealpale}{RGB}{232,246,247}
+\definecolor{sand}{RGB}{252,245,230}
+\definecolor{sanddark}{RGB}{190,140,60}
+\definecolor{plum}{RGB}{110,60,130}
+\definecolor{plumpale}{RGB}{243,236,247}
+\definecolor{slate}{RGB}{70,80,95}
+\definecolor{slatepale}{RGB}{240,242,245}
+\definecolor{elemcol}{RGB}{170,90,20}
+\definecolor{elempale}{RGB}{253,238,220}
+\definecolor{calccol}{RGB}{30,90,160}
+\definecolor{calcpale}{RGB}{226,236,250}
+
+% ---------- boxed environments ----------
+\newtcbtheorem[number within=chapter]{example}{Worked Example}{%
+  enhanced,breakable,colback=tealpale,colframe=teal,fonttitle=\bfseries,
+  coltitle=white,attach boxed title to top left={yshift=-2mm,xshift=4mm},
+  boxed title style={colback=teal,sharp corners},
+  top=4mm,left=3mm,right=3mm,bottom=2mm,before skip=10pt,after skip=10pt}{ex}
+
+\newtcbtheorem[number within=chapter]{definition}{Definition}{%
+  enhanced,breakable,colback=plumpale,colframe=plum,fonttitle=\bfseries,
+  coltitle=white,attach boxed title to top left={yshift=-2mm,xshift=4mm},
+  boxed title style={colback=plum,sharp corners},
+  top=4mm,left=3mm,right=3mm,bottom=2mm,before skip=10pt,after skip=10pt}{def}
+
+\newtcolorbox{keyidea}[1][Key Idea]{%
+  enhanced,breakable,colback=sand,colframe=sanddark,fonttitle=\bfseries,
+  title={#1},sharp corners,boxrule=0.6pt,left=3mm,right=3mm,
+  before skip=10pt,after skip=10pt}
+
+\newtcolorbox{modelnote}[1][Modeling Note]{%
+  enhanced,breakable,colback=slatepale,colframe=slate,fonttitle=\bfseries,
+  title={#1},sharp corners,boxrule=0.6pt,left=3mm,right=3mm,
+  before skip=10pt,after skip=10pt}
+
+% "Two Views" box: a concept explained first without calculus, then with it
+\newtcolorbox{twoviews}[1]{%
+  enhanced,breakable,colback=white,colframe=slate!80!black,fonttitle=\bfseries,
+  coltitle=white,colbacktitle=slate!80!black,
+  title={Two Views: #1},sharp corners,boxrule=0.8pt,left=3mm,right=3mm,
+  before skip=10pt,after skip=10pt}
+
+\newcounter{check}[chapter]
+\renewcommand{\thecheck}{\thechapter.\arabic{check}}
+\newtcolorbox{checkbox}{%
+  enhanced,breakable,colback=white,colframe=teal!70!black,
+  fonttitle=\bfseries,coltitle=white,
+  title=Check Your Understanding \refstepcounter{check}\thecheck,
+  sharp corners,boxrule=0.6pt,left=3mm,right=3mm,
+  before skip=10pt,after skip=10pt}
+
+% ---------- perspective labels ----------
+\newcommand{\viewtag}[3]{\fcolorbox{#2}{#3}{\footnotesize\textbf{\textcolor{#2}{#1}}}}
+\newcommand{\elemtag}{\viewtag{Elementary}{elemcol}{elempale}}
+\newcommand{\calctag}{\viewtag{Calculus}{calccol}{calcpale}}
+\newcommand{\elem}{\par\medskip\noindent\elemtag\ }
+\newcommand{\calc}{\par\medskip\noindent\calctag\ }
+\newcommand{\elemsub}[1]{\par\medskip\noindent\viewtag{Elementary: #1}{elemcol}{elempale}\ }
+
+\newcommand{\solution}{\par\smallskip\noindent\textbf{Solution.}\ }
+\newcommand{\qed}{\hfill$\blacksquare$}
+
+% ---------- drawing helpers ----------
+% \dotrow{label}{spacing}{count}{y}
+\newcommand{\dotrow}[4]{%
+  \node[anchor=east] at (-0.3,#4) {#1};
+  \foreach \i in {0,...,\numexpr#3-1\relax}{\fill (\i*#2,#4) circle (2.2pt);}}
+
+\setlist[enumerate]{itemsep=4pt,topsep=4pt}
+
+\begin{document}
+\setcounter{chapter}{0}
+
+\chapter{Velocity}
+
+\begin{tcolorbox}[enhanced,colback=white,colframe=teal,sharp corners,boxrule=1pt,
+  title=\textbf{In this chapter},coltitle=white,colbacktitle=teal,left=3mm,right=3mm]
+By the end of this chapter you should be able to
+\begin{itemize}[itemsep=2pt,topsep=2pt]
+  \item explain what a \emph{conceptual model} is, why scientists use them, and what makes a model scientific;
+  \item draw and read \emph{dot diagrams} to compare the speeds of moving objects;
+  \item use $\text{distance} = \text{speed}\times\text{time}$ and rearrange it for any one of the three quantities, and convert speeds between \si{\metre\per\second}, \si{\kilo\metre\per\hour}, and \si{\mile\per\hour};
+  \item explain why every speed is measured \emph{relative} to something, and say what that something usually is;
+  \item distinguish \emph{average} speed from \emph{instantaneous} speed two ways: as a ratio over a shrinking interval, and as a \emph{derivative}; recover distance from speed two ways: as average speed times time, and as an \emph{integral};
+  \item read speed from a \emph{position--time graph} as a slope, both of a chord and of a tangent;
+  \item recognize when a model is being \emph{extrapolated} beyond the range where it was tested, and perform a \emph{sanity check} on a result;
+  \item express a measured quantity with its \emph{uncertainty}, and carry that uncertainty through a calculation by recomputing at the ends of the range and by using a derivative;
+  \item explain how \emph{velocity} differs from speed, tell a \emph{vector} quantity from a \emph{scalar}, and find the velocity of one object relative to another.
+\end{itemize}
+\end{tcolorbox}
+
+\begin{tcolorbox}[enhanced,colback=slatepale,colframe=slate,sharp corners,boxrule=0.6pt,
+  title=\textbf{How to read this chapter: two perspectives},coltitle=white,colbacktitle=slate,left=3mm,right=3mm]
+Every idea in this book can be understood with elementary mathematics alone: ratios, averages, tables, and the areas of rectangles and triangles. Every idea can also be understood with calculus, the mathematics of change, which was invented for exactly these questions. Neither view is the ``real'' one; each illuminates the other. Throughout, explanations and solutions are labelled
+\begin{center}
+\elemtag\quad for the route using only elementary mathematics, and \qquad \calctag\quad for the route using derivatives and integrals.
+\end{center}
+This chapter needs only a little calculus: the derivative as the slope of a graph, and the integral as the area under one. If you have not met them yet, read the \elemtag\ routes now and return to the \calctag\ routes later; the elementary route is always complete on its own. When a worked example carries both labels, the two routes are independent: read one, then the other, and check that they agree.
+\end{tcolorbox}
+
+\section{An Ancient Sprinter}
+
+In 2003, Mary Pappin Jr., a young Mutthi Mutthi woman from the Willandra Lakes region of south-eastern Australia, noticed a set of footprints pressed into the hard surface of a long-vanished lake bed. The prints were not recent. They had been made in soft, wet clay, then baked, buried, and finally uncovered again by the wind. Hundreds more were soon found nearby: the largest collection of Ice Age human footprints known anywhere in the world.
+
+An archaeologist, Steve Webb, led the scientific study of the site. Among the tracks he described was one that made headlines around the world. Webb calculated that the person who left it had been running barefoot across the mud at more than \SI{10}{\metre\per\second}, about the average speed of an Olympic 100-metre champion. Newspapers ran stories with titles like ``Prehistoric hunter could have outrun Usain Bolt.'' For a while, the ancient sprinter was famous.
+
+Then, quietly, the story faded. A few years later, other scientists re-examined the same footprints and came to a very different conclusion.
+
+This chapter uses the story of the ancient sprinter to introduce the physics of motion. Along the way we will ask three questions that matter far beyond footprints:
+\begin{enumerate}
+  \item How can you measure the speed of something you never saw move?
+  \item What does it mean to \emph{model} a physical situation, and what can go wrong?
+  \item How confident should you be in a number that comes out of a calculation?
+\end{enumerate}
+
+\section{Models in Science}
+
+Nobody watched the hunter run. There is no stopwatch, no video, and no witness. All that survives is a trail of footprints in dried mud. To turn those footprints into a speed, Webb needed a \emph{model}.
+
+\begin{definition}{Conceptual model}{model}
+A \textbf{conceptual model} is a deliberately simplified description of some part of the world, built so that we can reason about it. A model may combine measurements, diagrams, equations, graphs, tables of data, and computer programs. Every model leaves things out. A good model leaves out the things that do not matter for the question being asked, and keeps the things that do.
+\end{definition}
+
+You already use models all the time. A subway map is a model of a city's rail network: it shows which stations connect to which, but it distorts distances and ignores streets entirely. That is exactly right for deciding which train to take, and exactly wrong for estimating how far you will walk. A model is never simply ``true'' or ``false''; it is useful or not useful \emph{for a particular purpose}.
+
+What makes a model scientific? Physicists apply two tests. First, the model must agree with what has already been observed. Second, and more importantly, it must \emph{predict} something that has not yet been checked, so that it can be put at risk. A model whose predictions turn out contrary to what actually happens is refined or, if it cannot be repaired, abandoned. A model that cannot be tested, even in principle, is not doing scientific work at all, however reasonable it sounds. We will meet this test again in Chapter~2, where two rival hypotheses about falling objects are worth arguing about only because they predict different things.
+
+This is a particular case of what might be called the scientific attitude: one of inquiry, integrity, and humility, meaning a willingness to admit error. In science a single verifiable observation that contradicts a claim outweighs any authority behind the claim, no matter how respected the person making it or how many people have repeated it. Keep this in mind as the story of the ancient sprinter unfolds.
+
+Physics is largely the craft of building models that are simple enough to calculate with and faithful enough to trust. The rest of this chapter follows one such model from its construction to its collapse, and then to its repair.
+
+\begin{modelnote}[Three models of one set of footprints]
+Other people studied the same footprints with entirely different models. Webb used a laboratory technique called optically stimulated luminescence, which relies on a model of how buried mineral grains store energy from natural radioactivity, to date the prints to between 19{,}000 and 23{,}000 years old. A group of Pintubi trackers, drawing on a lifetime of reading footprints, recognized that most of the trails were left by families walking, while a few belonged to a hunting party chasing an animal. One member of that party was running hard, cutting across to head the animal off. That runner is the ``ancient sprinter.'' Neither the dating nor the tracking tells us the runner's speed. For that, Webb needed a third model, and he built it with nothing more than a tape measure.
+\end{modelnote}
+
+\section{From Footprints to Dot Diagrams}
+
+\subsection{What Webb measured}
+
+Webb measured two things about the runner's trail. The first was the \textbf{stride length}: the distance from one footprint to the next print made by the \emph{same} foot. Note that a stride is two steps. (A \textbf{step} is the distance from a left print to the following right print, or vice versa.) The second measurement was the \textbf{foot length} of the prints themselves. Figure~\ref{fig:footprints} shows the idea.
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \foreach \x in {0,3.6,7.2}{
+    \fill[black!75,rounded corners=2pt] (\x,0) ellipse (0.28 and 0.13);
+  }
+  \foreach \x in {1.8,5.4}{
+    \fill[black!45,rounded corners=2pt] (\x,0.7) ellipse (0.28 and 0.13);
+  }
+  \draw[<->,>=Stealth,red!70!black] (0,-0.5) -- node[below]{stride length} (3.6,-0.5);
+  \draw[<->,>=Stealth,red!70!black] (6.92,0.4) -- node[above]{foot length} (7.48,0.4);
+  \draw[<->,>=Stealth,teal!80!black] (1.8,1.15) -- node[above]{step} (3.6,1.15);
+  \draw[teal!80!black,dashed] (3.6,0.2) -- (3.6,1.1);
+  \node[anchor=east] at (-0.45,0) {\small right foot};
+  \node[anchor=east] at (1.35,0.7) {\small left foot};
+\end{tikzpicture}
+\caption{A trail of footprints. A stride runs from one right-foot print to the next right-foot print; a step runs from a left print to the following right print. Webb measured stride length and foot length.}
+\label{fig:footprints}
+\end{figure}
+
+Why stride and not step? Because the two feet fall on slightly different lines. Measuring left-to-right-to-left traces a zigzag; measuring right-to-right follows a straight line along the direction of travel, which is what we want.
+
+\subsection{Simplifying to dots}
+
+Suppose the runner planted a right foot once every \SI{0.6}{\second}. (That corresponds to \num{100} strides per minute, since $\SI{60}{\second}/100 = \SI{0.6}{\second}$.) Then the right-foot prints mark where the runner was at \SI{0}{\second}, \SI{0.6}{\second}, \SI{1.2}{\second}, and so on. The left-foot prints add nothing new for our purposes, so we drop them. And the shape of each print does not matter either, so we replace each with a dot. Figure~\ref{fig:dotdiagram} shows the result.
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \foreach \i in {0,...,5}{\fill (\i*2,0) circle (2.5pt);}
+  \draw[<->,>=Stealth,red!70!black] (0,-0.45) -- node[below]{stride length} (2,-0.45);
+  \foreach \i in {0,...,5}{\node[above=3pt,font=\small] at (\i*2,0) {$\pgfmathparse{0.6*\i}\pgfmathprintnumber{\pgfmathresult}$~s};}
+\end{tikzpicture}
+\caption{The same trail as a dot diagram. Each dot marks the runner's position at equally spaced instants of time.}
+\label{fig:dotdiagram}
+\end{figure}
+
+\begin{definition}{Dot diagram}{dotdiagram}
+A \textbf{dot diagram} (also called a \emph{motion diagram}) is a picture that marks the position of a moving object at equally spaced instants of time. The time between dots is the same throughout a single diagram, but it may be any convenient value.
+\end{definition}
+
+A dot diagram can represent anything that moves. Picture a car with a leaky can of paint dripping onto the road once per second; the trail of drops is a dot diagram. Picture a strobe light flashing in a dark gym while someone runs across; each flash freezes the runner at one dot. And even when nothing physical leaves a mark, we can \emph{imagine} the dots. That is the whole point of a model.
+
+\begin{keyidea}[Two rules for dot diagrams]
+\begin{enumerate}[itemsep=2pt]
+  \item Within one diagram, every pair of neighbouring dots is separated by the \emph{same} time interval.
+  \item To compare the speeds of two objects using their dot diagrams, both diagrams must use the \emph{same} time interval.
+\end{enumerate}
+\end{keyidea}
+
+\subsection{Reading speed from spacing}
+
+\begin{example}{Ranking speeds from dot diagrams}{ranking}
+The dot diagrams below show three objects. The time between dots is the same for all three. Rank the objects from fastest to slowest.
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \dotrow{object A}{1.5}{7}{1.6}
+  \dotrow{object B}{0.5}{19}{0.8}
+  \dotrow{object C}{1.1}{9}{0}
+\end{tikzpicture}
+\end{center}
+
+\solution It is tempting to look at object~B, with its many closely packed dots, and think ``that one is busy, so it must be fast.'' Resist the temptation. The dots are not being laid down faster for B; the time between dots is identical for all three objects. The only thing that differs is how far each object moves during that fixed interval.
+
+Imagine the three objects starting a race together, each laying its first dot at the starting line at the same moment. When the second dot is laid, all three lay it at the same moment too. The object whose second dot is farthest from the start has travelled the greatest distance in the same time, so it is the fastest.
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \dotrow{object A}{1.5}{7}{1.6}
+  \dotrow{object B}{0.5}{19}{0.8}
+  \dotrow{object C}{1.1}{9}{0}
+  \fill[red] (1.5,1.6) circle (2.8pt);
+  \fill[red] (0.5,0.8) circle (2.8pt);
+  \fill[red] (1.1,0) circle (2.8pt);
+  \draw[dashed,gray] (0,-0.4) -- (0,2.0);
+\end{tikzpicture}
+\end{center}
+
+Object~A's second dot (highlighted) is farthest along, then C's, then B's. The ranking is $A > C > B$.
+
+\textbf{Takeaway:} widely spaced dots mean high speed; closely spaced dots mean low speed. This works because a fast object covers more ground than a slow one in the same time.\qed
+\end{example}
+
+\begin{example}{Counting gaps, not dots}{fencepost}
+The dot diagram in Figure~\ref{fig:dotdiagram} has six dots, \SI{0.6}{\second} apart. How much time does the diagram cover?
+
+\solution The elapsed time is measured by the \emph{gaps} between dots, not by the dots themselves. Six dots have only five gaps between them, so the diagram covers
+\[
+5 \times \SI{0.6}{\second} = \SI{3.0}{\second}.
+\]
+Be careful: a common error is to answer $6\times\SI{0.6}{\second}=\SI{3.6}{\second}$. This mistake is so common that it has a name: the \emph{fencepost error}, after the observation that a fence with six posts has only five sections of rail.\qed
+\end{example}
+
+\subsection{When speed changes}
+
+A dot diagram does more than compare constant speeds. If an object speeds up, each time interval carries it a little farther than the last, so the dots spread apart along the direction of motion. If it slows down, the dots bunch together. Figure~\ref{fig:accel} shows both cases, along with an object moving at constant speed for comparison.
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \node[anchor=east] at (-0.3,2.0) {constant speed};
+  \foreach \x in {0,1.6,3.2,4.8,6.4,8.0}{\fill (\x,2.0) circle (2.2pt);}
+  \node[anchor=east] at (-0.3,1.0) {speeding up};
+  \foreach \x in {0,0.32,1.28,2.88,5.12,8.0}{\fill (\x,1.0) circle (2.2pt);}
+  \node[anchor=east] at (-0.3,0) {slowing down};
+  \foreach \x in {0,2.88,4.88,6.48,7.68,8.0}{\fill (\x,0) circle (2.2pt);}
+  \draw[->,>=Stealth,gray] (0,-0.6) -- node[below]{direction of motion} (8,-0.6);
+\end{tikzpicture}
+\caption{Dot diagrams for three kinds of motion. Each row uses the same time between dots.}
+\label{fig:accel}
+\end{figure}
+
+Notice one thing a dot diagram does \emph{not} tell you: which way the object was going. An object moving left to right and one moving right to left leave exactly the same set of dots. If direction matters, we must add it to the diagram, for example by numbering the dots or drawing an arrow. We return to direction in Section~\ref{sec:velocity}.
+
+\subsection{Making dot diagrams in the laboratory}
+
+A classic laboratory device for producing dot diagrams is the \textbf{ticker-tape timer} (Figure~\ref{fig:ticker}). A long paper tape is attached to a moving cart and threaded under a small hammer that taps down at a fixed rate, typically \num{50} times per second. Each tap leaves a carbon dot on the tape. After the run, the tape is a dot diagram of the cart's motion, with \SI{0.02}{\second} between dots. With a ruler, you can then measure the spacing directly.
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \draw[fill=slatepale] (0,0) rectangle (2.2,1.4);
+  \node[font=\small] at (1.1,1.1) {timer};
+  \draw[fill=black] (1.4,0.55) rectangle (1.6,0.95);
+  \draw[->,>=Stealth] (1.5,1.6) -- (1.5,1.0);
+  \node[font=\scriptsize,anchor=south] at (1.5,1.6) {taps 50 times/s};
+  \draw[fill=white] (-1.0,0.35) rectangle (6.5,0.55);
+  \foreach \x in {-0.8,-0.55,-0.3,-0.05,0.2,0.45,0.7,0.95,1.2}{\fill (\x,0.45) circle (1.2pt);}
+  \foreach \x in {2.5,2.85,3.25,3.7,4.2,4.75,5.35,6.0}{\fill (\x,0.45) circle (1.2pt);}
+  \draw[fill=teal!30] (6.5,0.1) rectangle (8.3,0.9);
+  \fill (6.9,0.05) circle (0.15); \fill (7.9,0.05) circle (0.15);
+  \node[font=\small] at (7.4,0.5) {cart};
+  \draw[->,>=Stealth,thick] (8.5,0.5) -- (9.5,0.5);
+  \node[font=\scriptsize,anchor=west] at (9.5,0.5) {motion};
+\end{tikzpicture}
+\caption{A ticker-tape timer. The cart drags the tape under a hammer that strikes at a steady rate, leaving a dot diagram on the tape. In this sketch the cart is speeding up: the dots nearest the cart, made most recently, are farthest apart.}
+\label{fig:ticker}
+\end{figure}
+
+\begin{checkbox}
+A ticker-tape timer is adjusted to tap \emph{less} often, so that more time passes between dots. The cart's motion is unchanged. Will the dots on the tape be closer together or farther apart than before? Explain in one sentence.
+\end{checkbox}
+
+\begin{checkbox}
+You want to compare a fast cart and a slow cart using ticker tape. Should the timer tap at the same rate for both, faster for the fast cart, or faster for the slow cart? Why?
+\end{checkbox}
+
+\section{Speed: Distance and Time}
+\label{sec:speed}
+
+A dot diagram shows that widely spaced dots mean high speed, but it does not yet give speed a number. To do that we need a second ingredient: the time between dots.
+
+\subsection{The basic relationship}
+
+Before the seventeenth century, people described moving things simply as ``slow'' or ``fast.'' Galileo Galilei (1564--1642) is credited with being the first to measure speed by comparing the distance covered with the time it took, and he defined speed as the distance covered per unit of time. Distance was easy for Galileo to measure; short times were not. He sometimes used his own pulse as a clock, and sometimes counted drops from a ``water clock'' of his own design. The definition he arrived at is the one we still use.
+
+Start with something familiar. If you drive at \SI{30}{\mile\per\hour} for \SI{2}{\hour}, you cover \SI{60}{\mile}. Drive twice as long and you cover twice the distance; drive twice as fast and you also cover twice the distance. Distance is proportional to both speed and time, so
+\begin{equation}
+\text{distance} = \text{speed}\times\text{time}.
+\label{eq:dvt}
+\end{equation}
+In symbols, with $d$ for distance, $v$ for speed, and $t$ for time,
+\begin{equation}
+d = v\,t.
+\label{eq:dvt-symbols}
+\end{equation}
+We usually want speed, so we divide both sides by $t$:
+\begin{equation}
+v = \frac{d}{t}.
+\label{eq:speed}
+\end{equation}
+
+\begin{definition}{Speed}{speed}
+The \textbf{speed} of an object is the distance it travels divided by the time taken:
+\[
+\text{speed} = \frac{\text{distance travelled}}{\text{time elapsed}}, \qquad v = \frac{d}{t}.
+\]
+In SI units, distance is in metres (\si{\metre}) and time in seconds (\si{\second}), so speed is in metres per second (\si{\metre\per\second}). The slash in \si{\metre\per\second} is read ``per'' and means ``divided by.'' Any combination of a distance unit and a time unit is a legitimate unit of speed: kilometres per hour and miles per hour suit cars and long journeys, while metres per second suits the shorter distances of most physics problems, and it is the unit this book uses unless there is a good reason not to.
+\end{definition}
+
+Equation~\eqref{eq:speed} packs two ideas into one fraction:
+\begin{itemize}
+  \item \textbf{Fixed time, bigger distance, bigger speed.} If one object moves \SI{10}{\metre} in \SI{2}{\second} and another moves \SI{1000}{\metre} in \SI{2}{\second}, the second is faster. The numerator grew.
+  \item \textbf{Fixed distance, smaller time, bigger speed.} If one object moves \SI{10}{\metre} in \SI{2}{\second} and another moves \SI{10}{\metre} in \SI{0.02}{\second}, the second is much faster. The denominator shrank, and shrinking a denominator makes a fraction larger.
+\end{itemize}
+
+\begin{twoviews}{speed}
+\elem Speed is a \emph{ratio}: distance per unit time. The ratio is the same whichever pair of distance and time you take from a constant-speed motion, because doubling the time doubles the distance. Choose a time interval, measure how far the object went, divide. On a dot diagram, the ratio is the spacing of the dots divided by the time between them.
+
+\calc Speed is a \emph{rate of change}. Let $x(t)$ be the object's position along its line of motion at time $t$. Constant speed means the position grows in proportion to time, $x(t) = x_0 + v\,t$, and the speed is the derivative of position with respect to time:
+\[
+v = \deriv{x}{t}.
+\]
+For $x(t) = x_0 + vt$ the derivative is the constant $v$: the graph of $x$ against $t$ is a straight line and $v$ is its slope. Written this way the definition does not care whether the speed is constant, and that is its advantage. Section~\ref{sec:average} uses it for motion whose speed changes.
+\end{twoviews}
+
+\begin{example}{Walking speed from stride data}{walking}
+While walking at a steady pace you take one stride every \SI{1.18}{\second}, and each stride is \SI{1.54}{\metre} long. How fast are you walking, in metres per second?
+
+\elem Begin with a labelled dot diagram. It is not strictly needed for the arithmetic, but it organizes the information and makes it obvious which distance goes with which time.
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \foreach \i in {0,...,5}{\fill (\i*1.8,0) circle (2.5pt);}
+  \draw[<->,>=Stealth,red!70!black] (0,-0.4) -- node[below]{\SI{1.54}{\metre}} (1.8,-0.4);
+  \draw[<->,>=Stealth,teal!80!black] (3.6,0.4) -- node[above]{\SI{1.18}{\second}} (5.4,0.4);
+\end{tikzpicture}
+\end{center}
+
+Each stride carries you \SI{1.54}{\metre} and takes \SI{1.18}{\second}. By Equation~\eqref{eq:speed},
+\[
+v = \frac{d}{t} = \frac{\SI{1.54}{\metre}}{\SI{1.18}{\second}} = \SI{1.31}{\metre\per\second}.
+\]
+
+\calc After $n$ strides the walker is at $x = n\times\SI{1.54}{\metre}$ and the clock reads $t = n\times\SI{1.18}{\second}$. Eliminating $n$ gives the position as a function of time,
+\[
+x(t) = \frac{\SI{1.54}{\metre}}{\SI{1.18}{\second}}\,t = (\SI{1.31}{\metre\per\second})\,t,
+\qquad\text{so}\qquad
+v = \deriv{x}{t} = \SI{1.31}{\metre\per\second}.
+\]
+The derivative has no $t$ in it, which says the speed is the same at every instant, as ``steady pace'' promised. Strictly, the walker's speed wobbles within each stride, and the straight line is a model of the average motion; the dots are on the line, and the wobble is between them.
+
+\smallskip\noindent Is this reasonable? At \SI{1.31}{\metre\per\second} a kilometre takes about \num{13} minutes and a mile takes about \num{20} minutes. That is an ordinary walking pace, so the answer passes a quick reality check.\qed
+\end{example}
+
+\begin{keyidea}[Units travel with the numbers]
+In the example above, metres divided by seconds gave metres per second. Always carry the units through a calculation. If the units of your answer come out wrong, the calculation is wrong, no matter how good the arithmetic looks. The same holds for derivatives: $\dd x/\dd t$ has the units of $x$ divided by the units of $t$, and an integral $\int v\,\dd t$ has the units of $v$ times the units of $t$.
+\end{keyidea}
+
+\subsection{Solving for time or distance}
+
+Equation~\eqref{eq:dvt-symbols} can be rearranged to find whichever quantity is unknown:
+\[
+d = v\,t, \qquad v = \frac{d}{t}, \qquad t = \frac{d}{v}.
+\]
+You do not need to memorize three formulas. Memorize $d = vt$ and rearrange.
+
+\begin{example}{Paint drops from a wheel}{wheel}
+A car travels along a highway at \SI{25}{\metre\per\second}. A blob of wet paint on one tyre touches the road once per rotation, and the wheel turns once every \SI{0.079}{\second}. How far apart are the paint marks, and what does that distance represent physically?
+
+\solution The marks are a dot diagram with \SI{0.079}{\second} between dots. In that time the car moves
+\[
+d = v\,t = (\SI{25}{\metre\per\second})(\SI{0.079}{\second}) = \SI{1.98}{\metre}.
+\]
+The car moves this far during exactly one rotation of the wheel, so \SI{1.98}{\metre} is the distance the tyre rolls out in one turn: the \emph{circumference} of the wheel. (A tyre about \SI{63}{\centi\metre} across has roughly this circumference, which is sensible for a car.)\qed
+\end{example}
+
+\begin{example}{Finding the time between strides}{stridetime}
+A runner moves at \SI{3.2}{\metre\per\second} with a stride length of \SI{2.08}{\metre}. How much time passes between successive strides?
+
+\solution Rearranging $d = vt$ for time,
+\[
+t = \frac{d}{v} = \frac{\SI{2.08}{\metre}}{\SI{3.2}{\metre\per\second}} = \SI{0.65}{\second}.
+\]
+Check the units: metres divided by metres-per-second leaves seconds. Check the size: a bit more than one and a half strides per second is typical of an easy distance run.\qed
+\end{example}
+
+\begin{checkbox}
+Two dot diagrams are made with the same timer. The dots in diagram~A are three times as far apart as the dots in diagram~B. How many times faster is object~A than object~B? Now suppose instead that the timer for A ran at half the rate of the timer for B (twice as much time between dots). Which object is faster now, and by what factor?
+\end{checkbox}
+
+\subsection{Speed relative to what?}
+
+There is a hidden assumption in every speed we have quoted so far. When we say the walker moves at \SI{1.31}{\metre\per\second}, we mean relative to the ground. The walker's speed relative to a friend walking alongside is zero. If you stroll down the aisle of a moving train, your speed relative to the floor of the carriage is a leisurely \SI{1}{\metre\per\second}, while your speed relative to the countryside outside is that of the train. Everything moves relative to something, and a speed is meaningful only once we know what that something is.
+
+Even ``at rest'' is relative. As you sit reading this, you are at rest relative to your chair, but Earth carries you around the Sun at about \SI{107000}{\kilo\metre\per\hour}, which is \SI{30}{\kilo\metre\per\second}, and faster still relative to the centre of our galaxy. When a racing car is said to reach \SI{300}{\kilo\metre\per\hour}, the speed is relative to the track. Unless stated otherwise, speeds of things in our surroundings are measured relative to the surface of the Earth, and that is the convention this book follows. The ancient sprinter's speed, whatever it was, is a speed relative to the mud of the lake shore. We return to relative motion, with signs and directions, in Section~\ref{sec:relative}.
+
+\begin{checkbox}
+A hungry mosquito sees you resting in a hammock in a steady \SI{3}{\metre\per\second} breeze. How fast, and in which direction, should the mosquito fly in order to hover above you?
+\end{checkbox}
+
+\subsection{Units and conversions}
+
+Scientists report speed in metres per second, but everyday life uses kilometres per hour or miles per hour, and you should be able to move fluently between them. The method is to multiply by fractions that equal one. Since $\SI{1}{\kilo\metre} = \SI{1000}{\metre}$ and $\SI{1}{\hour} = \SI{3600}{\second}$,
+\[
+\SI{1}{\metre\per\second}
+ = 1\,\frac{\text{m}}{\text{s}}\times\frac{\SI{1}{km}}{\SI{1000}{m}}\times\frac{\SI{3600}{s}}{\SI{1}{h}}
+ = \SI{3.6}{\kilo\metre\per\hour}.
+\]
+Each fraction is equal to one, so multiplying by it changes the units without changing the physical quantity. The metre and second symbols cancel, leaving kilometres per hour.
+
+\begin{modelnote}[Where the metre and the second come from]
+Units are themselves agreements, and they have been refined as measurement improved. The metre was originally defined as one ten-millionth of the distance from the North Pole to the equator, and for a long time it was the distance between two scratches on a platinum--iridium bar kept near Paris. Since 1983 it has been defined as the distance light travels in a vacuum in $1/299\,792\,458$ of a second. The second was once $1/86\,400$ of a mean solar day, but Earth's rotation is gradually slowing, so since the 1960s the second has been defined by counting $9\,192\,631\,770$ vibrations of a caesium-133 atom. Every speed in this chapter ultimately rests on those two definitions.
+\end{modelnote}
+
+\begin{example}{Converting Bolt's average speed}{convert}
+Usain Bolt ran \SI{100}{\metre} in \SI{9.58}{\second}. Express his average speed in metres per second, kilometres per hour, and miles per hour. (\SI{1}{\mile} = \SI{1609}{\metre}.)
+
+\solution
+\[
+v = \frac{\SI{100}{\metre}}{\SI{9.58}{\second}} = \SI{10.44}{\metre\per\second}.
+\]
+To kilometres per hour, multiply by \num{3.6}:
+\[
+\SI{10.44}{\metre\per\second}\times 3.6 = \SI{37.6}{\kilo\metre\per\hour}.
+\]
+To miles per hour, convert metres to miles and seconds to hours:
+\[
+10.44\,\frac{\text{m}}{\text{s}}\times\frac{\SI{1}{mi}}{\SI{1609}{m}}\times\frac{\SI{3600}{s}}{\SI{1}{h}} = \SI{23.4}{\mile\per\hour}.
+\]
+A car doing \SI{37.6}{\kilo\metre\per\hour} is moving at an ordinary town speed, so Bolt could keep pace with city traffic for about ten seconds.\qed
+\end{example}
+
+Table~\ref{tab:speeds} lists some reference speeds. Keep a few of them in your head; they are the raw material of sanity checks.
+
+\begin{table}[htb]
+\centering
+\caption{Approximate speeds of familiar things. Values are rounded. Conversions use $\SI{1}{\hour}=\SI{3600}{\second}$ and $\SI{1}{\mile}=\SI{1609.344}{\metre}$. A handy set of landmarks: \SI{10}{\metre\per\second} is about \SI{36}{\kilo\metre\per\hour} or \SI{22}{\mile\per\hour}, and \SI{30}{\metre\per\second} is about \SI{108}{\kilo\metre\per\hour} or \SI{67}{\mile\per\hour}.}
+\label{tab:speeds}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{lS[table-format=4.2]S[table-format=4.1]S[table-format=3.1]}
+\toprule
+Moving object & {\si{\metre\per\second}} & {\si{\kilo\metre\per\hour}} & {\si{\mile\per\hour}} \\
+\midrule
+Garden snail & 0.005 & 0.02 & 0.01 \\
+Casual walk & 1.3 & 4.7 & 2.9 \\
+Brisk walk & 1.8 & 6.5 & 4.0 \\
+Recreational jog & 3 & 11 & 6.7 \\
+Marathon world-record pace & 5.8 & 21 & 13 \\
+Elite sprinter (average over \SI{100}{m}) & 10.4 & 37.6 & 23.4 \\
+Elite sprinter (peak) & 12.4 & 44.6 & 27.7 \\
+Highway car & 30 & 108 & 67 \\
+Cruising airliner & 250 & 900 & 560 \\
+Sound in air (room temperature) & 343 & 1235 & 767 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Average Speed and Instantaneous Speed}
+\label{sec:average}
+
+Bolt's \SI{10.44}{\metre\per\second} deserves a closer look. He did not run at that speed for the whole race. He started from rest, took several seconds to reach top speed, ran the middle of the race at roughly \SI{12.4}{\metre\per\second}, and slowed slightly near the finish. The number \num{10.44} is his \textbf{average speed}: total distance divided by total time, with all the speeding up and slowing down smeared together. The number a radar gun would show at any one moment is his \textbf{instantaneous speed}.
+
+\begin{twoviews}{instantaneous speed}
+\elem The instantaneous speed at some moment is the average speed over a very short interval around that moment: so short that the object had no time to speed up or slow down appreciably within it. ``Very short'' depends on the situation. A tenth of a second is short for a sprinter; a whole second is short for a glacier. If shrinking the interval further stops changing the answer, to the precision you care about, you have found the instantaneous speed. A speedometer does exactly this: it measures how far the wheels turn in a small fraction of a second.
+
+\calc Shrink the interval all the way. The instantaneous speed at time $t$ is the limit of the average speed $\Delta x/\Delta t$ as the interval $\Delta t$ around $t$ goes to zero, which is the definition of the derivative:
+\[
+v(t) = \lim_{\Delta t \to 0}\frac{\Delta x}{\Delta t} = \deriv{x}{t}.
+\]
+On a graph of position against time, $\Delta x/\Delta t$ is the slope of the chord joining two points on the curve; as the points slide together the chord becomes the tangent, and the instantaneous speed is the slope of the tangent line. If you have a formula for $x(t)$, the rules of differentiation give you $v(t)$ at every instant at once, with no intervals to shrink.
+\end{twoviews}
+
+\begin{definition}{Average and instantaneous speed}{avgspeed}
+The \textbf{average speed} over a trip is the total distance travelled divided by the total time:
+\[
+\bar v = \frac{d_{\text{total}}}{t_{\text{total}}}.
+\]
+The \textbf{instantaneous speed} is the speed at one particular moment: what a speedometer reads. \elemtag\ It equals the average speed over a very short time interval around that moment. \calctag\ It is the derivative of position with respect to time, $v = \dd x/\dd t$, the slope of the tangent to the position--time graph.
+\end{definition}
+
+For an object moving at constant speed, average and instantaneous speed are the same, and every gap in its dot diagram is the same length. For an object that speeds up or slows down, the average speed over a long interval can be quite different from the instantaneous speed at any one point.
+
+\begin{example}{Bolt's race, twenty metres at a time}{splits}
+In Bolt's world-record race in Berlin in 2009, timing equipment recorded when he passed each \SI{20}{\metre} mark. The times, measured from the starting gun, were \SI{2.88}{\second}, \SI{4.64}{\second}, \SI{6.31}{\second}, \SI{7.92}{\second}, and \SI{9.58}{\second}. Use them to describe how his speed changed during the race.
+
+\elem Each \SI{20}{\metre} segment is a dot-diagram interval in reverse: the distance is fixed and the time varies. The average speed over each segment is \SI{20}{\metre} divided by the time spent in it.
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{cccc}
+\toprule
+mark (m) & time at mark (s) & time in segment (s) & average speed (\si{\metre\per\second}) \\
+\midrule
+20  & 2.88 & 2.88 & 6.9 \\
+40  & 4.64 & 1.76 & 11.4 \\
+60  & 6.31 & 1.67 & 12.0 \\
+80  & 7.92 & 1.61 & 12.4 \\
+100 & 9.58 & 1.66 & 12.0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+The first segment is slow because it includes the reaction to the gun (about \SI{0.15}{\second}) and the start from rest. Bolt was still speeding up through \SI{60}{\metre}, was fastest between \SI{60}{\metre} and \SI{80}{\metre}, and slowed slightly at the end. No segment average equals the race average of \SI{10.44}{\metre\per\second}; the race average is pulled down by the slow start. The \SI{12.4}{\metre\per\second} of the fastest segment is itself an average over \SI{1.61}{\second}; his true peak instantaneous speed was a little higher, but the \SI{20}{\metre} intervals are too coarse to show it.
+
+\calc A smooth model for a sprinter's speed is
+\[
+v(t) = v_{\max}\left(1 - e^{-t/\tau}\right),
+\]
+which starts at zero, rises quickly, and levels off at $v_{\max}$; the constant $\tau$ sets how quickly. Position is recovered by integrating from the start, and the integral of $e^{-t/\tau}$ is $-\tau e^{-t/\tau}$:
+\[
+x(t) = \int_0^{t} v(t')\,\dd t' = v_{\max}\left[t - \tau\left(1 - e^{-t/\tau}\right)\right].
+\]
+With $v_{\max} = \SI{12.4}{\metre\per\second}$, the condition $x(\SI{9.58}{\second}) = \SI{100}{\metre}$ gives $\tau = \SI{1.52}{\second}$. The model then predicts the \SI{20}{\metre} marks at \num{2.9}, \num{4.7}, \num{6.3}, \num{7.9}, and \SI{9.6}{\second}, within about a tenth of a second of the measured times. Differentiating $x(t)$ returns $v(t)$, as it must, and the average speed is the integral of $v$ divided by the time,
+\[
+\bar v = \frac{1}{T}\int_0^{T} v(t)\,\dd t = \frac{x(T)}{T} = \frac{\SI{100}{\metre}}{\SI{9.58}{\second}} = \SI{10.44}{\metre\per\second},
+\]
+the same number as before, now seen as the average value of a function. The model ignores the reaction time and the slight slowing at the end, which is why it is a model and not a record.\qed
+\end{example}
+
+\subsection{From speed back to distance}
+
+Average speed is the quantity a driver planning a trip cares about, because it gives the travel time. Rearranging the definition,
+\[
+d_{\text{total}} = \bar v\, t_{\text{total}},
+\]
+which holds for \emph{any} motion, however uneven, provided $\bar v$ is the average speed over the whole interval. If your average speed on a four-hour drive is \SI{80}{\kilo\metre\per\hour}, you covered \SI{320}{\kilo\metre}, regardless of how many red lights you met along the way. Equation~\eqref{eq:dvt-symbols}, $d = vt$, is the special case in which the speed never changed.
+
+\begin{twoviews}{distance from speed}
+\elem On a graph of speed against time, a constant speed is a horizontal line, and $d = vt$ is the area of the rectangle under it: height $v$, width $t$. If the speed changes, cut the time into short pieces on which the speed is nearly constant, multiply on each piece, and add. The total is the area under the speed--time graph. Dividing that area by the total time gives the average speed, so $d_{\text{total}} = \bar v\,t_{\text{total}}$ is the statement that a rectangle of height $\bar v$ has the same area as the curve.
+
+\calc ``Cut, multiply, add, and let the pieces shrink'' is the definition of the definite integral. Because $v = \dd x/\dd t$, the fundamental theorem of calculus gives
+\begin{equation}
+d = \int_{t_1}^{t_2} v(t)\,\dd t,
+\qquad
+\bar v = \frac{1}{t_2 - t_1}\int_{t_1}^{t_2} v(t)\,\dd t.
+\label{eq:integral}
+\end{equation}
+The second formula is the average value of the function $v$ on the interval, and the first says the distance is the area under its graph. For a constant $v$ the integral is $v\,(t_2 - t_1)$ and Equation~\eqref{eq:dvt-symbols} drops out.
+\end{twoviews}
+
+\begin{checkbox}
+A car's odometer reads zero at the start of a trip and \SI{40}{\kilo\metre} half an hour later. (a) What was the car's average speed? (b) Could the car have achieved this average without ever going faster than \SI{80}{\kilo\metre\per\hour}, if it started from rest? (c) When a police officer writes a speeding ticket, is it for the driver's average speed or instantaneous speed?
+\end{checkbox}
+
+\begin{example}{The round-trip trap}{roundtrip}
+You cycle \SI{12}{\kilo\metre} to a friend's house at \SI{24}{\kilo\metre\per\hour}, then cycle home along the same road at \SI{12}{\kilo\metre\per\hour}. What was your average speed for the whole trip?
+
+\elem The tempting answer is the average of the two speeds, \SI{18}{\kilo\metre\per\hour}. It is wrong. Average speed is total distance over total time, so we need the time for each leg.
+\[
+t_{\text{out}} = \frac{\SI{12}{\kilo\metre}}{\SI{24}{\kilo\metre\per\hour}} = \SI{0.50}{\hour},
+\qquad
+t_{\text{back}} = \frac{\SI{12}{\kilo\metre}}{\SI{12}{\kilo\metre\per\hour}} = \SI{1.00}{\hour}.
+\]
+Then
+\[
+\bar v = \frac{\SI{24}{\kilo\metre}}{\SI{1.50}{\hour}} = \SI{16}{\kilo\metre\per\hour}.
+\]
+The slow leg took twice as long, so it counts for twice as much in the average.
+
+\calc The speed--time graph is two rectangles: height \SI{24}{\kilo\metre\per\hour} for \SI{0.5}{\hour}, then height \SI{12}{\kilo\metre\per\hour} for \SI{1.0}{\hour}. By Equation~\eqref{eq:integral},
+\[
+\bar v = \frac{1}{1.5}\int_0^{1.5} v\,\dd t = \frac{24(0.5) + 12(1.0)}{1.5}\ \si{\kilo\metre\per\hour} = \SI{16}{\kilo\metre\per\hour}.
+\]
+The time average weights each speed by how long it lasted. In general, for two legs of equal length $d$ at speeds $v_1$ and $v_2$,
+\[
+\bar v = \frac{2d}{d/v_1 + d/v_2} = \frac{2v_1v_2}{v_1 + v_2},
+\]
+the \emph{harmonic} mean of the two speeds, which is always less than their ordinary average unless $v_1 = v_2$ (Exercise~\ref{ex:harmonic}). Whenever the legs of a trip take different times, averaging the speeds directly gives the wrong answer.\qed
+\end{example}
+
+\subsection{Position--time graphs}
+\label{sec:graphs}
+
+A dot diagram is a picture of \emph{where} an object was; it hides \emph{when} in the spacing between dots. A \textbf{position--time graph} puts both on the page. Plot time along the horizontal axis and position along the vertical axis, and mark one point for each dot. Figure~\ref{fig:xt} does this for the walker of Worked Example~\ref{ex:walking}.
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=11cm,height=7cm,
+  xlabel={time $t$ (s)},ylabel={position $x$ (m)},
+  xmin=0,xmax=6.5,ymin=0,ymax=9,
+  grid=major,grid style={gray!25},
+  legend pos=north west,legend style={draw=none,fill=none},
+]
+\addplot[teal,thick,domain=0:6.3,samples=2] {1.305*x};
+\addlegendentry{$x = (\SI{1.31}{m/s})\,t$}
+\addplot[only marks,mark=*,mark size=2.2pt,black] coordinates
+  {(0,0) (1.18,1.54) (2.36,3.08) (3.54,4.62) (4.72,6.16) (5.90,7.70)};
+\addlegendentry{dots from the dot diagram}
+\draw[red!70!black,thick] (axis cs:2.36,3.08) -- (axis cs:4.72,3.08) -- (axis cs:4.72,6.16);
+\node[red!70!black,anchor=north,font=\small] at (axis cs:3.54,3.0) {$\Delta t = \SI{2.36}{s}$};
+\node[red!70!black,anchor=west,font=\small] at (axis cs:4.8,4.6) {$\Delta x = \SI{3.08}{m}$};
+\end{axis}
+\end{tikzpicture}
+\caption{Position--time graph for a walker with \SI{1.54}{\metre} strides every \SI{1.18}{\second}. The points fall on a straight line whose slope is the speed. The red triangle shows a rise of \SI{3.08}{\metre} over a run of \SI{2.36}{\second}, a slope of \SI{1.31}{\metre\per\second}.}
+\label{fig:xt}
+\end{figure}
+
+The points lie on a straight line through the origin. The \emph{slope} of that line, rise over run, is
+\[
+\frac{\Delta x}{\Delta t} = \frac{\SI{3.08}{\metre}}{\SI{2.36}{\second}} = \SI{1.31}{\metre\per\second},
+\]
+which is the walker's speed. This is a general and very useful fact.
+
+\begin{keyidea}[Slope of a position--time graph]
+On a position--time graph, the slope of the straight line (the \emph{chord}) joining two points equals the average speed between those two instants. \calctag\ The slope of the \emph{tangent} at a point equals the instantaneous speed there, $\dd x/\dd t$. A straight graph means constant speed. A graph that bends upward, getting steeper, means the object is speeding up; one that flattens means it is slowing down. A horizontal stretch means the object is not moving at all.
+\end{keyidea}
+
+You may notice that the dot diagram of a constant-speed object and its position--time graph carry exactly the same information. They are two views of one model. Which one to draw depends on the question: dot diagrams are quick to sketch and good for comparing objects, while graphs are better for reading off numbers and for handling changing speeds. Figure~\ref{fig:boltxt} shows what a changing speed looks like.
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  name=xt,
+  width=7.0cm,height=6.4cm,
+  xlabel={time $t$ (s)},ylabel={position $x$ (m)},
+  xmin=0,xmax=10,ymin=0,ymax=105,
+  xtick={0,2,4,6,8,10},
+  grid=major,grid style={gray!25},
+  title={(a) position--time},title style={font=\small},
+]
+\addplot[teal,thick,domain=0:9.58,samples=80] {12.4*(x - 1.52*(1-exp(-x/1.52)))};
+\addplot[only marks,mark=*,mark size=2pt,black] coordinates
+  {(0,0) (2.88,20) (4.64,40) (6.31,60) (7.92,80) (9.58,100)};
+\addplot[red!70!black,dashed,thick,domain=0:9.58,samples=2] {10.44*x};
+\addplot[red!70!black,thick,domain=2.5:7.5,samples=2] {43.85 + 11.94*(x-5)};
+\fill[red!70!black] (axis cs:5,43.85) circle (1.8pt);
+\node[red!70!black,anchor=south west,font=\scriptsize,align=left] (tl) at (axis cs:0.4,66) {tangent at \SI{5}{s}:\\ slope \SI{11.9}{m/s}};
+\draw[red!70!black,thin] (tl.south east) -- (axis cs:5,43.85);
+\node[red!70!black,anchor=south east,font=\scriptsize,align=right] at (axis cs:9.7,14) {chord from start:\\ slope \SI{10.44}{m/s}};
+\end{axis}
+\begin{axis}[
+  name=vt,
+  at={(xt.right of south east)},anchor=left of south west,xshift=1.1cm,
+  width=7.0cm,height=6.4cm,
+  xlabel={time $t$ (s)},ylabel={speed $v$ (m/s)},
+  xmin=0,xmax=10,ymin=0,ymax=14,
+  xtick={0,2,4,6,8,10},
+  grid=major,grid style={gray!25},
+  title={(b) speed--time},title style={font=\small},
+]
+\addplot[name path=curve,teal,thick,domain=0:9.58,samples=80] {12.4*(1-exp(-x/1.52))};
+\path[name path=axis] (axis cs:0,0) -- (axis cs:9.58,0);
+\addplot[teal!25] fill between[of=curve and axis];
+\addplot[red!70!black,dashed,thick,domain=0:9.58,samples=2] {10.44};
+\node[teal!60!black,font=\scriptsize] at (axis cs:5.5,5) {area $= \SI{100}{m}$};
+\node[red!70!black,anchor=north east,font=\scriptsize] at (axis cs:9.4,10.2) {average \SI{10.44}{m/s}};
+\end{axis}
+\end{tikzpicture}
+\caption{Bolt's world-record race. (a) Position against time: the dots are the measured \SI{20}{\metre} split times and the curve is the model of Worked Example~\ref{ex:splits}. The graph bends upward as he speeds up, then becomes nearly straight. The dashed chord from the start has slope equal to the average speed; the tangent at \SI{5}{\second} has slope equal to the instantaneous speed then. (b) The model's speed against time. The shaded area under the curve is the distance run, \SI{100}{\metre}, and the dashed line is the average speed: a rectangle of that height has the same area as the curve.}
+\label{fig:boltxt}
+\end{figure}
+
+\begin{example}{Reading a curved position--time graph}{tangent}
+From Figure~\ref{fig:boltxt}(a), estimate Bolt's instantaneous speed \SI{5.0}{\second} into the race, and compare it with his average speed up to that moment.
+
+\elem Lay a ruler along the curve at $t = \SI{5.0}{\second}$ so that it just touches without cutting: that is the tangent, drawn in red. Read two convenient points on it, for example $t = \SI{3.0}{\second}$, $x \approx \SI{20}{\metre}$ and $t = \SI{7.0}{\second}$, $x \approx \SI{68}{\metre}$. Its slope is
+\[
+\frac{\Delta x}{\Delta t} \approx \frac{\SI{68}{\metre} - \SI{20}{\metre}}{\SI{7.0}{\second} - \SI{3.0}{\second}} = \SI{12}{\metre\per\second}.
+\]
+The average speed up to \SI{5.0}{\second} is the slope of the chord from the origin to the point on the curve at $t = \SI{5.0}{\second}$, where $x \approx \SI{44}{\metre}$: about \SI{8.8}{\metre\per\second}. The instantaneous speed is much larger than the average because the average still remembers the slow start. Reading a tangent by eye is good to perhaps ten percent; that is usually enough for a sanity check.
+
+\calc Differentiate the model. Since $\dd (e^{-t/\tau})/\dd t = -(1/\tau)\,e^{-t/\tau}$,
+\[
+v(t) = \deriv{x}{t} = v_{\max}\left[1 - \tau\cdot\frac{1}{\tau}e^{-t/\tau}\right] = v_{\max}\left(1 - e^{-t/\tau}\right),
+\]
+which is the speed function we started from, as it should be. At $t = \SI{5.0}{\second}$, $e^{-5.0/1.52} = 0.037$, so $v = 12.4\,(1 - 0.037) = \SI{11.9}{\metre\per\second}$. The position at that moment is $x(5.0) = 12.4\,[5.0 - 1.52\,(1 - 0.037)] = \SI{43.8}{\metre}$, giving an average of $43.8/5.0 = \SI{8.8}{\metre\per\second}$. The ruler estimate of the tangent slope was within one percent of the derivative; the graph and the formula are two views of the same motion.\qed
+\end{example}
+
+\begin{checkbox}
+A cart's position along a track is $x(t) = (\SI{1.5}{\metre\per\second\squared})\,t^2$ for the first four seconds. (a) Find its average speed over the four seconds. (b) \elemtag\ Estimate its instantaneous speed at $t = \SI{4.0}{\second}$ from the average over the interval \SI{3.9}{\second} to \SI{4.1}{\second}. \calctag\ Confirm by differentiating. (c) Why are the answers to (a) and (b) different?
+\end{checkbox}
+
+\section{A Model of Stride Time}
+\label{sec:stridemodel}
+
+We now have the tools to see Webb's problem clearly. He measured the hunter's stride length: \SI{3.73}{\metre}. To compute a speed, he also needed the time between strides, and there is no way to read time from a footprint. He could have guessed, but a guess is not science. Instead, he did what scientists usually do: he borrowed a model that someone else had already built and tested.
+
+\subsection{Why height matters}
+
+Watch a small child walking beside an adult. To keep up, the child takes many quick, short steps while the adult takes a few long, unhurried ones. The child's time between strides is shorter. Leg length, and therefore height, affects how quickly a person steps at a given speed.
+
+Webb did not know the hunter's height, but he did know the hunter's foot length, and taller people tend to have longer feet. That opens a chain of inferences:
+\[
+\text{foot length} \;\longrightarrow\; \text{height} \;\longrightarrow\; \text{(with stride length)}\;\text{time between strides} \;\longrightarrow\; \text{speed}.
+\]
+Each arrow is a step in the model, and each step carries its own uncertainty.
+
+\subsection{The Charteris model}
+
+The equations Webb used came from a 1981 study by three Canadian researchers, John Charteris, Jack Wall, and John Nottrodt. They had been asked a similar question about far older footprints: the 3.6-million-year-old hominin trackway at Laetoli in Tanzania. To answer it, they measured modern volunteers walking at a range of speeds and recorded stride length, foot length, and height. From those data they fitted equations that take stride length and foot length as inputs and return an estimated time between strides.
+
+To make the data from people of different sizes comparable, Charteris and his colleagues worked with ratios rather than raw measurements. One of these is the \textbf{relative speed}.
+
+\begin{definition}{Relative speed}{relspeed}
+The \textbf{relative speed} of a walker or runner is their speed divided by their height:
+\[
+\text{relative speed} = \frac{\text{speed}}{\text{height}}.
+\]
+Its unit is $\si{\metre\per\second}/\si{\metre} = \si{\per\second}$. It tells you how many body-lengths the person covers each second.
+\end{definition}
+
+A person \SI{1.8}{\metre} tall walking at \SI{1.4}{\metre\per\second} has a relative speed of $1.4/1.8 = \SI{0.78}{\per\second}$: about three-quarters of a body length per second. A \SI{1.2}{\metre} child walking at the same speed has a relative speed of \SI{1.17}{\per\second}, which is why the child looks so much busier.
+
+\subsection{The famous result}
+
+Feeding the hunter's stride length and foot length into the Charteris equations, Webb obtained a time between strides of \SI{0.360}{\second}. Combined with the measured stride length,
+\[
+v = \frac{d}{t} = \frac{\SI{3.73}{\metre}}{\SI{0.360}{\second}} = \SI{10.4}{\metre\per\second}.
+\]
+
+\begin{example}{Comparing the hunter to Usain Bolt}{bolt}
+Webb's model gives the hunter a speed of \SI{10.4}{\metre\per\second}. Usain Bolt's world-record \SI{100}{\metre} time is \SI{9.58}{\second}. Compare the two.
+
+\solution Bolt's average speed over the race was
+\[
+\bar v = \frac{\SI{100}{\metre}}{\SI{9.58}{\second}} = \SI{10.44}{\metre\per\second}.
+\]
+The hunter's modelled speed is within one percent of Bolt's average. Taken at face value, Webb's result says a barefoot hunter on a muddy lake shore \num{20000} years ago ran essentially as fast as the fastest human ever timed. That is the claim that made the newspapers. Notice, too, what kind of speed each number is. Bolt's is an average over a race that began from a standstill; the hunter's stride-by-stride figure is closer to an instantaneous speed in mid-run. A fair comparison would set the hunter against Bolt's mid-race \SI{12.4}{\metre\per\second}, which makes the claim less dramatic but does not yet make it wrong.\qed
+\end{example}
+
+That comparison should make you a little uneasy. Extraordinary results deserve extra scrutiny. Before believing a number, a scientist asks: does the model that produced it hold up?
+
+\section{Questioning a Model}
+\label{sec:questioning}
+
+There are two broad ways to test a model's output. The first is to look at its \emph{other} outputs, the ones nobody put in the headline, and ask whether they make sense. The second is to look inside the model and ask whether it was ever meant for this job. Webb's result fails both tests.
+
+\subsection{Sanity checks}
+
+\begin{definition}{Sanity check}{sanity}
+A \textbf{sanity check} is a quick, rough test of whether a result is believable. It compares the result, or the intermediate quantities that produced it, against known values, limiting cases, or everyday experience. A sanity check cannot prove a result correct, but it can quickly reveal that something has gone wrong.
+\end{definition}
+
+Compare the hunter with Bolt in more detail, using numbers that are known for Bolt and predicted by the model for the hunter:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{lcc}
+\toprule
+ & Usain Bolt (measured) & Hunter (modelled) \\
+\midrule
+Stride length & \SI{4.88}{\metre} & \SI{3.73}{\metre} \\
+Time between strides & \SI{0.467}{\second} & \SI{0.360}{\second} \\
+Height & \SI{195}{\centi\metre} & \SI{194}{\centi\metre} \\
+Speed & \SI{10.44}{\metre\per\second} & \SI{10.36}{\metre\per\second} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Bolt's strides are more than a metre longer than the hunter's. On stride length alone, you would expect Bolt to be much faster. The only reason the two speeds come out nearly equal is that the model assigns the hunter an extraordinarily short stride time, about \SI{0.11}{\second} quicker than Bolt's. Could that be because the hunter was much shorter, with shorter legs that cycle faster? No: the model also predicts that the hunter was \SI{194}{\centi\metre} tall, within a centimetre of Bolt. The model is claiming that a man the same height as Bolt, taking strides a metre shorter than Bolt's, turned his legs over far faster than the greatest sprinter in history. That is hard to believe.
+
+Webb applied the same model to other trackways at the site. None came out as fast as the hunter, but several produced oddly short stride times of their own. When a model produces strange numbers across many inputs, the problem is more likely in the model than in the inputs.
+
+\subsection{Looking inside the model: extrapolation}
+
+Figure~\ref{fig:charteris} is a schematic version of one of the plots from the Charteris study. It shows the data the equations were built from. The horizontal axis is relative speed. The vertical axis is stride length measured in foot-lengths, another size-independent ratio.
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=11cm,height=7.5cm,
+  xlabel={relative speed, speed/height (\si{\per\second})},
+  ylabel={stride length (foot-lengths)},
+  xmin=0,xmax=1.5,ymin=0,ymax=8,
+  xtick={0,0.4,0.8,1.2},ytick={0,2,4,6,8},
+  grid=major,grid style={gray!25},
+]
+\addplot[only marks,mark=*,mark size=2pt,black,
+  error bars/.cd,y dir=both,y explicit,error bar style={thick}]
+  coordinates {
+    (0.4,3.6) +- (0,0.85)
+    (0.6,4.5) +- (0,0.40)
+    (0.8,5.2) +- (0,0.40)
+    (1.0,6.0) +- (0,0.60)
+    (1.2,6.4) +- (0,0.70)
+  };
+\addplot[teal,thick,dashed,domain=0.3:1.3,samples=2] {2.2+3.5*x};
+\draw[red!70!black,thick,->,>=Stealth] (axis cs:1.25,1.2) -- (axis cs:1.48,1.2);
+\node[red!70!black,anchor=south east,font=\small,align=right] at (axis cs:1.48,1.3) {Bolt is at \SI{5.35}{\per\second},\\ far off the page};
+\end{axis}
+\end{tikzpicture}
+\caption{Schematic of the walking data behind the Charteris model, redrawn after Charteris, Wall, and Nottrodt (1981). Points show group means with a bar indicating the spread. The dashed line is a rough straight-line fit. The data stop at a relative speed of about \SI{1.2}{\per\second}.}
+\label{fig:charteris}
+\end{figure}
+
+Now compute Bolt's relative speed:
+\[
+\frac{\SI{10.44}{\metre\per\second}}{\SI{1.95}{\metre}} = \SI{5.35}{\per\second}.
+\]
+The fastest volunteer in the Charteris data had a relative speed of about \SI{1.2}{\per\second}. Bolt, and the hunter that Webb's model made Bolt's equal, are more than four times beyond the edge of the data. There is a simpler way to say this: the Charteris volunteers were \emph{walking}. Their model was a model of walking. Webb used it on a sprinter.
+
+\begin{definition}{Interpolation and extrapolation}{extrap}
+Using a model to make predictions \emph{inside} the range of conditions it was built and tested on is called \textbf{interpolation}. Using it \emph{outside} that range is called \textbf{extrapolation}. Interpolation is usually safe. Extrapolation is a gamble: nothing in the data says how the relationship behaves out there, and the further you go, the worse the gamble.
+\end{definition}
+
+\begin{twoviews}{why a fitted line cannot be trusted far from its data}
+\elem A straight line fitted to data says: ``over the range I was fitted to, each extra unit on the horizontal axis adds the same amount on the vertical axis.'' The data cannot say whether that stays true outside the range, because nobody looked there. Real relationships usually bend sooner or later: children stop growing, engines hit a top speed, walkers break into a run. The line does not know about the bend, so the further you follow it past the last data point, the more likely it is to be badly wrong.
+
+\calc Suppose the true relationship is some smooth curve $y = f(x)$. Near any point $x_0$ the curve is well approximated by its tangent line,
+\[
+f(x) \approx f(x_0) + f'(x_0)\,(x - x_0),
+\]
+and a straight-line fit to data clustered near $x_0$ is essentially an estimate of this tangent: its slope is the derivative $f'(x_0)$ there. But a derivative is a \emph{local} quantity. It describes how $f$ changes right at $x_0$, and nothing forces $f'$ to keep the same value far away. Extrapolating a fitted line assumes $f'$ is constant everywhere, which is to assume the curve is a line. The error of the tangent approximation grows with the square of the distance $(x - x_0)^2$ times the curvature $f''$, so it is small nearby and can be enormous far off. That is the precise sense in which interpolation is safe and extrapolation is a gamble.
+\end{twoviews}
+
+\begin{example}{Extrapolating a straight line}{growth}
+Between the ages of 4 and 10 a child grows from about \SI{100}{\centi\metre} to about \SI{136}{\centi\metre}. Fit a straight line to these figures and use it to ``predict'' the person's height at age 40. Then explain what went wrong.
+
+\elem The growth rate over the six years is
+\[
+\frac{\SI{136}{\centi\metre} - \SI{100}{\centi\metre}}{\SI{10}{yr} - \SI{4}{yr}} = \SI{6}{\centi\metre\;per\;year}.
+\]
+Following the line for a further 30 years adds $30 \times \SI{6}{\centi\metre} = \SI{180}{\centi\metre}$, for a height of \SI{316}{\centi\metre} at age 40. Nobody is three metres tall. The straight line was a good description of growth between 4 and 10, and would be trustworthy at age 7 (interpolation), but growth slows in the teens and stops around 18. The line has no way of knowing that; only data from those ages could tell it.
+
+\calc Let $h(t)$ be height as a function of age. Between 4 and 10 the derivative $\dd h/\dd t$ is roughly \SI{6}{\centi\metre} per year, and the line we drew is the tangent approximation $h(t) \approx h(4) + h'(4)\,(t - 4)$. Real growth has $h'(t)$ rising briefly in the growth spurt and then falling to zero, so $h''$ is strongly negative in the late teens and the tangent approximation fails badly beyond that. The error of a tangent approximation is roughly $\tfrac12 h''\,(t - t_0)^2$; with $(t - t_0) = 36$ years, even a modest curvature produces an error of metres. Webb's use of the Charteris line was the same mistake with a different curve: a walking relationship extended, without any data, to a sprint.\qed
+\end{example}
+
+Extrapolation is not always wrong. Every prediction about the future is one. But a model must be extrapolated with eyes open, and the result treated with suspicion until it is confirmed. Running is not simply fast walking. In a walk, one foot is always on the ground; in a run, both feet leave the ground for part of every stride. The relationship between stride length, stride time, and speed changes when that happens. The Charteris equations know nothing about it.
+
+\subsection{How the mistake spread}
+
+Webb could have caught the problem in several ways: by reading the original study closely enough to notice that it concerned walking; by sanity-checking his output against known sprinters, as we did above; or by asking a colleague who worked with gait models regularly. None of that happened, and the reviewers who checked the paper before publication did not notice either. Once published, the number took on a life of its own. Journalists repeated it, then authors repeated the journalists. Hardly anyone went back to the source.
+
+\begin{modelnote}[Lessons from the ancient sprinter]
+\begin{enumerate}[itemsep=2pt]
+  \item \textbf{Know what your model was built for.} A model fitted to walking data is a model of walking.
+  \item \textbf{Sanity-check the result.} Compare it, and the intermediate quantities, against things you already know.
+  \item \textbf{Check the other outputs.} A model that gives one spectacular answer and several odd ones is probably wrong about all of them.
+  \item \textbf{Ask for help.} Someone who uses a model daily will spot misuse in seconds.
+  \item \textbf{Check the source.} A number that has been repeated a hundred times is not thereby a hundred times more reliable. In science, an appeal to authority or to popularity carries little weight; a single verifiable check carries a great deal.
+  \item \textbf{Be willing to be wrong.} Scientists, like everyone else, have a large capacity for fooling themselves, and the most widely shared assumptions are often the least questioned. The scientific attitude is one of inquiry, integrity, and humility. Changing your mind in the face of evidence is a strength, not a weakness.
+\end{enumerate}
+\end{modelnote}
+
+\section{Uncertainty and a Better Estimate}
+\label{sec:uncertainty}
+
+In 2013 two Spanish researchers, Javier Ruiz and Ang\'elica Torices, revisited the Willandra footprints with a model designed for the right job. Their equations were built from measurements of people actually running, on a running track and on a beach, so that the hunter's conditions fell inside the range of the data rather than far outside it. They also did something Webb had not: they reported how confident they were.
+
+Their estimate for the hunter's speed was
+\[
+v = \SI{7.2 \pm 1.0}{\metre\per\second}.
+\]
+
+\subsection{Reading an uncertainty}
+
+The notation $\SI{7.2 \pm 1.0}{\metre\per\second}$ means that the best estimate is \SI{7.2}{\metre\per\second}, and the true value is most likely somewhere between \SI{6.2}{\metre\per\second} and \SI{8.2}{\metre\per\second}. The ``$\pm\,1.0$'' is the \textbf{uncertainty}. It is not an admission of sloppiness. It is an honest statement of how precisely the method can pin the answer down.
+
+\begin{definition}{Uncertainty}{uncertainty}
+A measured or calculated quantity is reported as $x \pm \delta x$, where $x$ is the best estimate and $\delta x$ is the \textbf{absolute uncertainty}, in the same units as $x$. The \textbf{percentage uncertainty} is
+\[
+\frac{\delta x}{x}\times 100\%.
+\]
+\end{definition}
+
+For the Ruiz and Torices estimate, the percentage uncertainty is $1.0/7.2 \times 100\% \approx 14\%$. That is fairly large, and appropriately so: the estimate rests on a single trackway from one runner who lived twenty thousand years ago, in conditions the model can only approximate.
+
+\subsection{What the revised number says}
+
+A speed of \SI{7.2}{\metre\per\second} is \SI{26}{\kilo\metre\per\hour}. That is a fast run, roughly the pace of a \SI{100}{\metre} race in \num{14} seconds, sustained barefoot across soft mud while chasing an animal. It is impressive. It is also nowhere near an Olympic sprinter. Even the top of the range, \SI{8.2}{\metre\per\second}, falls well short of Bolt's \num{10.44}. The headline was wrong; the hunter was fast, not superhuman.
+
+\subsection{Carrying uncertainty through a calculation}
+
+An uncertain input produces an uncertain output. If the speed is known only to within \SI{\pm 1.0}{\metre\per\second}, then anything computed from the speed, such as the stride time, is uncertain too, and we should say by how much.
+
+\begin{twoviews}{propagating an uncertainty}
+\elem Do the calculation three times: once with the best estimate, and once with each end of the input's range. The spread of the three outputs is the output's uncertainty. This always works, and for a single uncertain input it is the method to reach for first. Its only drawback is that the two ends may give unequal deviations, and then you must decide how to report them.
+
+\calc If the output $y$ is a function of the input $x$, then a small change $\delta x$ in the input changes the output by approximately
+\[
+\delta y \approx \left|\deriv{y}{x}\right|\,\delta x,
+\]
+the tangent-line approximation again. For $y = d/x$ (a quotient with a fixed numerator), $\dd y/\dd x = -d/x^2$, so
+\[
+\delta y \approx \frac{d}{x^2}\,\delta x = \frac{d}{x}\cdot\frac{\delta x}{x} = y\,\frac{\delta x}{x},
+\qquad\text{that is,}\qquad
+\frac{\delta y}{y} \approx \frac{\delta x}{x}.
+\]
+Dividing a fixed number by an uncertain one passes the \emph{percentage} uncertainty through unchanged. The same is true of multiplying: $y = cx$ gives $\delta y/y = \delta x/x$. This one-line rule replaces the three calculations, and it is exact in the limit of small uncertainties.
+\end{twoviews}
+
+\begin{example}{Propagating uncertainty to stride time}{propagate}
+Using Webb's measured stride length of \SI{3.73}{\metre} and the Ruiz--Torices speed of \SI{7.2 \pm 1.0}{\metre\per\second}, estimate the hunter's time between strides and its uncertainty. Ignore any uncertainty in the stride length.
+
+\elem The best estimate comes from the best-estimate speed:
+\[
+t = \frac{d}{v} = \frac{\SI{3.73}{\metre}}{\SI{7.2}{\metre\per\second}} = \SI{0.52}{\second}.
+\]
+To find the uncertainty, repeat the calculation at the two ends of the speed range. A faster speed gives a shorter stride time and vice versa:
+\[
+t_{\text{fast}} = \frac{\SI{3.73}{\metre}}{\SI{8.2}{\metre\per\second}} = \SI{0.45}{\second},
+\qquad
+t_{\text{slow}} = \frac{\SI{3.73}{\metre}}{\SI{6.2}{\metre\per\second}} = \SI{0.60}{\second}.
+\]
+The best estimate sits about \SI{0.07}{\second} above the low end and \SI{0.08}{\second} below the high end, so we report $t \approx \SI{0.52 \pm 0.08}{\second}$, rounding the uncertainty up.
+
+\calc The percentage uncertainty in the speed is $1.0/7.2 = 14\%$, and $t = d/v$ inherits it:
+\[
+\delta t \approx t\,\frac{\delta v}{v} = \SI{0.518}{\second}\times 0.139 = \SI{0.072}{\second},
+\]
+so $t \approx \SI{0.52 \pm 0.07}{\second}$. The derivative gives a single symmetric figure that sits between the two elementary deviations, \num{0.066} and \num{0.083}; the difference between them is the curvature of $1/v$, which the tangent approximation ignores. Either report is acceptable, and both say the same thing: the stride time is known to about one part in seven.
+
+\smallskip\noindent Notice that both estimates are longer than Bolt's \SI{0.467}{\second}, as they should be for a shorter-striding, slower runner. The revised model passes the sanity check that Webb's failed.\qed
+\end{example}
+
+\begin{keyidea}[Three habits of careful modelling]
+\begin{itemize}[itemsep=2pt]
+  \item \textbf{Test models against real data} in the conditions where you intend to use them.
+  \item \textbf{Remember each model's limits,} and sanity-check anything that comes out of it.
+  \item \textbf{Report results with uncertainty,} so that others know how much weight the number can bear.
+\end{itemize}
+\end{keyidea}
+
+\section{From Speed to Velocity}
+\label{sec:velocity}
+
+Everything so far has been about \emph{how fast} an object moves. We have said nothing about \emph{which way}. Recall that a dot diagram cannot even tell you whether the object went left or right. For many questions that is fine. For many others, direction is the whole point. A hunter running toward an animal and one running away from it have the same speed and very different prospects.
+
+\subsection{Position, displacement, and direction}
+
+To keep track of direction, choose a line along the motion, pick a point on it as the origin, and pick one direction as positive. Then every point on the line has a \textbf{position} $x$, a number with a sign. If the hunter runs east and we call east positive, positions ahead of the origin are positive and positions behind it are negative.
+
+\begin{definition}{Displacement}{displacement}
+The \textbf{displacement} of an object over some time interval is its change in position:
+\[
+\Delta x = x_{\text{final}} - x_{\text{initial}}.
+\]
+Displacement has a sign. Positive displacement means net motion in the positive direction; negative means the opposite. Displacement is \emph{not} the same as distance travelled: an object that goes out and comes back has zero displacement but nonzero distance.
+\end{definition}
+
+\subsection{Velocity}
+
+\begin{definition}{Average velocity}{velocity}
+The \textbf{average velocity} of an object over a time interval $\Delta t$ is its displacement divided by the elapsed time:
+\[
+\bar v_x = \frac{\Delta x}{\Delta t} = \frac{x_{\text{final}} - x_{\text{initial}}}{t_{\text{final}} - t_{\text{initial}}}.
+\]
+Velocity has both a size and a direction. Along a line, the direction is carried by the sign. The size of the velocity, ignoring its sign, is the speed. The subscript $x$ records that this is the velocity along the $x$ line, with the sign convention chosen for $x$.
+\end{definition}
+
+\begin{twoviews}{velocity, displacement, and distance}
+\elem Velocity is speed with a sign. Over an interval, the average velocity is the displacement divided by the time, so it can be positive, negative, or zero; the average speed is the total distance divided by the time and is never negative. The two agree in size only when the object never reverses. On a position--time graph the slope of a chord is now the average velocity: rising lines mean positive velocity, falling lines negative. The instantaneous velocity is the slope over a very short interval, and the instantaneous speed is its size.
+
+\calc The instantaneous velocity is the derivative of position, sign included:
+\[
+v_x = \deriv{x}{t}, \qquad \text{speed} = |v_x|.
+\]
+Integrating recovers displacement and distance, and the difference between them is exactly the difference between $v_x$ and $|v_x|$:
+\[
+\Delta x = \int_{t_1}^{t_2} v_x\,\dd t, \qquad d = \int_{t_1}^{t_2} |v_x|\,\dd t.
+\]
+Where the velocity is negative the first integral counts area below the axis as negative; the second counts all area as positive. That is why displacement can vanish while distance does not.
+\end{twoviews}
+
+Speed answers ``how fast?'' Velocity answers ``how fast, and which way?'' If a car travels at \SI{60}{\kilo\metre\per\hour}, we know its speed; if it travels at \SI{60}{\kilo\metre\per\hour} \emph{to the north}, we know its velocity. Two cars passing each other on a highway at \SI{30}{\metre\per\second} have the same speed but opposite velocities: $+\SI{30}{\metre\per\second}$ and $-\SI{30}{\metre\per\second}$.
+
+\begin{definition}{Vector and scalar quantities}{vector}
+A quantity that needs both a magnitude and a direction for its complete description is a \textbf{vector quantity}. Velocity is a vector quantity; so are force and acceleration, which you will meet in later chapters. A quantity that is fully described by a magnitude alone is a \textbf{scalar quantity}. Speed is a scalar, and so are distance, time, and mass.
+\end{definition}
+
+In this chapter, where motion is along a single line, the direction of a vector is carried by its sign, and that is all the vector machinery we need. In two or three dimensions a velocity is drawn as an arrow whose length gives the speed and whose orientation gives the direction. We return to that picture when we study motion in a plane.
+
+\begin{keyidea}[Constant velocity means straight-line motion at constant speed]
+Constant \emph{speed} means the object neither speeds up nor slows down. Constant \emph{velocity} means constant speed \emph{and} constant direction, and a constant direction is a straight line. A car rounding a curve with its speedometer needle steady has a constant speed but a changing velocity, because its direction changes at every instant. Whenever either the speed or the direction changes, the velocity changes. In the next chapter this distinction becomes the basis of \emph{acceleration}.
+\end{keyidea}
+
+\begin{checkbox}
+For a certain period of time the speedometer of a car reads a steady \SI{60}{\kilo\metre\per\hour}. Does this tell you the car has a constant speed? A constant velocity? Explain.
+\end{checkbox}
+
+\begin{example}{Speed versus velocity on a return trip}{outandback}
+A runner jogs \SI{40}{\metre} east along a straight path in \SI{8.0}{\second}, turns around immediately, and jogs \SI{40}{\metre} west back to the start in \SI{10.0}{\second}. Find the average speed and the average velocity for the whole trip. Take east as positive.
+
+\elem The total distance is \SI{80}{\metre} and the total time is \SI{18.0}{\second}, so
+\[
+\text{average speed} = \frac{\SI{80}{\metre}}{\SI{18.0}{\second}} = \SI{4.4}{\metre\per\second}.
+\]
+The runner ends where they started, so the displacement is $\Delta x = 0$ and
+\[
+\bar v_x = \frac{0}{\SI{18.0}{\second}} = 0.
+\]
+The runner was certainly moving, but on average they went nowhere. This is not a paradox; it is what velocity is designed to measure. If we instead wanted the velocity on the way back only, it would be $\Delta x/\Delta t = (\SI{-40}{\metre})/(\SI{10.0}{\second}) = \SI{-4.0}{\metre\per\second}$, negative because the motion is westward.
+
+\calc Model each leg at constant velocity: $v_x = +\SI{5.0}{\metre\per\second}$ for the first \SI{8.0}{\second} and $v_x = \SI{-4.0}{\metre\per\second}$ for the next \SI{10.0}{\second}. Then
+\begin{gather*}
+\Delta x = \int_0^{18} v_x\,\dd t = (5.0)(8.0) + (-4.0)(10.0) = 40 - 40 = 0,\\
+d = \int_0^{18} |v_x|\,\dd t = 40 + 40 = \SI{80}{\metre}.
+\end{gather*}
+Dividing by \SI{18.0}{\second} gives $\bar v_x = 0$ and an average speed of \SI{4.4}{\metre\per\second}, as before. On the velocity--time graph the first rectangle sits above the axis and the second below it, with equal areas; the displacement is the signed area, zero, and the distance is the unsigned area.\qed
+\end{example}
+
+\subsection{Relative velocity}
+\label{sec:relative}
+
+Section~\ref{sec:speed} pointed out that every speed is measured relative to something. With signs in hand we can say precisely how the velocity of an object depends on who is measuring it.
+
+\begin{twoviews}{relative velocity along a line}
+\elem Suppose two objects, A and B, move along the same line, with velocities $v_A$ and $v_B$ measured relative to the ground (signs included). The velocity of A \emph{as seen from B} is
+\[
+v_{A\text{ rel }B} = v_A - v_B.
+\]
+Think of it this way: every second, A moves $v_A$ along the line and B moves $v_B$, so the gap between them changes by $v_A - v_B$. Two cars driving the same way at \SI{100}{\kilo\metre\per\hour} and \SI{98}{\kilo\metre\per\hour} close at \SI{2}{\kilo\metre\per\hour}; two cars approaching head-on at \SI{100}{\kilo\metre\per\hour} each, one with velocity $+100$ and the other $-100$, close at \SI{200}{\kilo\metre\per\hour}. The subtraction handles both cases without special rules, provided the signs are kept.
+
+\calc Let $x_A(t)$ and $x_B(t)$ be the two positions. The position of A relative to B is the difference $x_A - x_B$, and the relative velocity is its derivative:
+\[
+v_{A\text{ rel }B} = \deriv{}{t}\left(x_A - x_B\right) = \deriv{x_A}{t} - \deriv{x_B}{t} = v_A - v_B,
+\]
+because the derivative of a difference is the difference of the derivatives. Nothing here required the velocities to be constant; the rule holds instant by instant.
+\end{twoviews}
+
+\begin{example}{Closing speeds}{closing}
+You are driving east at \SI{25}{\metre\per\second}. (a) A car ahead of you is driving east at \SI{20}{\metre\per\second}. (b) A car on the other side of the road is driving west at \SI{20}{\metre\per\second}. In each case find the other car's velocity relative to you, and say how fast the gap between you is changing.
+
+\elem Take east as positive, so your velocity is $v_{\text{you}} = +25$ (all in \si{\metre\per\second}). (a) The car ahead has $v = +20$; relative to you its velocity is $20 - 25 = \SI{-5}{\metre\per\second}$: it drifts toward you (westward, in your frame) at \SI{5}{\metre\per\second}, so you gain on it by \SI{5}{\metre} every second. (b) The oncoming car has $v = -20$; relative to you, $-20 - 25 = \SI{-45}{\metre\per\second}$. It approaches at \SI{45}{\metre\per\second}, which is \SI{162}{\kilo\metre\per\hour}: the reason head-on collisions are so much worse than rear-end ones at the same speeds.
+
+\calc Put your car at the origin at $t = 0$ and the other car a distance $D$ ahead (case a) or ahead on the other side (case b). Then $x_{\text{you}} = 25t$ and $x_{\text{other}} = D + 20t$ or $D - 20t$. The separation $x_{\text{other}} - x_{\text{you}}$ is $D - 5t$ or $D - 45t$, and its derivative is $-5$ or $\SI{-45}{\metre\per\second}$. The gap closes at those rates and reaches zero (you draw level, or you meet) at $t = D/5$ or $t = D/45$.\qed
+\end{example}
+
+\begin{checkbox}
+Two trains on the same straight track approach each other, one at \SI{30}{\metre\per\second} and the other at \SI{20}{\metre\per\second}, from an initial separation of \SI{5.0}{\kilo\metre}. Taking the first train's direction as positive, write the velocity of the second train relative to the first, and find how long it takes for the trains to meet if neither brakes.
+\end{checkbox}
+
+The word \emph{velocity} gives this chapter its title, and in the chapters ahead velocity, not speed, will be the quantity we work with, because so much of physics depends on direction. For motion along a line, everything you have learned about speed carries over: velocity is the slope of a position--time graph, displacement equals velocity times time when velocity is constant, and dot diagrams work exactly as before, provided you add an arrow. When the motion is one-way along a straight line, physicists often use the words \emph{speed} and \emph{velocity} interchangeably, and we will sometimes do the same; the difference matters the moment direction can change.
+
+It took people nearly two thousand years, from Aristotle to Galileo, to arrive at a clear description of motion. If some of these ideas take you a few hours to absorb, you are doing well.
+
+\section{Summary}
+
+\subsection*{Key ideas}
+\begin{itemize}
+  \item A \textbf{conceptual model} is a simplified description built for a purpose. It is judged by usefulness, not by completeness, and it is scientific only if it makes predictions that could turn out wrong.
+  \item A \textbf{dot diagram} marks an object's position at equal time intervals. Within one diagram, wider spacing means higher speed. Comparing diagrams requires the same time interval. Count gaps, not dots.
+  \item \textbf{Speed} is distance divided by time. \elemtag\ $v = d/t$, equivalently $d = vt$ and $t = d/v$. \calctag\ $v = \dd x/\dd t$, the slope of the position--time graph. SI unit: \si{\metre\per\second}. Multiply \si{\metre\per\second} by \num{3.6} to get \si{\kilo\metre\per\hour}.
+  \item \textbf{Motion is relative.} Every speed is measured relative to something. Unless stated otherwise, speeds are relative to the surface of the Earth.
+  \item \textbf{Average speed} is total distance over total time. \textbf{Instantaneous speed} is the speed at one moment. \elemtag\ The average over a very short interval; the slope of a tangent drawn with a ruler. \calctag\ The derivative $\dd x/\dd t$; the average speed is $\frac{1}{T}\int_0^T v\,\dd t$. Average speed is \emph{not} the average of the speeds on different legs unless the legs take equal times.
+  \item \textbf{Distance from speed.} \elemtag\ Average speed times time; the area under the speed--time graph. \calctag\ $d = \int v\,\dd t$.
+  \item On a \textbf{position--time graph}, the slope of a chord is the average speed (or velocity) between its endpoints, and the slope of the tangent is the instantaneous speed (or velocity).
+  \item A model applied outside the range of its data is being \textbf{extrapolated}. \elemtag\ Nothing in the data says the relationship stays straight out there. \calctag\ A fitted line is a tangent approximation, and a derivative is local: the error grows like $(x - x_0)^2$. Extrapolated results need independent confirmation.
+  \item A \textbf{sanity check} compares a result and its intermediate values against known quantities. Results that fail a sanity check should not be trusted, however impressive they look.
+  \item Report results with \textbf{uncertainty}: $x \pm \delta x$. Percentage uncertainty is $\delta x / x \times 100\%$. To propagate it through a calculation: \elemtag\ recompute at the ends of the range; \calctag\ $\delta y \approx |\dd y/\dd x|\,\delta x$, and multiplying or dividing by a fixed number preserves the percentage uncertainty.
+  \item \textbf{Velocity} is displacement divided by time and carries direction as a sign. Speed is the magnitude of velocity. \calctag\ The velocity is the derivative $\dd x/\dd t$; displacement is the integral of $v_x$ and distance is the integral of $|v_x|$. Velocity is a \textbf{vector} quantity; speed is a \textbf{scalar}.
+  \item \textbf{Constant velocity} means constant speed \emph{and} constant direction: straight-line motion at a steady speed.
+  \item \textbf{Relative velocity} along a line: $v_{A\text{ rel }B} = v_A - v_B$, signs included. \calctag\ It is the derivative of $x_A - x_B$.
+\end{itemize}
+
+\subsection*{Key equations}
+\begin{center}
+\renewcommand{\arraystretch}{2.2}
+\footnotesize
+\begin{tabular}{lll}
+\toprule
+ & \elemtag & \calctag \\
+\midrule
+constant speed & $v = \dfrac{d}{t}$, \; $d = vt$, \; $t = \dfrac{d}{v}$ & $x = x_0 + vt$, \; $v = \dfrac{\dd x}{\dd t}$ \\
+instantaneous speed & $v \approx \dfrac{\Delta x}{\Delta t}$ (short interval) & $v = \lim\limits_{\Delta t\to 0}\dfrac{\Delta x}{\Delta t} = \dfrac{\dd x}{\dd t}$ \\
+average speed & $\bar v = \dfrac{d_{\text{total}}}{t_{\text{total}}}$ & $\bar v = \dfrac{1}{T}\displaystyle\int_0^T v\,\dd t$ \\
+distance from speed & $d = \bar v\,t$ = area under $v$--$t$ graph & $d = \displaystyle\int_{t_1}^{t_2} v\,\dd t$ \\
+two equal legs & $\bar v = \dfrac{2v_1v_2}{v_1 + v_2}$ & (time-weighted average of $v$) \\
+unit conversion & $\SI{1}{\metre\per\second} = \SI{3.6}{\kilo\metre\per\hour}$; \; $\SI{1}{\mile} = \SI{1609}{\metre}$ & \\
+relative speed (gait) & $\text{speed}/\text{height}$, unit \si{\per\second} & \\
+extrapolation & a fitted line used beyond its data & tangent line $f(x_0) + f'(x_0)(x - x_0)$, local only \\
+uncertainty & $\dfrac{\delta x}{x}\times 100\%$; recompute at $x \pm \delta x$ & $\delta y \approx \left|\dfrac{\dd y}{\dd x}\right|\delta x$; \; $\dfrac{\delta y}{y} = \dfrac{\delta x}{x}$ for $y = cx$ or $c/x$ \\
+velocity along a line & $\bar v_x = \dfrac{\Delta x}{\Delta t}$; \; speed $= |\bar v_x|$ if no reversal & $v_x = \dfrac{\dd x}{\dd t}$; \; $\Delta x = \int v_x\,\dd t$, \; $d = \int |v_x|\,\dd t$ \\
+relative velocity & $v_{A\text{ rel }B} = v_A - v_B$ & $\dfrac{\dd}{\dd t}(x_A - x_B)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Key terms}
+conceptual model \textperiodcentered\ scientific attitude \textperiodcentered\ stride \textperiodcentered\ step \textperiodcentered\ dot diagram \textperiodcentered\ fencepost error \textperiodcentered\ ticker-tape timer \textperiodcentered\ speed \textperiodcentered\ rate of change \textperiodcentered\ derivative \textperiodcentered\ motion is relative \textperiodcentered\ average speed \textperiodcentered\ instantaneous speed \textperiodcentered\ integral \textperiodcentered\ area under the graph \textperiodcentered\ position--time graph \textperiodcentered\ chord \textperiodcentered\ tangent \textperiodcentered\ slope \textperiodcentered\ harmonic mean \textperiodcentered\ relative speed \textperiodcentered\ sanity check \textperiodcentered\ interpolation \textperiodcentered\ extrapolation \textperiodcentered\ tangent approximation \textperiodcentered\ uncertainty \textperiodcentered\ percentage uncertainty \textperiodcentered\ propagation of uncertainty \textperiodcentered\ position \textperiodcentered\ displacement \textperiodcentered\ velocity \textperiodcentered\ vector quantity \textperiodcentered\ scalar quantity \textperiodcentered\ constant velocity \textperiodcentered\ relative velocity
+
+\section{Exercises}
+
+Exercises marked $\star$ require more thought or more than one step. Wherever an exercise can be solved both ways, solve it by an \elemtag\ route and a \calctag\ route and check that they agree; the answers at the end often show both.
+
+\subsection*{Dot diagrams}
+\begin{enumerate}[label=\textbf{\thechapter.\arabic*},series=exercises,leftmargin=*]
+  \item Explain in your own words why Webb measured the hunter's \emph{stride} length rather than \emph{step} length.
+  \item A dot diagram contains nine dots with \SI{0.5}{\second} between neighbouring dots. How much time does it represent?
+  \item Two dot diagrams show dots that are the same distance apart. In diagram~A the time between dots is \SI{0.2}{\second}; in diagram~B it is \SI{0.4}{\second}. Which object is faster, and by what factor?
+  \item Sketch a dot diagram for a car that approaches a red light and slows smoothly to a stop. Mark the direction of motion.
+  \item A ticker-tape timer taps \num{50} times per second. On a piece of tape you count \num{12} dots, and the distance from the first dot to the last is \SI{33}{\centi\metre}. Find the speed of the cart, assuming it was constant.
+  \item A dot diagram cannot tell you the direction of motion. Describe two different ways to add that information to the diagram.
+  \item $\star$ A bicycle wheel has a circumference of \SI{2.1}{\metre}. A wet patch on the tyre leaves a mark on the pavement once per revolution, and the marks are \SI{2.1}{\metre} apart. A student says, ``The marks are evenly spaced, so the bicycle was moving at constant speed.'' Is the student right? What, if anything, do the marks tell you about the speed?
+  \item $\star$ A leaky car leaves paint drops on the road. The drops are evenly spaced, yet a passenger insists the car was speeding up the whole time. Can both be true? If so, what must have been happening to the time between drips?
+\end{enumerate}
+
+\subsection*{Speed, distance, and time}
+\begin{enumerate}[label=\textbf{\thechapter.\arabic*},resume=exercises,leftmargin=*]
+  \item Sound travels through air at about \SI{343}{\metre\per\second}. You see a lightning flash and hear the thunder \SI{4.5}{\second} later. How far away was the lightning? (Light arrives essentially instantly.)
+  \item Light travels at \SI{3.00e8}{\metre\per\second}, and the Sun is \SI{1.50e11}{\metre} from Earth. How long does sunlight take to reach us? Give your answer in seconds and in minutes.
+  \item Convert (a) \SI{100}{\kilo\metre\per\hour} to \si{\metre\per\second}; (b) \SI{8.0}{\metre\per\second} to \si{\kilo\metre\per\hour}; (c) \SI{8.0}{\metre\per\second} to \si{\mile\per\hour}, using \SI{1}{\mile} = \SI{1609}{\metre}.
+  \item The men's marathon world record, set in 2023, is \SI{2}{\hour}~\SI{0}{\minute}~\SI{35}{\second} for \SI{42.195}{\kilo\metre}. Find the average speed in \si{\metre\per\second} and in \si{\kilo\metre\per\hour}.
+  \item A walker takes steps \SI{0.75}{\metre} long at a rate of \num{110} steps per minute. Find the walker's speed in \si{\metre\per\second}. (Careful: these are steps, not strides.)
+  \item Dot diagram~A has dots three times as far apart as diagram~B, but the time between dots for A is twice that for B. Which object is faster, and by what factor?
+  \item A garden snail moves at \SI{0.5}{\centi\metre\per\second}. How long does it take to cross a path \SI{1.2}{\metre} wide?
+  \item A cheetah sprints \SI{100}{\metre} in \SI{4}{\second}. What is its average speed? What would its average speed be if it sprinted \SI{50}{\metre} in \SI{2}{\second}?
+\end{enumerate}
+
+\subsection*{Average and instantaneous speed; graphs}
+\begin{enumerate}[label=\textbf{\thechapter.\arabic*},resume=exercises,leftmargin=*]
+  \item You drive to a town \SI{60}{\kilo\metre} away at \SI{60}{\kilo\metre\per\hour} and return at \SI{30}{\kilo\metre\per\hour}. Show that your average speed for the round trip is \emph{not} \SI{45}{\kilo\metre\per\hour}, and find its correct value.
+  \item $\star$ An object's position is recorded every two seconds:
+  \begin{center}
+  \begin{tabular}{lccccc}
+  \toprule
+  $t$ (s) & 0 & 2 & 4 & 6 & 8 \\
+  $x$ (m) & 0 & 5 & 10 & 15 & 22 \\
+  \bottomrule
+  \end{tabular}
+  \end{center}
+  (a) Find the average speed between $t=0$ and $t=6$. (b) Find the average speed between $t=6$ and $t=8$. (c) Was the object moving at constant speed throughout? Sketch the position--time graph and describe its shape.
+  \item $\star$ Usain Bolt's average speed over \SI{100}{\metre} was \SI{10.44}{\metre\per\second}, but his fastest \SI{20}{\metre} segment averaged \SI{12.4}{\metre\per\second}. Explain, using the ideas of average and instantaneous speed, why the two numbers differ and why the race average must be the smaller one.
+  \item Using the split times in Worked Example~\ref{ex:splits}, find Bolt's average speed over the first \SI{60}{\metre} and over the last \SI{40}{\metre}. Which is larger, and why is neither equal to \SI{10.44}{\metre\per\second}?
+  \item A car's position along a straight road is $x(t) = (\SI{12}{\metre\per\second})\,t + \SI{50}{\metre}$. \elemtag\ Compute $\Delta x/\Delta t$ between $t = \SI{2}{\second}$ and $t = \SI{5}{\second}$. \calctag\ Differentiate to find $v$. Where was the car at $t = 0$?
+  \item A particle's position is $x(t) = (\SI{2.0}{\metre\per\second\cubed})\,t^3$. (a) Find its average speed between $t = \SI{1.0}{\second}$ and $t = \SI{2.0}{\second}$. (b) \calctag\ Find its instantaneous speed at $t = \SI{1.0}{\second}$ and at $t = \SI{2.0}{\second}$ by differentiating. (c) Explain why the average lies between the two instantaneous values.
+  \item A cyclist's speed--time graph is a horizontal line at \SI{8.0}{\metre\per\second} from $t = 0$ to $t = \SI{30}{\second}$, then a horizontal line at \SI{4.0}{\metre\per\second} until $t = \SI{90}{\second}$. Find the total distance \elemtag\ as the area of two rectangles and \calctag\ as $\int v\,\dd t$, and then the average speed.
+  \item $\star$ A sprinter's speed is modelled by $v(t) = v_{\max}(1 - e^{-t/\tau})$ with $v_{\max} = \SI{11.0}{\metre\per\second}$ and $\tau = \SI{1.4}{\second}$. (a) \calctag\ Show by integration that $x(t) = v_{\max}[t - \tau(1 - e^{-t/\tau})]$. (b) Find the time to reach \SI{100}{\metre} by trial (a calculator is fine). (c) Find the average speed over the race and the instantaneous speed at the finish.
+  \item $\star$ Show that for two legs of equal length at speeds $v_1$ and $v_2$ the average speed $2v_1v_2/(v_1 + v_2)$ is never larger than $(v_1 + v_2)/2$. (Hint: consider $(v_1 - v_2)^2 \ge 0$.) When are they equal?\label{ex:harmonic}
+\end{enumerate}
+
+\subsection*{Models and sanity checks}
+\begin{enumerate}[label=\textbf{\thechapter.\arabic*},resume=exercises,leftmargin=*]
+  \item A child \SI{1.2}{\metre} tall and an adult \SI{1.8}{\metre} tall walk side by side at \SI{1.0}{\metre\per\second}. Find the relative speed of each. Who has the greater relative speed, and what does that mean physically?
+  \item $\star$ The dashed line in Figure~\ref{fig:charteris} is approximately
+  \[
+  \text{stride length (foot-lengths)} \approx 2.2 + 3.5\times\text{relative speed}.
+  \]
+  A walker \SI{1.70}{\metre} tall leaves prints with strides \num{4.3} foot-lengths long. (a) Estimate the walker's relative speed. (b) Estimate the walker's speed in \si{\metre\per\second}. (c) Is this use of the model an interpolation or an extrapolation? Explain.
+  \item The fastest relative speed among the Charteris volunteers was about \SI{1.2}{\per\second}. Bolt's relative speed was \SI{5.35}{\per\second}. By what factor was Webb extrapolating beyond the data when he applied the model to a sprinter?
+  \item List three distinct sources of uncertainty in Webb's original estimate of the hunter's speed. For each, say whether it is a problem with the \emph{measurement} or with the \emph{model}.
+  \item Webb's model output a height of \SI{194}{\centi\metre} and a stride time of \SI{0.360}{\second} for the hunter. Explain, using Bolt's known values, why these two numbers together fail a sanity check.
+  \item A gait model predicts that a recreational jogger's time between strides is \SI{0.05}{\second}. Without any further calculation, explain why this result should not be believed.
+  \item $\star$ The temperature in a city rises from \SI{10}{\celsius} at 8~a.m.\ to \SI{16}{\celsius} at 11~a.m. (a) Fit a straight line and use it to ``predict'' the temperature at 8~p.m. (b) Explain, in the language of Worked Example~\ref{ex:growth}, why the prediction is worthless. (c) \calctag\ What does the sign of the second derivative of temperature with respect to time have to be at some point in the afternoon, and why?
+\end{enumerate}
+
+\subsection*{Uncertainty}
+\begin{enumerate}[label=\textbf{\thechapter.\arabic*},resume=exercises,leftmargin=*]
+  \item Find the percentage uncertainty in (a) the Ruiz--Torices speed estimate, \SI{7.2 \pm 1.0}{\metre\per\second}; (b) Bolt's race time of \SI{9.58}{\second} if the timing system is accurate to \SI{\pm 0.01}{\second}.
+  \item Using the Ruiz--Torices speed and Webb's stride length of \SI{3.73}{\metre}, find the hunter's time between strides and the range of values consistent with the uncertainty in the speed.
+  \item $\star$ Suppose Webb's stride-length measurement is uncertain by \SI{\pm 0.05}{\metre}. Holding the speed fixed at \SI{7.2}{\metre\per\second}, find the resulting uncertainty in the stride time \elemtag\ by recomputing at both ends and \calctag\ from $\delta t \approx t\,(\delta d/d)$. Compare it to the uncertainty you found in the previous exercise. Which source of uncertainty dominates?
+  \item Express the hunter's revised speed of \SI{7.2}{\metre\per\second} in \si{\kilo\metre\per\hour} and \si{\mile\per\hour}. How long would the hunter take to run \SI{100}{\metre} at this speed, and how does that compare to a good high-school sprinter, who might run \SI{100}{\metre} in about \SI{11.5}{\second}?
+  \item $\star$ A student times a \SI{100}{\metre} run at \SI{14.0 \pm 0.3}{\second}. \elemtag\ Find the speed and its uncertainty by recomputing at \SI{13.7}{\second} and \SI{14.3}{\second}. \calctag\ Find it from $\delta v \approx |\dd v/\dd t|\,\delta t$ with $v = d/t$. Compare the two answers and explain why they nearly agree.
+\end{enumerate}
+
+\subsection*{Velocity and relative velocity}
+\begin{enumerate}[label=\textbf{\thechapter.\arabic*},resume=exercises,leftmargin=*]
+  \item A runner goes \SI{40}{\metre} east in \SI{5.0}{\second}, then immediately \SI{40}{\metre} west in \SI{5.0}{\second}. Taking east as positive, find the average speed and the average velocity for the whole \SI{10}{\second}.
+  \item An object moves along a line from $x = +\SI{12}{\metre}$ to $x = \SI{-8}{\metre}$ in \SI{4.0}{\second}. Find its displacement, its average velocity, and its average speed (assume it did not reverse direction).
+  \item $\star$ Can the average speed of an object over some interval ever be \emph{less} than the magnitude of its average velocity over the same interval? Explain using the definitions of distance and displacement, \calctag\ or using $\left|\int v_x\,\dd t\right| \le \int |v_x|\,\dd t$.
+  \item One airplane flies due north at \SI{300}{\kilo\metre\per\hour} while another flies due south at \SI{300}{\kilo\metre\per\hour}. Are their speeds the same? Are their velocities the same? Explain.
+  \item You are driving north on a highway at \SI{90}{\kilo\metre\per\hour}. Without changing your speedometer reading, you round a curve and end up driving east. (a) Did your speed change? (b) Did your velocity change? Explain.
+  \item ``She moves at a constant speed in a constant direction.'' Rephrase this sentence in fewer words, and explain why the shorter version says the same thing.
+  \item A particle's velocity along a line is $v_x = +\SI{3.0}{\metre\per\second}$ for \SI{4.0}{\second}, then $\SI{-1.0}{\metre\per\second}$ for \SI{6.0}{\second}. \calctag\ Find its displacement and the distance it travelled as integrals. \elemtag\ Confirm with signed and unsigned rectangle areas.
+  \item As you sit in a chair reading this, how fast are you moving relative to the chair? Relative to the Sun? (Use the figure given in the text.)
+  \item A car travelling at \SI{100}{\kilo\metre\per\hour} bumps into the rear of another car travelling in the same direction at \SI{98}{\kilo\metre\per\hour}. What is the impact speed, that is, the speed of one car relative to the other?
+  \item You are driving at the speed limit and see a car coming toward you at the same speed. How fast is the other car approaching you, compared with the speed limit? What would you see if instead it were driving ahead of you in the same direction?
+  \item $\star$ A canoeist can paddle at \SI{8}{\kilo\metre\per\hour} relative to still water. She sets off upstream on a river that flows at \SI{8}{\kilo\metre\per\hour}. Describe her motion relative to the riverbank, and relative to the water. What would a dot diagram made by an observer on the bank look like?
+  \item $\star$ Two cyclists start \SI{600}{\metre} apart on a straight road and ride toward each other at \SI{7.0}{\metre\per\second} and \SI{5.0}{\metre\per\second}. \elemtag\ Use the relative velocity to find when they meet. \calctag\ Write $x_1(t)$ and $x_2(t)$, form $x_2 - x_1$, and find when it is zero. How far has each ridden?
+\end{enumerate}
+
+\subsection*{Hands-on}
+\begin{enumerate}[label=\textbf{\thechapter.\arabic*},resume=exercises,leftmargin=*]
+  \item Mark a start line and walk at your normal pace for exactly ten strides, counting one stride each time the same foot lands. Measure the distance covered and the time taken. (a) Find your stride length and the time between strides. (b) Find your walking speed in \si{\metre\per\second} and in \si{\kilo\metre\per\hour}, and compare it with Table~\ref{tab:speeds}. (c) Compute your relative speed (speed divided by height) and compare it with the range of the Charteris data in Figure~\ref{fig:charteris}.
+  \item Make a real dot diagram. Fill a plastic bottle with water, punch a small hole in the cap so that it drips steadily, and carry it at a constant walking speed along a dry pavement, then again while speeding up from a standstill. Sketch the two trails, and explain in a sentence what each one shows and what it cannot show.
+  \item Film a friend sprinting \SI{40}{\metre} past cones placed every \SI{10}{\metre}, and read the time at each cone from the video. Make a table like the one in Worked Example~\ref{ex:splits}, plot position against time, and estimate the top speed from the steepest part of the graph. Report it with an uncertainty based on how precisely you could read the times.
+  \item Without using any equations, write a short message to a relative explaining the difference between speed and velocity, and why a car on a curve at a steady \SI{50}{\kilo\metre\per\hour} does \emph{not} have a constant velocity.
+\end{enumerate}
+
+\section*{Answers to Check Your Understanding}
+\begin{description}[leftmargin=2em,itemsep=2pt]
+  \item[1.1] Farther apart. With more time between taps, the cart moves farther between dots.
+  \item[1.2] The same rate for both. If the rates differed, dot spacing would no longer measure speed alone; only diagrams with equal time intervals can be compared directly.
+  \item[1.3] Three times faster. In the second case, A covers three times the distance in twice the time, so A is $3/2 = 1.5$ times faster than B.
+  \item[1.4] Into the breeze, toward you, at \SI{3}{\metre\per\second} relative to the air. Its velocity relative to the air then exactly cancels the breeze, so relative to you (and the ground) it is at rest, hovering. This is why a breeze is such an effective deterrent to mosquito bites.
+  \item[1.5] (a) $\SI{40}{\kilo\metre}/\SI{0.5}{\hour} = \SI{80}{\kilo\metre\per\hour}$. (b) No. Starting from rest, the car's instantaneous speed was below \SI{80}{\kilo\metre\per\hour} for some of the time, so it must have exceeded \SI{80}{\kilo\metre\per\hour} at other times to average \num{80}. (c) Instantaneous speed: a radar gun or speed camera measures how fast the car was going at that moment.
+  \item[1.6] (a) $x(4) = \SI{24}{\metre}$, so the average speed is $24/4 = \SI{6.0}{\metre\per\second}$. (b) \elemtag\ $x(4.1) - x(3.9) = 1.5(16.81 - 15.21) = \SI{2.40}{\metre}$ in \SI{0.2}{\second}: \SI{12.0}{\metre\per\second}. \calctag\ $v = \dd x/\dd t = 3.0\,t = \SI{12.0}{\metre\per\second}$ at $t = 4$. (c) The cart is speeding up, so its speed at the end of the interval is greater than its average over the interval; in fact for this motion the final speed is exactly twice the average.
+  \item[1.7] A constant speed, yes. A constant velocity, not necessarily: the car may be turning, in which case its direction, and hence its velocity, is changing even though its speed is not.
+  \item[1.8] The second train's velocity is $\SI{-20}{\metre\per\second}$, and relative to the first it is $-20 - 30 = \SI{-50}{\metre\per\second}$: the gap closes at \SI{50}{\metre\per\second}. They meet after $\SI{5000}{\metre}/(\SI{50}{\metre\per\second}) = \SI{100}{\second}$.
+\end{description}
+
+\section*{Answers to Selected Exercises}
+\begin{description}[leftmargin=2.6em,itemsep=3pt,style=sameline]
+  \item[1.1] The two feet fall on separate, parallel lines. Measuring from a left print to a right print traces a zigzag; measuring right-to-right follows a straight line along the direction of travel.
+  \item[1.2] \SI{4.0}{\second}. Nine dots have eight gaps: $8 \times \SI{0.5}{\second}$.
+  \item[1.3] Object A, twice as fast. It covers the same distance in half the time.
+  \item[1.4] Dots evenly spaced at first, then progressively closer together in the direction of motion, ending in a cluster at the stop line.
+  \item[1.5] \SI{1.5}{\metre\per\second}. Twelve dots span eleven intervals of \SI{0.02}{\second}, so \SI{0.22}{\second}; $\SI{0.33}{\metre}/\SI{0.22}{\second} = \SI{1.5}{\metre\per\second}$.
+  \item[1.6] Number the dots in time order, or draw an arrow along the direction of motion, or label the first dot.
+  \item[1.7] The student is wrong. The marks are always one circumference apart, whatever the speed, because one mark is made per revolution. Without the time per revolution, the marks say nothing about speed.
+  \item[1.8] Yes. Speed $= d/t$ with $d$ fixed; if speed rises, the time between drips must fall. The can was dripping faster and faster.
+  \item[1.9] About \SI{1.5}{\kilo\metre} ($343 \times 4.5 \approx \SI{1540}{\metre}$).
+  \item[1.10] \SI{500}{\second}, about \num{8.3} minutes.
+  \item[1.11] (a) \SI{27.8}{\metre\per\second}; (b) \SI{28.8}{\kilo\metre\per\hour}; (c) \SI{17.9}{\mile\per\hour}.
+  \item[1.12] \SI{5.83}{\metre\per\second}; \SI{21.0}{\kilo\metre\per\hour}. (Total time \SI{7235}{\second}.)
+  \item[1.13] \SI{1.4}{\metre\per\second}. $0.75 \times 110 / 60 = 1.375$.
+  \item[1.14] Object A, \num{1.5} times faster ($3/2$).
+  \item[1.15] \SI{240}{\second}, or \num{4} minutes.
+  \item[1.16] \SI{25}{\metre\per\second} in both cases: $100/4 = 50/2$.
+  \item[1.17] \SI{40}{\kilo\metre\per\hour}. The trip out takes \SI{1}{\hour} and the return \SI{2}{\hour}; $\SI{120}{\kilo\metre}/\SI{3}{\hour}$. The harmonic-mean formula gives $2(60)(30)/90 = 40$ as well.
+  \item[1.18] (a) \SI{2.5}{\metre\per\second}. (b) \SI{3.5}{\metre\per\second}. (c) No. The graph is a straight line from $t=0$ to $t=6$ and then bends upward, becoming steeper: the object sped up in the last interval.
+  \item[1.19] Bolt starts from rest and needs several seconds to reach top speed, so for the early part of the race his instantaneous speed is well below \num{12.4}; he also slows slightly at the end. The average over the whole race blends the slow start with the fast middle, so it must be less than the peak.
+  \item[1.20] First \SI{60}{\metre}: $60/6.31 = \SI{9.5}{\metre\per\second}$. Last \SI{40}{\metre}: $40/(9.58 - 6.31) = 40/3.27 = \SI{12.2}{\metre\per\second}$. The second is larger because it contains no start. The race average, \num{10.44}, is a time-weighted blend of the two: $(9.5 \times 6.31 + 12.2 \times 3.27)/9.58$.
+  \item[1.21] \elemtag\ $x(5) - x(2) = 110 - 74 = \SI{36}{\metre}$ in \SI{3}{\second}: \SI{12}{\metre\per\second}. \calctag\ $v = \dd x/\dd t = \SI{12}{\metre\per\second}$, constant. At $t = 0$ the car was at $x = \SI{50}{\metre}$.
+  \item[1.22] (a) $x(2) - x(1) = 16 - 2 = \SI{14}{\metre}$ in \SI{1}{\second}: \SI{14}{\metre\per\second}. (b) $v = 6.0\,t^2$: \SI{6.0}{\metre\per\second} at $t = 1$ and \SI{24}{\metre\per\second} at $t = 2$. (c) The speed rises steadily through the interval, so its average must lie between its smallest and largest values.
+  \item[1.23] $8.0(30) + 4.0(60) = 240 + 240 = \SI{480}{\metre}$ both ways; average speed $480/90 = \SI{5.3}{\metre\per\second}$.
+  \item[1.24] (a) $\int_0^t v_{\max}(1 - e^{-t'/\tau})\,\dd t' = v_{\max}\left[t' + \tau e^{-t'/\tau}\right]_0^t = v_{\max}[t - \tau(1 - e^{-t/\tau})]$. (b) About \SI{10.5}{\second}: $x(10.5) = 11.0\,[10.5 - 1.4(1 - e^{-7.5})] = 11.0 \times 9.10 = \SI{100.1}{\metre}$. (c) Average \SI{9.5}{\metre\per\second}; at the finish $v = 11.0(1 - e^{-7.5}) \approx \SI{11.0}{\metre\per\second}$.
+  \item[1.25] $\dfrac{v_1 + v_2}{2} - \dfrac{2v_1v_2}{v_1 + v_2} = \dfrac{(v_1 + v_2)^2 - 4v_1v_2}{2(v_1 + v_2)} = \dfrac{(v_1 - v_2)^2}{2(v_1 + v_2)} \ge 0$, with equality only when $v_1 = v_2$.
+  \item[1.26] Child: \SI{0.83}{\per\second}; adult: \SI{0.56}{\per\second}. The child has the greater relative speed: at the same speed the child covers more of their own body length each second, which is why the child appears to hurry.
+  \item[1.27] (a) $(4.3 - 2.2)/3.5 = \SI{0.60}{\per\second}$. (b) $0.60 \times 1.70 \approx \SI{1.0}{\metre\per\second}$. (c) Interpolation: \num{0.60} lies within the data range of roughly \num{0.4} to \num{1.2}, and \SI{1.0}{\metre\per\second} is an ordinary walking speed.
+  \item[1.28] About \num{4.5} times ($5.35/1.2$).
+  \item[1.29] Examples: stride length measured imperfectly and strides vary (measurement); footprints may have eroded or deformed over \num{20000} years (measurement); foot length only loosely predicts height (model); the height-and-stride-to-stride-time equations have their own scatter (model); the model was built for walking, not running (model, and the largest problem).
+  \item[1.30] The model makes the hunter the same height as Bolt but with a shorter stride and a much shorter stride time. A person of the same height taking strides a metre shorter than Bolt's and cycling their legs \SI{0.11}{\second} faster than Bolt is not credible; the output contradicts what we know about the fastest runner ever measured.
+  \item[1.31] \SI{0.05}{\second} per stride means \num{20} strides per second. Bolt, at full sprint, manages about two strides per second (\SI{0.467}{\second} each). No jogger turns their legs over ten times faster than Bolt.
+  \item[1.32] (a) \SI{2}{\celsius} per hour, so \SI{34}{\celsius} at 8~p.m. (b) The line was fitted to three morning hours and says nothing about the afternoon; temperature peaks and then falls, so the relationship bends. (c) Negative: the temperature rises in the morning and falls in the evening, so its rate of change must decrease somewhere in between, and a decreasing first derivative means a negative second derivative.
+  \item[1.33] (a) About \SI{14}{\percent}. (b) About \SI{0.1}{\percent}.
+  \item[1.34] \SI{0.52}{\second}, with a range of about \SI{0.45}{\second} to \SI{0.60}{\second}; roughly $\SI{0.52 \pm 0.08}{\second}$.
+  \item[1.35] \elemtag\ $3.68/7.2 = \SI{0.511}{\second}$ and $3.78/7.2 = \SI{0.525}{\second}$, so about $\SI{\pm 0.007}{\second}$. \calctag\ $\delta t \approx 0.518 \times (0.05/3.73) = \SI{0.007}{\second}$. This is roughly ten times smaller than the $\SI{\pm 0.08}{\second}$ from the speed uncertainty, so the speed uncertainty dominates.
+  \item[1.36] \SI{26}{\kilo\metre\per\hour}; \SI{16}{\mile\per\hour}. At \SI{7.2}{\metre\per\second}, \SI{100}{\metre} takes about \SI{14}{\second}, slower than a good high-school sprinter's \SI{11.5}{\second} (\SI{8.7}{\metre\per\second}), though the hunter was barefoot, on mud, and not running a race.
+  \item[1.37] \elemtag\ $100/14.0 = \SI{7.14}{\metre\per\second}$; $100/13.7 = 7.30$ and $100/14.3 = 6.99$, so $\SI{7.14 \pm 0.15}{\metre\per\second}$. \calctag\ $|\dd v/\dd t| = d/t^2 = 100/196 = 0.51$, so $\delta v \approx 0.51 \times 0.3 = \SI{0.15}{\metre\per\second}$; equivalently $\delta v/v = \delta t/t = 2.1\%$. They agree because a \SI{2}{\percent} change is small enough for the tangent approximation to be accurate.
+  \item[1.38] Average speed \SI{8.0}{\metre\per\second}; average velocity \num{0}.
+  \item[1.39] Displacement \SI{-20}{\metre}; average velocity \SI{-5.0}{\metre\per\second}; average speed \SI{5.0}{\metre\per\second}.
+  \item[1.40] No. Distance travelled is always at least as large as the magnitude of displacement, since any back-tracking adds to distance but subtracts from displacement. Dividing both by the same time interval preserves the inequality, so average speed $\ge |\bar v_x|$, with equality only when the object never reverses direction. In integral form, $|\int v_x\,\dd t| \le \int |v_x|\,\dd t$ because cancellation can only reduce a signed sum.
+  \item[1.41] Same speed, \SI{300}{\kilo\metre\per\hour}. Different velocities, because velocity includes direction and the directions are opposite.
+  \item[1.42] (a) No; the speedometer reading, which is the speed, stayed at \SI{90}{\kilo\metre\per\hour}. (b) Yes; the direction changed from north to east, so the velocity changed. (In the next chapter you will see that this means the car accelerated.)
+  \item[1.43] ``She moves at a constant velocity.'' Constant velocity means constant speed and constant direction.
+  \item[1.44] Displacement $3.0(4.0) + (-1.0)(6.0) = \SI{+6.0}{\metre}$; distance $12 + 6 = \SI{18}{\metre}$. The first rectangle (area \num{12}) is above the axis, the second (area \num{6}) below; signed sum \num{6}, unsigned sum \num{18}.
+  \item[1.45] Zero relative to the chair. About \SI{107000}{\kilo\metre\per\hour}, or \SI{30}{\kilo\metre\per\second}, relative to the Sun.
+  \item[1.46] \SI{2}{\kilo\metre\per\hour}. Relative to the slower car, the faster one closes in at the difference of their velocities, $100 - 98$.
+  \item[1.47] Twice the speed limit: with velocities $+v$ and $-v$, the relative velocity is $-2v$. A car ahead of you at the same speed would appear to stand still: relative velocity zero.
+  \item[1.48] Relative to the bank she does not move at all: her \SI{8}{\kilo\metre\per\hour} upstream relative to the water is cancelled by the water's \SI{8}{\kilo\metre\per\hour} downstream. Relative to the water she is moving at \SI{8}{\kilo\metre\per\hour}. An observer on the bank would see all the dots of her dot diagram piled on top of one another at a single point.
+  \item[1.49] Closing speed $7.0 + 5.0 = \SI{12.0}{\metre\per\second}$, so they meet after $600/12 = \SI{50}{\second}$. With $x_1 = 7.0t$ and $x_2 = 600 - 5.0t$, $x_2 - x_1 = 600 - 12t = 0$ at $t = \SI{50}{\second}$. They ride \SI{350}{\metre} and \SI{250}{\metre}.
+  \item[1.50] Answers depend on your own measurements. Typical values: stride about \SIrange{1.4}{1.6}{\metre}, time between strides about \SIrange{1.0}{1.2}{\second}, speed about \SIrange{1.2}{1.5}{\metre\per\second} (\SIrange{4.5}{5.5}{\kilo\metre\per\hour}), relative speed roughly \SIrange{0.7}{0.9}{\per\second}, comfortably inside the Charteris range of about \num{0.4} to \num{1.2}.
+  \item[1.51] The constant-speed trail has evenly spaced drops; the speeding-up trail has drops that spread farther apart along the direction of motion. Neither trail, by itself, tells you which way you were walking or how fast the drips were falling.
+  \item[1.52] Typical school sprinters reach \SIrange{7}{9}{\metre\per\second}. Reading times from ordinary video (about \num{30} frames per second) gives an uncertainty of a few hundredths of a second per cone, which for \SI{10}{\metre} segments of about \SI{1.3}{\second} is a few percent in speed.
+\end{description}
+
+\section*{Sources and Further Reading}
+\begin{itemize}[itemsep=3pt]
+  \item P.~G. Hewitt, \emph{Conceptual Physics}, 12th ed. (Pearson, 2014). Chapter~1 (``About Science'') on scientific methods, the scientific attitude, and testable hypotheses; Chapter~3 (``Linear Motion''), Sections 3.1--3.3, on relative motion, speed, instantaneous and average speed, velocity, and vector and scalar quantities; Appendix~A on the definitions of the metre and the second. The reference speeds in Table~\ref{tab:speeds} and several of the Check Your Understanding questions and exercises are adapted from this book. Hewitt's treatment corresponds to the \elemtag\ route throughout; the \calctag\ route is our addition.
+  \item S. Webb, M.~L. Cupper, and R. Robins, ``Pleistocene human footprints from the Willandra Lakes, southeastern Australia,'' \emph{Journal of Human Evolution} 50 (2006), 405--413.
+  \item S. Webb, ``Further research of the Willandra Lakes fossil footprint site, southeastern Australia,'' \emph{Journal of Human Evolution} 52 (2007), 711--715.
+  \item J. Charteris, J.~C. Wall, and J.~W. Nottrodt, ``Functional reconstruction of gait from the Pliocene hominid footprints at Laetoli, northern Tanzania,'' \emph{Nature} 290 (1981), 496--498.
+  \item J. Ruiz and A. Torices, ``Humans running at stadiums and beaches and the accuracy of speed estimations from fossil trackways,'' \emph{Ichnos} 20 (2013), 31--35.
+  \item International Association of Athletics Federations and Deutscher Leichtathletik-Verband, \emph{Biomechanics Report, World Championships Berlin 2009: Sprint Men} (2009). The source of the \SI{20}{\metre} split times and the reaction time used in Worked Example~\ref{ex:splits} and Figure~\ref{fig:boltxt}. The stride count and stride length quoted for Bolt are from the same analysis.
+  \item ``Prehistoric Aussie aboriginals could have outrun Usain Bolt,'' \emph{Metro} (UK), 14 October 2009. An example of how the original claim was reported.
+  \item The Mungo National Park visitor site, \url{https://www.visitmungo.com.au}, has photographs of the trackways and background on the Willandra Lakes World Heritage Area and its Traditional Owners.
+\end{itemize}
+
+\end{document}
