@@ -140,5 +140,31 @@ in a sentence if there is one.
 - In `checkbox`, keep `coltitle=white`: with `enhanced` boxes the title bar
   is filled with `colframe`, so a `coltitle` equal to the frame colour makes
   the title invisible (bug found 2026-09-13, fixed in both chapters).
+- `\foreach \X/\Y in {...}` *inside* a pgfplots `axis` with `(axis cs:\X,\Y)`
+  fails with "Undefined control sequence" (hit 2026-09-20 drawing projection
+  guide lines). Generate the `\draw` lines explicitly instead; a `\foreach`
+  in a plain `tikzpicture` is fine.
+- Labels that sit on top of a curve: add `fill=white,inner sep=1.5pt` to the
+  node rather than hunting for a free spot. Used throughout Ch. 3's figures.
+- A `\label` placed on a `modelnote`/`keyidea` (no counter) silently latches
+  onto the last stepped counter and produces a wrong `\ref`. Refer to such
+  boxes in words ("the Modeling Note below").
+- A wide three-column Key Equations table fits at `\small` once
+  `\setlength{\tabcolsep}{4pt}` is added and the longest cell in each column
+  is shortened; check which *row* sets each column's width before trimming.
+- The `In this chapter` tcolorbox is not `breakable` by default. Growing it
+  past about ten bullets overflows the page (`Overfull \\vbox ... while
+  \\output is active`); add `breakable` to its option list.
+- Class transcripts (`chapter/chapterN/*.pdf`) are a second source alongside
+  the handout, and they cover different ground: Lesson 1 added coordinate
+  systems and video measurement, Lesson 2 added the lift, the sign trap, and
+  the equivalence principle. Extract with `scripts/extract_pdf.py`, then pull
+  the instructor's lines with
+  `awk '/^<instructor> 2026/{getline; print}'`; the maths renders as detached
+  fragments, so recover numbers by grepping the raw page ranges.
+- Hardcoded cross-chapter references ("Definition 2.2") go stale as soon as a
+  chapter gains a box. After editing an earlier chapter, grep the later ones
+  for `Definition N\\.`, `Worked Example N\\.`, `Figure N\\.`, `Table N\\.` and
+  check each against the rebuilt PDF.
 - Aim for zero Overfull boxes wider than ~2pt; Underfull vbox warnings from
   breakable boxes are harmless.

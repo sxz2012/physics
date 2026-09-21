@@ -1,0 +1,1427 @@
+% ------------------------------------------------------------------
+%  Physics 1: Mechanics  --  Chapter 3: Projectile Motion
+%  Compile with:  tectonic projectile.tex   (or pdflatex/xelatex/lualatex)
+% ------------------------------------------------------------------
+\documentclass[11pt,twoside,openany]{book}
+
+% ---------- packages ----------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[letterpaper,top=1in,bottom=1in,inner=1.1in,outer=1.1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{siunitx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,decorations.pathreplacing,positioning,patterns}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary{fillbetween}
+\usepackage[most]{tcolorbox}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+\sisetup{per-mode=symbol,range-units=single,separate-uncertainty=true}
+\DeclareSIUnit{\mile}{mi}
+\newcommand{\mps}{\si{\metre\per\second}}
+\newcommand{\mpss}{\si{\metre\per\second\squared}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\deriv}[2]{\frac{\dd #1}{\dd #2}}
+\newcommand{\dderiv}[2]{\frac{\dd^2 #1}{\dd #2^2}}
+
+% ---------- headers ----------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{\small\thepage\quad Chapter \thechapter\quad Projectile Motion}
+\fancyhead[RO]{\small Physics 1: Mechanics\quad\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\chaptermark}[1]{}
+\renewcommand{\sectionmark}[1]{}
+
+% ---------- colours ----------
+\definecolor{teal}{RGB}{0,140,150}
+\definecolor{tealpale}{RGB}{232,246,247}
+\definecolor{sand}{RGB}{252,245,230}
+\definecolor{sanddark}{RGB}{190,140,60}
+\definecolor{plum}{RGB}{110,60,130}
+\definecolor{plumpale}{RGB}{243,236,247}
+\definecolor{slate}{RGB}{70,80,95}
+\definecolor{slatepale}{RGB}{240,242,245}
+\definecolor{elemcol}{RGB}{170,90,20}
+\definecolor{elempale}{RGB}{253,238,220}
+\definecolor{calccol}{RGB}{30,90,160}
+\definecolor{calcpale}{RGB}{226,236,250}
+
+% ---------- boxed environments ----------
+\newtcbtheorem[number within=chapter]{example}{Worked Example}{%
+  enhanced,breakable,colback=tealpale,colframe=teal,fonttitle=\bfseries,
+  coltitle=white,attach boxed title to top left={yshift=-2mm,xshift=4mm},
+  boxed title style={colback=teal,sharp corners},
+  top=4mm,left=3mm,right=3mm,bottom=2mm,before skip=10pt,after skip=10pt}{ex}
+
+\newtcbtheorem[number within=chapter]{definition}{Definition}{%
+  enhanced,breakable,colback=plumpale,colframe=plum,fonttitle=\bfseries,
+  coltitle=white,attach boxed title to top left={yshift=-2mm,xshift=4mm},
+  boxed title style={colback=plum,sharp corners},
+  top=4mm,left=3mm,right=3mm,bottom=2mm,before skip=10pt,after skip=10pt}{def}
+
+\newtcolorbox{keyidea}[1][Key Idea]{%
+  enhanced,breakable,colback=sand,colframe=sanddark,fonttitle=\bfseries,
+  title={#1},sharp corners,boxrule=0.6pt,left=3mm,right=3mm,
+  before skip=10pt,after skip=10pt}
+
+\newtcolorbox{modelnote}[1][Modeling Note]{%
+  enhanced,breakable,colback=slatepale,colframe=slate,fonttitle=\bfseries,
+  title={#1},sharp corners,boxrule=0.6pt,left=3mm,right=3mm,
+  before skip=10pt,after skip=10pt}
+
+% "Two Views" box: a concept explained first without calculus, then with it
+\newtcolorbox{twoviews}[1]{%
+  enhanced,breakable,colback=white,colframe=slate!80!black,fonttitle=\bfseries,
+  coltitle=white,colbacktitle=slate!80!black,
+  title={Two Views: #1},sharp corners,boxrule=0.8pt,left=3mm,right=3mm,
+  before skip=10pt,after skip=10pt}
+
+\newcounter{check}[chapter]
+\renewcommand{\thecheck}{\thechapter.\arabic{check}}
+\newtcolorbox{checkbox}{%
+  enhanced,breakable,colback=white,colframe=teal!70!black,
+  fonttitle=\bfseries,coltitle=white,
+  title=Check Your Understanding \refstepcounter{check}\thecheck,
+  sharp corners,boxrule=0.6pt,left=3mm,right=3mm,
+  before skip=10pt,after skip=10pt}
+
+% ---------- perspective labels ----------
+\newcommand{\viewtag}[3]{\fcolorbox{#2}{#3}{\footnotesize\textbf{\textcolor{#2}{#1}}}}
+\newcommand{\elemtag}{\viewtag{Elementary}{elemcol}{elempale}}
+\newcommand{\calctag}{\viewtag{Calculus}{calccol}{calcpale}}
+\newcommand{\elem}{\par\medskip\noindent\elemtag\ }
+\newcommand{\calc}{\par\medskip\noindent\calctag\ }
+\newcommand{\elemsub}[1]{\par\medskip\noindent\viewtag{Elementary: #1}{elemcol}{elempale}\ }
+
+\newcommand{\solution}{\par\smallskip\noindent\textbf{Solution.}\ }
+\newcommand{\qed}{\hfill$\blacksquare$}
+
+% ---------- drawing helpers ----------
+% \dotrow{label}{spacing}{count}{y}
+\newcommand{\dotrow}[4]{%
+  \node[anchor=east] at (-0.3,#4) {#1};
+  \foreach \i in {0,...,\numexpr#3-1\relax}{\fill (\i*#2,#4) circle (2.2pt);}}
+
+\setlist[enumerate]{itemsep=4pt,topsep=4pt}
+
+
+\begin{document}
+\setcounter{chapter}{2}
+
+\chapter{Projectile Motion}
+
+\begin{tcolorbox}[enhanced,colback=white,colframe=teal,sharp corners,boxrule=1pt,
+  title=\textbf{In this chapter},coltitle=white,colbacktitle=teal,left=3mm,right=3mm]
+By the end of this chapter you should be able to
+\begin{itemize}[itemsep=2pt,topsep=2pt]
+  \item say what a \emph{projectile} is, decide whether a given moving object can usefully be modelled as one, and describe Tartaglia's three-stage model and why it was replaced;
+  \item read a two-dimensional \emph{dot diagram}, explain where the dots bunch and why, and state what it means to say a trajectory \emph{curves downward everywhere};
+  \item resolve a motion into its horizontal and vertical \emph{components} by projection, and state Galileo's model: $a_x = 0$ with $a_y = -g$, so that $x(t)$ is constant-velocity motion and $y(t)$ is free fall;
+  \item use the \emph{independence} of the two components to solve problems, finding the time of flight from the vertical component and the range from the horizontal one, and explain why a ball fired horizontally and a ball dropped land together;
+  \item derive the equation of the trajectory, $y = y_{\max} - \dfrac{g}{2v_x^2}(x - x_{\max})^2$, both by eliminating $t$ from two elementary formulas and by integrating the accelerations, and recognise it as a parabola;
+  \item combine components into a speed with Pythagoras and an angle with trigonometry, and split a launch velocity $v_0$ at angle $\theta$ back into $v_x = v_0\cos\theta$ and $v_{y0} = v_0\sin\theta$;
+  \item obtain the \emph{range equation} $R = v_0^2\sin 2\theta/g$, explain why complementary launch angles give equal ranges, and show that $\SI{45}{\degree}$ gives maximum range both by a symmetry argument and by setting a derivative to zero;
+  \item use the ``falls beneath the straight line'' picture, $\tfrac12 g t^2$ below where it would have been with no gravity, to solve problems that look hard otherwise;
+  \item judge when \emph{air resistance} makes Galileo's model unsafe to use, using the size, speed, density, and spin of the projectile, and say what a model is for.
+\end{itemize}
+\end{tcolorbox}
+
+\begin{tcolorbox}[enhanced,colback=slatepale,colframe=slate,sharp corners,boxrule=0.6pt,
+  title=\textbf{How to read this chapter: two perspectives},coltitle=white,colbacktitle=slate,left=3mm,right=3mm]
+As in Chapter~2, every idea here can be reached with elementary mathematics alone: ratios, averages, symmetry, similar triangles, the areas of triangles and trapezia, and a little geometry of the parabola. That is how Galileo did it, and he did it without algebra as we would recognise it. Every idea can also be reached with calculus, which handles two dimensions at once by treating position as a pair of functions of time. Explanations and solutions are labelled
+\begin{center}
+\elemtag\quad for the route using only elementary mathematics, and \qquad \calctag\quad for the route using derivatives and integrals.
+\end{center}
+The two routes are independent. Read one, then the other, and check that they agree. A warning specific to this chapter: the calculus route is so efficient here that it is tempting to skip the elementary one. Resist. The elementary arguments about symmetry, independence, and ``falling beneath the line'' are what physicists actually use when thinking about a new problem; the integrals are what they use when writing the answer down.
+\end{tcolorbox}
+
+\section{The Problem of Cannons}
+
+Cannons reached Europe from China in the fourteenth century, and for a long time nobody aimed them carefully. There was no point. Two shots fired from the same gun with the same charge might land tens of metres apart, one to the left and one to the right, and the difference between a careful aim and a rough one was lost in that scatter. Gunnery was a matter of experience and luck.
+
+As barrels were bored more accurately and powder was milled more consistently, the scatter shrank, and aim began to matter. Gunners wanted to know things a physicist can recognise as physics questions. If I raise the barrel from twenty degrees to thirty, how much farther will the ball go? If I double the charge, how much farther? Is there an angle that sends the ball as far as it can possibly go? The desire to answer such questions is the beginning of \textbf{ballistics}, the study of the paths of thrown and fired objects, which today is applied to sport, to volcanology, to crime-scene reconstruction, to the design of safety barriers, and, less gravely, to the arc of a tossed pizza base.
+
+The path a thrown or fired object follows through the air is called its \textbf{trajectory}. The first widely used mathematical model of a cannonball's trajectory was published in 1537 by the Venetian mathematician Niccol\`o Tartaglia, in a book called \emph{Nova Scientia}. Figure~\ref{fig:tartaglia} shows a simplified version of it.
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[x=1.4cm,y=1.4cm]
+  % ground
+  \draw[slate!60,thick] (-0.2,0) -- (8.6,0);
+  \fill[pattern=north east lines,pattern color=slate!30] (-0.2,-0.2) rectangle (8.6,0);
+  % cannon
+  \draw[fill=slate!70,draw=slate!85] (0.0,0.06) rectangle (0.58,0.32);
+  \draw[line width=3pt,slate!85] (0.3,0.2) -- (1.0,0.9);
+  \fill[slate!85] (0.16,0.06) circle (2pt);
+  \fill[slate!85] (0.44,0.06) circle (2pt);
+  \node[font=\small,anchor=north] at (0.3,-0.02) {cannon};
+  % Tartaglia's three stages
+  \coordinate (A) at (1.0,0.9);
+  \coordinate (B) at (3.2,3.1);
+  \coordinate (D) at (6.4435,1.7565);
+  \draw[very thick,plum] (A) -- (B);
+  \draw[very thick,plum] (B) arc (135:0:1.9);
+  \draw[very thick,plum] (D) -- (6.4435,0);
+  \foreach \pt/\lab/\pos in {A/{$A$}/{below right},B/{$B$}/{above left},D/{$D$}/{right}}{
+    \fill[plum] (\pt) circle (2.2pt); \node[font=\small,plum,\pos=1pt] at (\pt) {\lab};}
+  \fill[plum] (6.4435,0) circle (2.2pt);
+  \node[font=\small,plum,anchor=north west] at (6.50,0.02) {$F$};
+  \node[font=\small,plum,anchor=east,align=right] at (2.25,2.35) {1.~straight\\line};
+  \node[font=\small,plum,anchor=south] at (4.55,3.72) {2.~circular arc};
+  \node[font=\small,plum,anchor=west] at (6.55,0.95) {3.~drop};
+  % the real trajectory
+  \draw[very thick,teal,dashed] plot[domain=1.0:6.9,samples=80]
+    (\x,{0.9 + (\x-1.0) - 0.19535*(\x-1.0)*(\x-1.0)});
+  \node[font=\small,teal,anchor=north] at (4.4,1.30) {the real trajectory};
+\end{tikzpicture}
+\caption{A simplified form of Tartaglia's 1537 model (solid, purple) set against the parabolic trajectory we will derive in this chapter (dashed, teal). Tartaglia's ball travels in a straight line from $A$ to $B$, swings through a circular arc from $B$ to $D$, then drops vertically from $D$ to $F$. Notice that the model has \emph{stages}: the ball is doing one kind of motion, then another. Notice also that it is not a bad guess about where the ball lands, which is why gunners found it useful.}
+\label{fig:tartaglia}
+\end{figure}
+
+Tartaglia's ball does three things in succession. It leaves the muzzle along a straight line; it then swings through an arc of a circle; and it finally falls straight down. The names given to the stages at the time, ``violent motion'' for the first and ``natural motion'' for the last, came from a tradition of thinking about motion that traces back to Aristotle, in which an object moves in a straight line while some influence drives it, and reverts to its own natural behaviour when that influence is spent. The essential feature, for our purposes, is not the names but the structure: \emph{the ball switches between different kinds of motion at particular moments}.
+
+The model is wrong in every stage. A cannonball does not travel in a straight line as it leaves the muzzle; it does not follow a circular arc in the middle; and it does not fall vertically at the end. But it is wrong in a forgiving way. If you only want to know roughly where the ball will land, Tartaglia's curve and the true curve are close enough that a gunner using his tables would hit more often than a gunner using nothing. Tartaglia himself was more careful than the simplified picture suggests: he knew that air resistance mattered, he said explicitly that a model ignoring it would be simpler but less accurate, and he did not believe the first stage was exactly straight. He thought gravity was pulling on the ball all along and merely that the deviation was small at first. That is a remarkably modern attitude, and it deserves credit.
+
+\begin{modelnote}[What was actually wrong with the staged picture]
+The trouble with a model built from stages is not only that its curve is the wrong shape. It is that the stages cannot be justified by anything you can measure. Where exactly does $B$ lie, and what decides it? What is the radius of the circle? A model with adjustable joints can be bent to fit almost any data, which sounds like a strength and is in fact a weakness: we met the same issue in Chapter~1 when a model with enough free parameters stops making risky predictions. Galileo's replacement has \emph{no} joints. From the moment the ball leaves the muzzle to the moment it lands, one description covers the whole flight, and everything about the trajectory follows from two numbers measured at launch. That is a far more exposed claim, and therefore a far more useful one.
+\end{modelnote}
+
+Our goal in this chapter is to arrive at that replacement. Two ideas do all the work:
+
+\begin{enumerate}[itemsep=2pt]
+  \item A thrown object is doing the \emph{same} sort of motion at every instant of its flight. There are no stages and no transitions.
+  \item That motion is best understood by splitting it into two \emph{independent} parts, one horizontal and one vertical, which go on simultaneously and do not interfere with each other.
+\end{enumerate}
+
+Cannonballs are hardly the only objects this applies to. A long jumper, a thrown ball, a stream of water from a drinking fountain, a grain of rice flicked out of a wok, a rock hurled from a volcanic vent, a dolphin leaving the water: all of them leave a surface and then travel through the air with nothing significant acting on them except gravity. Objects of this kind are called \emph{projectiles}.
+
+\begin{definition}{Projectile}{projectile}
+A \textbf{projectile} is an object that has been launched into the air and then moves under the influence of gravity alone, with no engine, no lift, no string, no contact with a surface, and no appreciable air resistance. ``Launched'' includes being dropped: an object released from rest is a projectile with zero initial velocity, and free fall (Definition 2.1) is the special case of projectile motion in which the initial velocity is zero or straight up or down.
+\end{definition}
+
+The word ``appreciable'' is doing the same job it did for free fall in Chapter~2, and Section~\ref{sec:drag} is devoted to deciding when it is justified. Until then we ignore the air completely, and we should say so out loud each time, because it is the assumption most likely to be the one that breaks.
+
+\begin{checkbox}
+Which of the following can usefully be modelled as projectiles once they are in the air? (a) a pole vaulter on the way up, still pushing on the pole; (b) a pole vaulter after releasing the pole; (c) a firework rocket with its fuse still burning; (d) the sparks from that rocket after it bursts; (e) grains of rice tossed out of a wok; (f) a paper aeroplane; (g) water arcing out of a drinking fountain; (h) a child swinging on a swing; (i) the same child a moment after letting go at the bottom of the arc.
+\end{checkbox}
+
+\section{Watching a Projectile's Path}
+\label{sec:watching}
+
+Before modelling a motion it is worth looking at it, and in Chapter~1 we built the tool for that: the dot diagram, a record of where an object was at equally spaced instants. For a projectile the tool needs one upgrade. A sprinter runs along a line, so one coordinate sufficed; a thrown ball moves in a vertical plane, so we need two, a horizontal $x$ and a vertical $y$.
+
+Making such a diagram is easy today. Film the throw, step through the frames, and mark the ball's position in each one; or, in a darkened room, leave a camera shutter open and fire a stroboscopic lamp at a fixed rate, so that a single photograph records the ball at many instants. Long-exposure photographs of volcanic eruptions do something similar by accident: each glowing rock draws its own trajectory as a continuous bright streak. A streak and a row of dots carry the same information in two formats, and we will use both.
+
+\begin{modelnote}[What the dots mean, and why there is no time axis]
+The graphs of Chapters~1 and~2 all had time on the horizontal axis. This one does not, and the difference matters. A dot diagram of a projectile is a picture of \emph{space}: both axes are distances, and it shows the shape of the path as an eye would see it. Time is still recorded, but implicitly, by \emph{counting dots}: the flash rate is fixed, so equal numbers of dots mean equal times. The price of this choice is that you cannot read a time off an axis; the reward is that you see the trajectory's true shape. Later in the chapter we will pull the two apart again into $x(t)$ and $y(t)$, which do have time axes, and the ability to move between the two pictures is most of the skill in this subject.
+\end{modelnote}
+
+Look at any collection of such pictures, of a diver leaving a board, a snowboarder off a ramp, a basketball on its way to the hoop, rocks from a volcanic vent, and one feature is shared by all of them, however steep or shallow the flight. \emph{The path curves downward everywhere.}
+
+That phrase deserves a precise meaning. Draw the straight line that just grazes the path at a chosen point, the \textbf{tangent line} there, the line whose direction is the direction the object is travelling at that instant. Then the path lies below that tangent line on both sides of the point of contact. Choose a different point and draw a new tangent; the path lies below that one too. Figure~\ref{fig:curvedown} shows three tangents to one trajectory, and, for contrast, a curve that bends the other way.
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm]
+  % --- (a) projectile: curves down everywhere
+  \begin{scope}
+    \draw[slate!45,->,>=Stealth] (-0.3,0) -- (7.4,0) node[right,font=\small,black] {$x$};
+    \draw[slate!45,->,>=Stealth] (-0.3,0) -- (-0.3,3.9) node[above,font=\small,black] {$y$};
+    \draw[very thick,teal] plot[domain=0:7.0,samples=90] (\x,{0.25+1.28*\x-0.1829*\x*\x});
+    \foreach \a in {0.8,3.5,6.2}{
+      \pgfmathsetmacro\ya{0.25+1.28*\a-0.1829*\a*\a}
+      \pgfmathsetmacro\ma{1.28-0.3658*\a}
+      \draw[red!70!black,thick] ({\a-1.05},{\ya-1.05*\ma}) -- ({\a+1.05},{\ya+1.05*\ma});
+      \fill[red!70!black] (\a,\ya) circle (2.1pt);}
+    \node[font=\small,anchor=north] at (3.5,-0.25) {(a) a projectile: below every tangent};
+  \end{scope}
+  % --- (b) a curve that bends upward
+  \begin{scope}[xshift=8.6cm]
+    \draw[slate!45,->,>=Stealth] (-0.3,0) -- (4.2,0) node[right,font=\small,black] {$x$};
+    \draw[slate!45,->,>=Stealth] (-0.3,0) -- (-0.3,3.9) node[above,font=\small,black] {$y$};
+    \draw[very thick,plum] plot[domain=0:3.8,samples=90] (\x,{0.2+0.24*\x*\x});
+    \foreach \a in {1.2,3.0}{
+      \pgfmathsetmacro\ya{0.2+0.24*\a*\a}
+      \pgfmathsetmacro\ma{0.48*\a}
+      \draw[red!70!black,thick] ({\a-1.0},{\ya-1.0*\ma}) -- ({\a+1.0},{\ya+1.0*\ma});
+      \fill[red!70!black] (\a,\ya) circle (2.1pt);}
+    \node[font=\small,anchor=north,align=center] at (1.95,-0.25) {(b) not a projectile:\\ above every tangent};
+  \end{scope}
+\end{tikzpicture}
+\caption{(a) A projectile's path (teal) with three tangent lines (red). Wherever the tangent is drawn, and whether the object is rising or falling, the path lies \emph{below} it. This is what ``curves downward everywhere'' means. (b) A curve that bends the other way: it lies above every tangent. No projectile traces such a path. Many curves do neither, bending down in some places and up in others; projectile trajectories never do.}
+\label{fig:curvedown}
+\end{figure}
+
+\begin{modelnote}[Curving down, in two languages]
+\elemtag\ ``Curves downward everywhere'' is a statement you can check with a ruler: lay the ruler along the path at any point and the path falls away beneath it on both sides. On a dot diagram you can check it without a ruler at all, by looking at how the direction from one dot to the next changes: each step tips a little further downward than the one before. \calctag\ A curve lies below its tangents exactly when $\dd^2 y/\dd x^2 < 0$, and mathematicians call such a curve \emph{concave}. We will find in Section~\ref{sec:parabola} that a projectile has $\dd^2 y/\dd x^2 = -g/v_x^2$, a negative constant, so it is not merely concave but concave by the same amount everywhere, which turns out to pin the shape down completely.
+\end{modelnote}
+
+Knowing that the trajectory curves downward everywhere is real information, but not much of it: a great many curves do that. To go further we need to look at how the dots are \emph{spaced}, not just at the shape they trace. Figure~\ref{fig:dotdiag} is a dot diagram for a particular flight, which we will use as a running example for the rest of the chapter. It was recorded at ten flashes per second, and every fifth flash is shown, so the dots are $\tau = \SI{0.5}{\second}$ apart.
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=13cm,height=8cm,
+  xlabel={$x$ (m)},ylabel={$y$ (m)},
+  xmin=-2,xmax=35,ymin=-1.5,ymax=22,
+  xtick={0,4,...,32},ytick={0,4,...,20},
+  grid=major,grid style={gray!25},
+  axis lines=left,
+  tick label style={font=\small},label style={font=\small},
+]
+\addplot[teal!40,thick,smooth,domain=0:32,samples=80] {19.6*x/8 - 4.9*x*x/64};
+\addplot[only marks,mark=*,mark size=2.6pt,black] coordinates {
+ (0,0) (4,8.575) (8,14.7) (12,18.375) (16,19.6) (20,18.375) (24,14.7) (28,8.575) (32,0)};
+\end{axis}
+\end{tikzpicture}
+\caption{A dot diagram for a ball thrown from the ground, recorded every $\tau = \SI{0.5}{\second}$. The faint curve is drawn only to guide the eye; the data are the nine dots. Notice that the dots crowd together near the top of the arc and spread out near the ends, and that the whole path curves downward, as Figure~\ref{fig:curvedown}(a) requires.}
+\label{fig:dotdiag}
+\end{figure}
+
+Two features of Figure~\ref{fig:dotdiag} stand out. The dots are closer together near the top of the arc than near the two ends, so the ball is \emph{slowest} at the top. And the diagram is symmetric left to right: the ball's path on the way down is the mirror image of its path on the way up. Both facts will fall out of the model we are about to build, which is a good sign, since we did not put either of them in by hand.
+
+\begin{checkbox}
+In a photograph of a bouncing tennis ball taken with a strobe light, the images of the ball overlap near the top of each arc but are well separated near the bottom. Explain why, and say what this tells you about the ball's speed. Then explain why the same reasoning applies to Figure~\ref{fig:dotdiag}, and name one thing a dot diagram does \emph{not} tell you that a motion diagram (Definition 2.4) would.
+\end{checkbox}
+
+\section{Two Motions at Once}
+\label{sec:twomotions}
+
+The dots in Figure~\ref{fig:dotdiag} bunch near the top, so the ball slows as it rises. In what way does it slow? Does it lose horizontal speed, vertical speed, or both? The diagram can answer this, because a two-dimensional motion can be taken apart.
+
+\subsection{Projection}
+
+Stand a lamp directly above the trajectory so that it casts a shadow of the ball onto the floor. The shadow moves back and forth along a horizontal line, and it does so in exactly the way the ball's $x$ coordinate changes: the shadow is a one-dimensional motion extracted from a two-dimensional one. On a dot diagram we can make the same shadow with a pencil, by dropping each dot straight down onto the $x$ axis. Shine the lamp from the side instead and the shadow on the wall traces the ball's $y$ coordinate.
+
+\begin{definition}{Projection; component}{component}
+To \textbf{project} a two-dimensional motion onto an axis is to record, at each instant, only that one coordinate of the object's position: the foot of the perpendicular from the object to the axis, which is the shadow the object would cast on that axis. The resulting one-dimensional motion is a \textbf{component} of the full motion. The projection onto the horizontal axis is the \textbf{horizontal component}, or $x$ component; the projection onto the vertical axis is the \textbf{vertical component}, or $y$ component. Velocities and accelerations have components in the same sense, written $v_x$, $v_y$, $a_x$, $a_y$. The full motion is the two components performed simultaneously, and nothing is lost in the splitting: given $x(t)$ and $y(t)$ you can reconstruct the trajectory exactly.
+\end{definition}
+
+Figure~\ref{fig:projections} carries out both projections on the dot diagram of Figure~\ref{fig:dotdiag}, red onto the horizontal axis and green onto the vertical. The result is worth staring at.
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=13.4cm,height=8.6cm,
+  xlabel={$x$ (m)},ylabel={$y$ (m)},
+  xmin=-7,xmax=35,ymin=-4.6,ymax=22,
+  xtick={0,4,...,32},ytick={0,4,...,20},
+  grid=major,grid style={gray!25},
+  axis lines=left,
+  tick label style={font=\small},label style={font=\small},
+  clip=false,
+]
+\addplot[teal!35,thick,smooth,domain=0:32,samples=80] {19.6*x/8 - 4.9*x*x/64};
+\draw[gray!65,thin,densely dotted] (axis cs:4,8.575) -- (axis cs:4,-1.6);
+\draw[gray!65,thin,densely dotted] (axis cs:4,8.575) -- (axis cs:-2.2,8.575);
+\draw[gray!65,thin,densely dotted] (axis cs:8,14.7) -- (axis cs:8,-1.6);
+\draw[gray!65,thin,densely dotted] (axis cs:8,14.7) -- (axis cs:-2.2,14.7);
+\draw[gray!65,thin,densely dotted] (axis cs:12,18.375) -- (axis cs:12,-1.6);
+\draw[gray!65,thin,densely dotted] (axis cs:12,18.375) -- (axis cs:-2.2,18.375);
+\draw[gray!65,thin,densely dotted] (axis cs:16,19.6) -- (axis cs:16,-1.6);
+\draw[gray!65,thin,densely dotted] (axis cs:16,19.6) -- (axis cs:-2.2,19.6);
+\draw[gray!65,thin,densely dotted] (axis cs:20,18.375) -- (axis cs:20,-1.6);
+\draw[gray!65,thin,densely dotted] (axis cs:20,18.375) -- (axis cs:-2.2,18.375);
+\draw[gray!65,thin,densely dotted] (axis cs:24,14.7) -- (axis cs:24,-1.6);
+\draw[gray!65,thin,densely dotted] (axis cs:24,14.7) -- (axis cs:-2.2,14.7);
+\draw[gray!65,thin,densely dotted] (axis cs:28,8.575) -- (axis cs:28,-1.6);
+\draw[gray!65,thin,densely dotted] (axis cs:28,8.575) -- (axis cs:-2.2,8.575);
+\draw[gray!65,thin,densely dotted] (axis cs:32,0) -- (axis cs:32,-1.6);
+\draw[gray!65,thin,densely dotted] (axis cs:32,0) -- (axis cs:-2.2,0);
+\addplot[only marks,mark=*,mark size=2.6pt,black] coordinates {
+ (0,0) (4,8.575) (8,14.7) (12,18.375) (16,19.6) (20,18.375) (24,14.7) (28,8.575) (32,0)};
+\addplot[only marks,mark=*,mark size=2.5pt,red!75!black] coordinates {
+ (0,-1.6) (4,-1.6) (8,-1.6) (12,-1.6) (16,-1.6) (20,-1.6) (24,-1.6) (28,-1.6) (32,-1.6)};
+\addplot[only marks,mark=*,mark size=2.5pt,green!45!black] coordinates {
+ (-2.2,0) (-2.2,8.575) (-2.2,14.7) (-2.2,18.375) (-2.2,19.6)};
+\node[red!75!black,font=\small,anchor=north west] at (axis cs:0,-2.4)
+  {horizontal component: equally spaced, so $v_x$ is constant};
+\node[green!45!black,font=\small,rotate=90,anchor=south] at (axis cs:-4.5,1.0)
+  {vertical component};
+\end{axis}
+\end{tikzpicture}
+\caption{The trajectory of Figure~\ref{fig:dotdiag} projected onto each axis. The red dots on the horizontal axis are \emph{equally spaced}: the horizontal component is constant-velocity motion. The green dots on the vertical axis (only the rising half is drawn, to keep them apart) crowd together toward the top, with gaps in the ratio $7:5:3:1$, which is the odd-number rule of Chapter~2 running backwards. The vertical component is free fall.}
+\label{fig:projections}
+\end{figure}
+
+The red dots are evenly spaced. Equal distances in equal times is, from Chapter~1, exactly what constant velocity looks like. \emph{The horizontal component of a projectile's motion is constant-velocity motion.} The ball covers \SI{4}{\metre} horizontally in every \SI{0.5}{\second} of its flight, from the first interval to the last, whether it is climbing, hanging at the top, or plunging.
+
+The green dots tell a different story. Measured upward from the launch point, the heights at the five flashes of the rising half are \SI{0}{}, \SI{8.575}{}, \SI{14.700}{}, \SI{18.375}{}, and \SI{19.600}{\metre}, so the gaps are
+\[
+\SI{8.575}{\metre},\quad \SI{6.125}{\metre},\quad \SI{3.675}{\metre},\quad \SI{1.225}{\metre},
+\]
+which are $7d$, $5d$, $3d$, and $d$ with $d = \SI{1.225}{\metre}$. Read from the top of the flight downwards, they are $d$, $3d$, $5d$, $7d$: Galileo's odd-number rule for an object starting from rest. The ball's vertical motion on the way up is a free fall played backwards, and on the way down it is a free fall played forwards. Checking the acceleration confirms it: the second difference of the heights is $2d = \SI{2.45}{\metre}$, so
+\[
+a_y = \frac{\text{second difference}}{\tau^2} = \frac{\SI{-2.45}{\metre}}{(\SI{0.5}{\second})^2} = \SI{-9.8}{\metre\per\second\squared} = -g,
+\]
+the minus sign because each gap is smaller than the one before as the ball rises. \emph{The vertical component of a projectile's motion is free fall.}
+
+\subsection{Galileo's model}
+
+Putting the two halves together gives the model that replaced Tartaglia's, and it is due to Galileo, in the same \emph{Two New Sciences} of 1638 that contains the inclined-plane work of Chapter~2.
+
+\begin{keyidea}[Galileo's model of projectile motion]
+Throughout the flight of a projectile, with air resistance ignored and $y$ measured upward:
+\[
+a_x = 0, \qquad a_y = -g.
+\]
+Everything else follows. The horizontal component is constant-velocity motion and the vertical component is free fall:
+\[
+v_x = \text{constant}, \qquad x = x_0 + v_x t, \qquad\qquad
+v_y = v_{y0} - g t, \qquad y = y_0 + v_{y0}\,t - \tfrac12 g t^2 .
+\]
+There are no stages: these formulas hold from launch to landing, on the way up, at the top, and on the way down.
+\end{keyidea}
+
+\begin{twoviews}{why the motion splits into two}
+\elem Take the dot diagram and drop the dots onto each axis, as in Figure~\ref{fig:projections}. What you get on the horizontal axis is a dot diagram of a one-dimensional motion, and you already know how to read it: equal spacing means constant velocity. What you get on the vertical axis is another one-dimensional dot diagram, and its spacings obey the odd-number rule, which means constant acceleration. Every tool from Chapters~1 and~2 now applies to each component separately, and nothing new is needed. The two-dimensional problem has been turned into two one-dimensional problems, which is the whole trick.
+
+\calc Write the position as a pair of functions of one variable, $\big(x(t),\,y(t)\big)$. Differentiating a pair means differentiating each entry, so $v_x = \dd x/\dd t$ and $v_y = \dd y/\dd t$, and likewise for the accelerations. Galileo's model is the pair of differential equations
+\[
+\dderiv{x}{t} = 0, \qquad \dderiv{y}{t} = -g,
+\]
+and because neither equation mentions the other's variable, they can be integrated independently. Integrating the first twice, with $v_x(0) = v_x$ and $x(0) = x_0$, gives $x = x_0 + v_x t$; integrating the second twice, with $v_y(0) = v_{y0}$ and $y(0) = y_0$, gives $y = y_0 + v_{y0}t - \tfrac12 g t^2$. This is the precise sense in which the components are independent: they are governed by \emph{uncoupled} equations. Later, when air resistance is put back in, the equations become coupled, and that single change is what destroys every convenient result in this chapter.
+\end{twoviews}
+
+Figure~\ref{fig:threeviews} shows the model assembled from its parts, in the arrangement that has appeared in physics texts since Galileo: horizontal motion alone, vertical motion alone, and the two together.
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[x=0.95cm,y=0.95cm]
+  \def\dd{0.17}
+  % (a) horizontal only
+  \begin{scope}
+    \draw[slate!40] (-0.2,0.6) -- (4.4,0.6);
+    \foreach \i in {0,...,5}{\fill[red!75!black] (0.8*\i,0.6) circle (2.4pt);}
+    \node[font=\small,anchor=north,align=center] at (2.0,0.1) {(a) horizontal\\ component only};
+  \end{scope}
+  % (b) vertical only
+  \begin{scope}[xshift=5.6cm]
+    \draw[slate!40] (0.9,0.45) -- (0.9,5.0);
+    \foreach \i in {0,...,5}{\fill[green!45!black] (0.9,{4.85-\dd*\i*\i}) circle (2.4pt);}
+    \node[font=\small,anchor=north,align=center] at (0.9,0.1) {(b) vertical\\ component only};
+  \end{scope}
+  % (c) combined
+  \begin{scope}[xshift=8.9cm]
+    \draw[teal!55,thick] plot[domain=0:4.0,samples=60] (\x,{4.85-\dd*(\x/0.8)*(\x/0.8)});
+    \foreach \i in {1,...,5}{
+      \draw[red!70!black,densely dotted,thin] (0.8*\i,{4.85-\dd*\i*\i}) -- (0.8*\i,0.6);
+      \draw[green!45!black,densely dotted,thin] (0.8*\i,{4.85-\dd*\i*\i}) -- (0,{4.85-\dd*\i*\i});}
+    \draw[slate!40] (-0.2,0.6) -- (4.4,0.6);
+    \draw[slate!40] (0,0.45) -- (0,5.0);
+    \foreach \i in {0,...,5}{\fill (0.8*\i,{4.85-\dd*\i*\i}) circle (2.6pt);
+      \fill[red!75!black] (0.8*\i,0.6) circle (2.2pt);
+      \fill[green!45!black] (0,{4.85-\dd*\i*\i}) circle (2.2pt);}
+    \node[font=\small,anchor=north,align=center] at (2.0,0.1) {(c) both at once};
+  \end{scope}
+\end{tikzpicture}
+\caption{A ball rolls off the edge of a table and is photographed at equal intervals. (a) Its horizontal component alone: equally spaced, constant velocity. (b) Its vertical component alone: spacings in the ratio $1:3:5:7:9$, free fall from rest. (c) The two performed simultaneously. Each black dot sits directly above a red dot and directly across from a green one, and the curve through them is the trajectory. Nothing has been added in (c) that is not already in (a) and (b).}
+\label{fig:threeviews}
+\end{figure}
+
+\begin{modelnote}[Why Galileo's model looks harder and is easier]
+At first sight Tartaglia's model is the simpler one: it describes the flight directly, and Galileo's asks us to track two motions and then recombine them. But a model is judged by how hard it is to \emph{use}, not by how few pieces it has. With Galileo's model, any question about height and time is answered by looking at the vertical component alone, where the problem is a one-dimensional constant-acceleration problem of the sort we solved throughout Chapter~2; any question about horizontal distance is answered by the horizontal component alone, where the problem is $x = v_x t$ from Chapter~1. Most projectile problems are solved by asking which component the question is about, answering it there, and using the time of flight as the bridge between them. Tartaglia's model, by contrast, offers no such handle on anything.
+\end{modelnote}
+
+\subsection{Independence}
+\label{sec:independence}
+
+The most useful and least believable consequence of Galileo's model is that the two components do not affect each other at all.
+
+\begin{keyidea}[Independence of the components]
+In Galileo's model, the horizontal motion of a projectile has no effect on its vertical motion, and the vertical motion has no effect on the horizontal. In particular, \emph{how long a projectile stays in the air is decided entirely by its vertical component}, and how fast it is moving sideways makes no difference whatever. A ball fired horizontally from a height and a ball simply dropped from the same height reach the ground at the same instant.
+\end{keyidea}
+
+\begin{twoviews}{the independence of the two components}
+\elem Look again at Figure~\ref{fig:projections}. The red dots and the green dots were obtained from the same photograph, but once separated, neither carries any trace of the other. The red dots are evenly spaced whether the ball is climbing or diving; the green dots obey the odd-number rule whether the ball is drifting sideways quickly or slowly. To predict the next red dot you need only the previous red dots; to predict the next green dot you need only the previous green dots. Two clerks given one list each could carry the motion forward without ever speaking, and their lists reassembled would be the trajectory.
+
+\calc Independence is the statement that the two differential equations are \emph{uncoupled}: neither $\dd^2x/\dd t^2 = 0$ nor $\dd^2 y/\dd t^2 = -g$ contains the other's variable, so each can be solved on its own, and the initial data for one do not enter the solution of the other. This is a property of the model, not a law of nature. Put in air resistance and the equations become
+\[
+\dderiv{x}{t} = -\frac{k}{m}\,v\,v_x, \qquad \dderiv{y}{t} = -g - \frac{k}{m}\,v\,v_y, \qquad v = \sqrt{v_x^2+v_y^2},
+\]
+in which the speed $v$ appears in both. Now the horizontal motion does affect the vertical one, no result in this chapter survives, and the pair has no solution in elementary functions; Figure~\ref{fig:drag} was computed numerically. Everything convenient about projectile motion comes from that single word \emph{uncoupled}.
+\end{twoviews}
+
+Most people do not believe this the first time they hear it, and they are in good company: it contradicts the whole of pre-Galilean physics. The reason to believe it is that it is a consequence of $a_x = 0$ and $a_y = -g$, and that the consequence has been checked. Drop two golf balls from a mechanism that releases one straight down and flicks the other sideways at the same instant, photograph both with a strobe, and their heights match frame for frame. The experiment is easy enough to do in a classroom, and is one of the demonstrations worth seeing rather than reading about.
+
+\begin{example}{The dropped ball and the fired ball}{dropfire}
+A cannon on a low platform fires a ball horizontally at \SI{200}{\metre\per\second} from a height of \SI{2.0}{\metre} above level ground. At the instant of firing, a second ball is released from rest beside the muzzle, at the same height. Which ball reaches the ground first, and how far downrange does the fired ball land? Ignore air resistance.
+
+\elem Ask the question about the vertical component, because that is the component the ground is in. Both balls start with zero vertical velocity: the dropped ball because it is released from rest, and the fired ball because it was fired \emph{horizontally}, so its velocity has no vertical part at launch. From then on both have $a_y = -g$. Two objects that begin a vertical motion with the same height, the same vertical velocity, and the same vertical acceleration perform the same vertical motion. They therefore reach $y = 0$ at the same instant. The fired ball's \SI{200}{\metre\per\second} is entirely horizontal and contributes nothing to the vertical story.
+
+From Chapter~2, the time to fall \SI{2.0}{\metre} from rest is
+\[
+t = \sqrt{\frac{2h}{g}} = \sqrt{\frac{2(\SI{2.0}{\metre})}{\SI{9.8}{\metre\per\second\squared}}} = \SI{0.64}{\second}.
+\]
+Now switch to the horizontal component, where the velocity is constant:
+\[
+\Delta x = v_x t = (\SI{200}{\metre\per\second})(\SI{0.64}{\second}) = \SI{128}{\metre}.
+\]
+The dropped ball lands at the gunner's feet; the fired ball lands \SI{128}{\metre} away; both land \SI{0.64}{\second} after firing.
+
+\calc The two balls satisfy the same vertical equation $\dd^2 y/\dd t^2 = -g$ with the same initial conditions $y(0) = \SI{2.0}{\metre}$ and $v_y(0) = 0$, so they have the same solution $y(t) = 2.0 - 4.9t^2$; the solution of an initial-value problem is determined by the equation and the initial data, and the horizontal equation supplies neither. Setting $y = 0$ gives $t = \sqrt{2(2.0)/9.8} = \SI{0.639}{\second}$, and $x(t) = \int_0^{t} 200\,\dd t' = \SI{128}{\metre}$.
+
+Sanity check, and a caution. The model says the fired ball hits the ground after \SI{0.64}{\second} however fast it is fired: at \SI{2000}{\metre\per\second} it would travel \SI{1280}{\metre} in the same \SI{0.64}{\second}. At that range two of our assumptions are in trouble. Air resistance on a ball moving at \SI{2000}{\metre\per\second} is enormous (Section~\ref{sec:drag}), and over \SI{1.3}{\kilo\metre} the ground is measurably not flat (Section~\ref{sec:orbit}). The independence of the components is sound; the surrounding idealisations are what give way.\qed
+\end{example}
+
+\begin{modelnote}[Why independence feels wrong]
+The intuition that resists this result usually runs: \emph{surely a ball that is moving forward fast has less time to fall.} It is worth locating the error. Time is not something a projectile uses up by moving; the clock runs at the same rate for the fired ball and the dropped one. What forward motion changes is \emph{where} the ball is when the clock reaches a given reading, not \emph{when} the clock reaches it. The vertical question ``has it got down to the ground yet?'' is answered by the vertical component, and the vertical component has never heard of $v_x$.
+
+There is also a genuine effect hiding behind the bad intuition, which may be why it is so persistent. A ball fired \emph{fast enough} really does stay up longer, because the ground curves away beneath it (Section~\ref{sec:orbit}), and a real ball moving through air really does have its fall affected by its forward speed, because drag acts along the direction of travel and so mixes the components together. Both effects are outside Galileo's model. Within the model, the independence is exact.
+\end{modelnote}
+
+\begin{example}{Jumping on a moving train}{train}
+You are standing in the aisle of a train moving smoothly along straight, level track at \SI{30}{\metre\per\second}. You jump straight up, and your feet are off the floor for \SI{0.60}{\second}. How far do you move forward during the jump, according to a passenger sitting beside you, and according to a farmer standing in a field as the train goes by? How high do you jump?
+
+\elem Take the jump apart into components in the farmer's frame. Vertically, you are a projectile: up, then down, taking \SI{0.60}{\second} in all, so \SI{0.30}{\second} up and \SI{0.30}{\second} down by symmetry. You left the floor at $v_{y0} = g(\SI{0.30}{\second}) = \SI{2.94}{\metre\per\second}$ and rose, on average at half that speed, to
+\[
+h = \tfrac12(\SI{2.94}{\metre\per\second})(\SI{0.30}{\second}) = \SI{0.44}{\metre}.
+\]
+Horizontally, you left the floor moving at \SI{30}{\metre\per\second}, the train's speed, because you were travelling with the train before you jumped and nothing horizontal acted on you afterwards. Your horizontal velocity stays \SI{30}{\metre\per\second} for the whole \SI{0.60}{\second}, so the farmer sees you move forward
+\[
+\Delta x = (\SI{30}{\metre\per\second})(\SI{0.60}{\second}) = \SI{18}{\metre}.
+\]
+The train moves forward \SI{18}{\metre} in the same time, so the passenger beside you, who moves with it, sees you go up and come down in the same spot: \SI{0}{\metre} forward. You land where you took off, and your neighbour's coffee does not spill.
+
+\calc In the farmer's frame, $x(t) = 30t$ and $y(t) = 2.94t - 4.9t^2$; the trajectory is a flat parabola \SI{18}{\metre} long and \SI{0.44}{\metre} high. In the train's frame, subtract the train's motion: $x'(t) = x(t) - 30t = 0$, while $y'(t) = y(t)$ is unchanged, because the two frames differ by a constant horizontal velocity and the vertical component is untouched. The two descriptions are related by the relative-velocity rule of Chapter~1, and both are correct; asking which is ``really'' happening is asking a question with no content.
+
+Sanity check: \SI{0.44}{\metre} is a plausible standing jump, and the \SI{18}{\metre} agrees with common experience that you can jump in a smoothly moving vehicle without being thrown to the back of it. The word \emph{smoothly} is essential. If the train were accelerating, you would leave the floor with the train's velocity but the train would gain velocity while you were airborne, and you would land behind your take-off spot (Exercise~\ref{ex:acceltrain}).\qed
+\end{example}
+
+\begin{checkbox}
+A heavy crate falls from a cargo aeroplane flying horizontally at a steady \SI{250}{\metre\per\second}, at the moment the aeroplane passes directly over a parked red car. Ignoring air resistance: (a) Does the crate land on the car, behind it, or ahead of it? (b) Where is the crate relative to the aeroplane at the instant it lands, assuming the aeroplane flies on unchanged? (c) Sketch the crate's path as seen by the farmer in the field, and as seen by the pilot looking straight down. (d) Which of your answers change if air resistance is \emph{not} ignored?
+\end{checkbox}
+
+\section{Solving Problems with Components}
+\label{sec:solving}
+
+Independence turns every projectile problem into the same three-step procedure, and it is worth naming the steps, because almost every worked example in this chapter follows them.
+
+\begin{keyidea}[The standard method]
+\begin{enumerate}[itemsep=1pt,topsep=2pt]
+  \item \textbf{Split.} Write down what you know about the horizontal component ($v_x$ constant) and about the vertical component ($v_{y0}$, $y_0$, $a_y = -g$), keeping the two lists separate. State which way $y$ points.
+  \item \textbf{Solve the component the question is really about.} Heights, times of flight, and ``does it clear the bar?'' are vertical questions. ``How far downrange?'' is a horizontal question.
+  \item \textbf{Bridge with the time.} The one quantity the two components share is the time $t$. Find it in one component and carry it to the other.
+\end{enumerate}
+\end{keyidea}
+
+Table~\ref{tab:components} sets the two components side by side in the form we will use throughout.
+
+\begin{table}[htb]
+\centering
+\caption{The two components of projectile motion, with $y$ measured upward and $g > 0$. Each column is a one-dimensional motion of a kind already studied: the left column is Chapter~1's constant-velocity motion, the right column is Chapter~2's constant-acceleration motion. The only quantity the columns share is $t$.}
+\label{tab:components}
+\renewcommand{\arraystretch}{1.5}
+\small
+\begin{tabular}{lll}
+\toprule
+ & horizontal ($x$) & vertical ($y$) \\
+\midrule
+acceleration & $a_x = 0$ & $a_y = -g$ \\
+velocity & $v_x = \text{constant}$ & $v_y = v_{y0} - g t$ \\
+position & $x = x_0 + v_x t$ & $y = y_0 + v_{y0}t - \tfrac12 g t^2$ \\
+time-free relation & --- & $v_y^2 = v_{y0}^2 - 2g(y - y_0)$ \\
+what it controls & how far downrange & how high, and how long in the air \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{example}{The cliff diver and the rocks}{cliff}
+A diver wants to run horizontally off a cliff \SI{12}{\metre} above the sea and land clear of a shelf of rocks that juts \SI{5.0}{\metre} out from the base of the cliff. How fast must the diver be running at the edge? Take $g = \SI{9.8}{\metre\per\second\squared}$ and ignore air resistance.
+
+\elem \emph{Split.} Measure $y$ upward from the sea, so the take-off is at $y_0 = \SI{12}{\metre}$. Running horizontally off the edge means $v_{y0} = 0$. Horizontally, the diver leaves at some speed $v_x$ and keeps it.
+
+\emph{Vertical.} The diver falls \SI{12}{\metre} from rest, which by Chapter~2 takes
+\[
+t_{\text{fall}} = \sqrt{\frac{2h}{g}} = \sqrt{\frac{2(\SI{12}{\metre})}{\SI{9.8}{\metre\per\second\squared}}} = \SI{1.56}{\second}.
+\]
+Notice what is \emph{not} in this formula: $v_x$. However fast the diver runs, the fall takes \SI{1.56}{\second}. This is the independence of Section~\ref{sec:independence} doing useful work.
+
+\emph{Horizontal, bridged by the time.} In that \SI{1.56}{\second} the diver must travel at least $d = \SI{5.0}{\metre}$ horizontally, so
+\[
+v_x \ge \frac{d}{t_{\text{fall}}} = \frac{\SI{5.0}{\metre}}{\SI{1.56}{\second}} = \SI{3.2}{\metre\per\second}.
+\]
+
+\calc Solve $y(t) = h - \tfrac12 g t^2 = 0$ for the landing time, $t_{\text{fall}} = \sqrt{2h/g}$, then require $x(t_{\text{fall}}) = v_x t_{\text{fall}} \ge d$. Eliminating the time gives the general answer in one line,
+\begin{equation}
+v_x \ge d\,\sqrt{\frac{g}{2h}},
+\label{eq:cliff}
+\end{equation}
+and substituting $d = \SI{5.0}{\metre}$, $h = \SI{12}{\metre}$ returns \SI{3.2}{\metre\per\second}.
+
+Sanity check: \SI{3.2}{\metre\per\second} is a gentle jog, about \SI{11.5}{\kilo\metre\per\hour}, far below sprinting speed, so the dive is possible with room to spare. It is still a bad idea, and the arithmetic is not a licence to try it.\qed
+\end{example}
+
+An answer in symbols, like Equation~\eqref{eq:cliff}, is worth more than the number it produces, because you can interrogate it. Chapter~1 called this sense-making; here it amounts to asking whether each proportionality in the formula matches what you would expect, and being suspicious if it does not.
+
+\begin{example}{Making sense of the cliff formula}{sensemaking}
+Equation~\eqref{eq:cliff} says $v_x \propto d$, $v_x \propto 1/\sqrt{h}$, and $v_x \propto \sqrt{g}$. Are all three reasonable?
+
+\elem \emph{$v_x \propto d$.} Double the reach of the rocks and you must run twice as fast. This is right, and the reason is independence again: the fall still takes \SI{1.56}{\second}, so covering twice the distance in the same time needs twice the speed. A plain proportionality, no square roots.
+
+\emph{$v_x \propto 1/\sqrt{h}$.} A higher cliff makes the dive \emph{easier}, which is correct: more height means more time in the air to get clear. But doubling the height does not halve the required speed; it divides it by $\sqrt{2} \approx \num{1.41}$. That factor is the one Galileo found. Doubling the fall does not double the fall time, because the diver spends the extra height moving faster than average: if the time were doubled, the average vertical speed would double too, and the height would go up by a factor of four, not two. To double the height you multiply the time by $\sqrt2$, and that is how much extra time the diver gets.
+
+\emph{$v_x \propto \sqrt{g}$.} On a planet with stronger gravity the dive is harder, which is right, and again the effect is softened to a square root because $g$ enters the fall time as $t = \sqrt{2h/g}$. On the Moon, with $g$ about one-sixth of Earth's, the same dive would need only $\sqrt{1/6} \approx \num{0.41}$ times the speed, about \SI{1.3}{\metre\per\second}: a walk.
+
+\calc All three proportionalities can be read off $v_x = d\sqrt{g/2h}$ at once, and their strengths compared by taking logarithms, $\ln v_x = \ln d + \tfrac12\ln g - \tfrac12 \ln h + \text{const}$, so that the exponents $1$, $\tfrac12$, $-\tfrac12$ appear as the coefficients. Equivalently, a \SI{1}{\percent} increase in $d$ raises $v_x$ by \SI{1}{\percent}, while a \SI{1}{\percent} increase in $h$ lowers it by only about \SI{0.5}{\percent}. Sensitivity of this kind is what a formula tells you and a single number cannot.\qed
+\end{example}
+
+\begin{example}{Rolling a ball off a table}{table}
+In the laboratory, a steel ball rolls along a track and leaves the edge of a bench \SI{1.20}{\metre} above the floor, moving horizontally at \SI{2.5}{\metre\per\second}. Where should a cup be placed to catch it? How fast is the ball moving when it arrives, and in what direction?
+
+\elem \emph{Vertical.} From rest vertically, through \SI{1.20}{\metre}:
+\[
+t = \sqrt{\frac{2(\SI{1.20}{\metre})}{\SI{9.8}{\metre\per\second\squared}}} = \SI{0.495}{\second}.
+\]
+\emph{Horizontal.} $\Delta x = (\SI{2.5}{\metre\per\second})(\SI{0.495}{\second}) = \SI{1.24}{\metre}$, so the cup goes \SI{1.24}{\metre} from the point on the floor directly below the edge of the bench.
+
+\emph{Arrival velocity.} Horizontally the ball is still doing \SI{2.5}{\metre\per\second}. Vertically it has been gaining \SI{9.8}{\metre\per\second} of downward speed each second for \SI{0.495}{\second}, so $v_y = \SI{-4.85}{\metre\per\second}$. The two components are at right angles, so the speed is the hypotenuse:
+\[
+v = \sqrt{v_x^2 + v_y^2} = \sqrt{(2.5)^2 + (4.85)^2}\ \si{\metre\per\second} = \SI{5.5}{\metre\per\second},
+\]
+directed below the horizontal at an angle $\arctan(4.85/2.5) = \SI{63}{\degree}$.
+
+\calc With $y(t) = 1.20 - 4.9t^2$ and $x(t) = 2.5t$: $y = 0$ at $t = \sqrt{1.20/4.9} = \SI{0.495}{\second}$, giving $x = \SI{1.24}{\metre}$. The velocity vector is $\big(\dd x/\dd t,\ \dd y/\dd t\big) = (2.5,\ -9.8t)$, which at $t = \SI{0.495}{\second}$ is $(2.5,\,-4.85)\ \si{\metre\per\second}$, of magnitude \SI{5.5}{\metre\per\second}.
+
+Sanity check: the ball lands about as far out as the bench is tall, and steeply, which matches what happens when you actually roll a ball off a bench. The cup should be a little wider than a cup, because the roll speed is not known to better than a few percent and the landing point inherits that uncertainty directly (Chapter~1).\qed
+\end{example}
+
+\begin{example}{Reading the dot diagram}{readdots}
+From Figure~\ref{fig:dotdiag} alone, find the ball's horizontal velocity and its initial vertical velocity. The dots are $\tau = \SI{0.5}{\second}$ apart, and the ball is launched from the ground at the leftmost dot and lands at the rightmost. Take $g = \SI{9.8}{\metre\per\second\squared}$.
+
+\elem \emph{Horizontal.} The horizontal component is constant-velocity motion, so measure any one gap. The ball moves \SI{4}{\metre} horizontally in each \SI{0.5}{\second}:
+\[
+v_x = \frac{\SI{4}{\metre}}{\SI{0.5}{\second}} = \SI{8.0}{\metre\per\second}.
+\]
+Equivalently, read the whole flight: \SI{32}{\metre} horizontally in $8\tau = \SI{4.0}{\second}$.
+
+\emph{Vertical.} The highest dot is at $y_{\max} = \SI{19.6}{\metre}$. From the top the ball falls to the ground from rest, taking
+\[
+t_{\text{fall}} = \sqrt{\frac{2 y_{\max}}{g}} = \sqrt{\frac{2(\SI{19.6}{\metre})}{\SI{9.8}{\metre\per\second\squared}}} = \SI{2.0}{\second},
+\]
+and arriving at $g\,t_{\text{fall}} = \SI{19.6}{\metre\per\second}$ downward. The rising half of a flight is the falling half played backwards, so the ball \emph{left} the ground at
+\[
+v_{y0} = \sqrt{2 g y_{\max}} = \SI{19.6}{\metre\per\second}
+\]
+upward. This also checks the horizontal answer: the whole flight lasts $2t_{\text{fall}} = \SI{4.0}{\second}$, and $\SI{32}{\metre}/\SI{4.0}{\second} = \SI{8.0}{\metre\per\second}$, as found.
+
+\calc Fit the model to the data. Horizontally, $x = v_x t$ with $x = \SI{32}{\metre}$ at $t = \SI{4.0}{\second}$ gives $v_x = \SI{8.0}{\metre\per\second}$. Vertically, $y = v_{y0}t - \tfrac12 g t^2$ returns to zero at $t = 2v_{y0}/g$; setting that equal to \SI{4.0}{\second} gives $v_{y0} = \tfrac12 g(\SI{4.0}{\second}) = \SI{19.6}{\metre\per\second}$. As a check, the maximum is where $\dd y/\dd t = v_{y0} - gt = 0$, at $t = \SI{2.0}{\second}$, where $y = 19.6(2) - 4.9(4) = \SI{19.6}{\metre}$, matching the highest dot.
+
+Sanity check: a launch speed of \SI{19.6}{\metre\per\second} upward is about \SI{70}{\kilo\metre\per\hour}, steep and hard but within what a person can do to a ball; the flight lasts four seconds and covers \SI{32}{\metre}. These are the numbers of a long, high throw, not of a gentle toss, which is what the diagram looks like.\qed
+\end{example}
+
+\begin{checkbox}
+Two projectiles are launched from ground level and photographed with the same strobe. They rise to the \emph{same} maximum height, but B travels twice as far downrange as A. (a) Which had the larger initial vertical velocity, or were they equal? (b) Which was in the air longer? (c) Which had the larger horizontal velocity, and by what factor? Explain each answer without calculating. (d) Now suppose instead that A and B have the same \emph{range}, but A rises higher. Answer (a)--(c) again.
+\end{checkbox}
+
+\section{The Shape of the Trajectory}
+\label{sec:parabola}
+
+So far we have asked where the projectile is at a given \emph{time}. Now we ask a different question, the one the gunners actually cared about: what \emph{shape} is the path? To answer it we must get rid of the time, because time does not appear in a photograph of a trajectory. We have two equations, $x(t)$ and $y(t)$; eliminating $t$ between them leaves a single relation between $y$ and $x$, and that relation is the curve.
+
+\begin{example}{The equation of the trajectory}{trajeq}
+Find $y$ as a function of $x$ for a projectile, in terms of its horizontal velocity $v_x$ and the maximum height $y_{\max}$ of the flight. Put the origin of time at the top of the flight and the origin of $x$ directly beneath it.
+
+\elem Two choices make the algebra easy, and neither costs anything: we are free to start the clock when we like and to put $x = 0$ where we like. Start the clock at the instant the projectile is at its highest point, and measure $x$ from the point directly below it. Then at $t = 0$ the projectile is at $x = 0$ and $y = y_{\max}$, and its vertical velocity is zero, because at the top of a flight it is momentarily neither rising nor falling.
+
+\emph{Horizontal.} With constant velocity and $x = 0$ at $t = 0$,
+\begin{equation}
+x = v_x t.
+\label{eq:xoft}
+\end{equation}
+Negative values of $t$ are allowed and describe the part of the flight before the top; they give negative $x$, which is correct.
+
+\emph{Vertical.} The vertical velocity starts at zero at $t = 0$ and changes at the steady rate $-g$, so at time $t$ it is $v_y = -gt$. Over the interval from $0$ to $t$ it changed steadily from $0$ to $-gt$, so its average was half of that, $-gt/2$, and displacement is average velocity times time:
+\[
+\Delta y = \left(-\frac{gt}{2}\right)t = -\frac{g t^2}{2} .
+\]
+Since $\Delta y$ is measured from the top,
+\begin{equation}
+y = y_{\max} - \tfrac12 g t^2 .
+\label{eq:yoft}
+\end{equation}
+(This also works for $t < 0$, because $t^2$ is positive either way, which is the algebraic form of the statement that the rise mirrors the fall.)
+
+\emph{Eliminate the time.} Equation~\eqref{eq:xoft} gives $t = x/v_x$, and substituting into Equation~\eqref{eq:yoft},
+\begin{equation}
+\boxed{\;y = y_{\max} - \frac{g}{2v_x^{2}}\,x^{2}\;}
+\label{eq:parabola}
+\end{equation}
+This is of the form $y = C - kx^2$ with $k > 0$: a parabola opening downward, with its vertex at $(0, y_{\max})$.
+
+\calc Integrating $\dderiv{x}{t} = 0$ and $\dderiv{y}{t} = -g$ with the initial data $x(0) = 0$, $v_x(0) = v_x$, $y(0) = y_{\max}$, $v_y(0) = 0$ gives Equations~\eqref{eq:xoft} and~\eqref{eq:yoft} directly. Substituting $t = x/v_x$ gives Equation~\eqref{eq:parabola}. Differentiating the result twice with respect to $x$,
+\[
+\deriv{y}{x} = -\frac{g}{v_x^{2}}\,x, \qquad \dderiv{y}{x} = -\frac{g}{v_x^{2}},
+\]
+a negative constant, which is the promise made in Section~\ref{sec:watching}: the trajectory curves downward everywhere, and by the same amount everywhere. That last property characterises the parabola: it is the only curve whose second derivative is a nonzero constant.
+
+Sanity check on the sign and size: a larger $v_x$ makes $g/2v_x^2$ smaller, so the parabola is flatter and wider, which matches the picture of a ball thrown hard travelling far before dropping much. A small $v_x$ gives a tall narrow arc. If $v_x = 0$ the formula breaks down, correctly: an object thrown straight up has no trajectory in the $x$--$y$ sense at all, only a line travelled twice.\qed
+\end{example}
+
+\begin{keyidea}[The trajectory is a parabolic arc]
+A projectile moving with constant horizontal velocity $v_x \ne 0$ and constant vertical acceleration $-g$ follows a parabola. With the vertex at $(x_{\max}, y_{\max})$,
+\[
+y = y_{\max} - \frac{g}{2v_x^{2}}\,(x - x_{\max})^{2},
+\]
+and with the origin at the launch point, where the initial vertical velocity is $v_{y0}$,
+\begin{equation}
+y = \frac{v_{y0}}{v_x}\,x - \frac{g}{2v_x^{2}}\,x^{2}.
+\label{eq:parabolalaunch}
+\end{equation}
+Strictly, the path is a \emph{parabolic arc}: only the piece of the parabola between launch and landing is physical, since the model stops applying the moment the projectile touches anything.
+\end{keyidea}
+
+Equation~\eqref{eq:parabolalaunch} is worth a second look. The first term, $ (v_{y0}/v_x)\,x$, is a straight line through the origin of slope $v_{y0}/v_x$: it is where the projectile would be if there were no gravity, since then it would travel in a straight line in the launch direction. The second term, $-g x^2/2v_x^2$, is the amount it has dropped below that line. Writing $x = v_x t$ turns the second term into $-\tfrac12 g t^2$ exactly, so:
+
+\begin{keyidea}[Falling beneath the straight line]
+At any time $t$ after launch, a projectile is exactly $\tfrac12 g t^2$ \emph{below} the point it would have reached had gravity been switched off. This vertical drop is the same $\tfrac12 g t^2$ as for an object released from rest, and it does not depend on the launch speed or the launch angle.
+\end{keyidea}
+
+\begin{twoviews}{falling beneath the straight line}
+\elem Imagine two balls launched together from the same point with the same velocity, in a world where one of them is exempt from gravity. The exempt ball sails off in a straight line at constant speed. The real ball keeps the same horizontal motion, so at every instant the two are at the same horizontal position; the only difference between them is vertical, and it is exactly the $\tfrac12 g t^2$ that any object gains by falling from rest for a time $t$. So a projectile's path is a straight line with a free fall subtracted from it, vertically, and nothing else.
+
+\calc In vector form, integrating $\dd^2\mathbf{r}/\dd t^2 = -g\,\hat{\mathbf{\jmath}}$ twice gives
+\[
+\mathbf{r}(t) = \mathbf{r}_0 + \mathbf{v}_0 t - \tfrac12 g t^{2}\,\hat{\mathbf{\jmath}} .
+\]
+The first two terms are the straight line the projectile would follow with no gravity; the third is a purely vertical correction that does not involve $\mathbf{v}_0$ at all. Because the correction is the same for every projectile launched at the same instant, whatever its speed or direction, two projectiles released together stay at a fixed separation from the straight-line picture of themselves. Worked Example~\ref{ex:monkey} turns that observation into a party trick.
+\end{twoviews}
+
+This is the most useful single picture in the chapter, and Figure~\ref{fig:belowline} shows it. It converts many projectile problems into a straight-line problem plus a free-fall correction, both of which are easy.
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[x=0.088cm,y=0.088cm]
+  \draw[slate!60,thick] (-6,0) -- (140,0);
+  \fill[pattern=north east lines,pattern color=slate!30] (-6,-5) rectangle (140,0);
+  % no-gravity line: v0=50 at 30 deg -> per second (43.30, 25)
+  \draw[red!70!black,dashed,thick] (0,0) -- (132.1,76.3);
+  \node[red!70!black,font=\small,anchor=south,rotate=30,fill=white,inner sep=1.5pt] at (62,36.5) {path with no gravity};
+  % actual parabola: x=43.3t, y=25t-4.9t^2
+  \draw[very thick,teal] plot[domain=0:3.05,samples=70] ({43.301*\x},{25*\x-4.9*\x*\x});
+  \node[teal,font=\small,anchor=north east,fill=white,inner sep=1.5pt] at (118,26) {actual path};
+  % t = 1 s
+  \draw[slate,thick,|-|] (43.3,25) -- (43.3,20.1);
+  \fill[red!70!black] (43.3,25) circle (1.6pt);  \fill (43.3,20.1) circle (1.8pt);
+  \node[font=\small,anchor=east,fill=white,inner sep=1.5pt] at (40.5,22.6) {\SI{4.9}{\metre}};
+  \node[font=\small,anchor=north] at (43.3,-6) {$t = 1\,\si{\second}$};
+  % t = 2 s
+  \draw[slate,thick,|-|] (86.6,50) -- (86.6,30.4);
+  \fill[red!70!black] (86.6,50) circle (1.6pt);  \fill (86.6,30.4) circle (1.8pt);
+  \node[font=\small,anchor=west,fill=white,inner sep=1.5pt] at (89.4,40.2) {\SI{19.6}{\metre}};
+  \node[font=\small,anchor=north] at (86.6,-6) {$t = 2\,\si{\second}$};
+  % t = 3 s
+  \draw[slate,thick,|-|] (129.9,75) -- (129.9,30.9);
+  \fill[red!70!black] (129.9,75) circle (1.6pt);  \fill (129.9,30.9) circle (1.8pt);
+  \node[font=\small,anchor=west,fill=white,inner sep=1.5pt] at (132.7,53) {\SI{44.1}{\metre}};
+  \node[font=\small,anchor=north] at (129.9,-6) {$t = 3\,\si{\second}$};
+  % launch velocity
+  \draw[->,>=Stealth,thick,teal] (0,0) -- (26,15);
+  \node[font=\small,anchor=south east,fill=white,inner sep=1.5pt] at (25,16.5) {$v_0$};
+\end{tikzpicture}
+\caption{A projectile launched at \SI{50}{\metre\per\second}, \SI{30}{\degree} above the horizontal. The dashed line is where it would be with gravity switched off. At each instant the projectile is below that line by $\tfrac12 g t^2$: \SI{4.9}{\metre} after one second, \SI{19.6}{\metre} after two, \SI{44.1}{\metre} after three, the same distances an object dropped from rest would fall. These drops do not depend on the launch speed or angle; only the dashed line does.}
+\label{fig:belowline}
+\end{figure}
+
+\begin{example}{Where is the shell after three seconds?}{belowline}
+A shell leaves a gun at \SI{50}{\metre\per\second}, \SI{30}{\degree} above the horizontal. Ignoring air resistance, where is it \SI{3.0}{\second} later?
+
+\elem With no gravity the shell would travel in a straight line at \SI{50}{\metre\per\second} for \SI{3.0}{\second}, reaching a point \SI{150}{\metre} along the launch direction. At \SI{30}{\degree}, that point is
+\[
+\SI{150}{\metre}\times\cos\SI{30}{\degree} = \SI{130}{\metre} \text{ downrange}, \qquad
+\SI{150}{\metre}\times\sin\SI{30}{\degree} = \SI{75}{\metre} \text{ up}.
+\]
+Gravity puts the shell $\tfrac12 g t^2 = \tfrac12(9.8)(9.0) = \SI{44.1}{\metre}$ below that point, and nowhere else: not sideways, not backwards, just down. So the shell is \SI{130}{\metre} downrange at a height of $75 - 44.1 = \SI{31}{\metre}$.
+
+\calc The components are $v_x = 50\cos\SI{30}{\degree} = \SI{43.3}{\metre\per\second}$ and $v_{y0} = 50\sin\SI{30}{\degree} = \SI{25}{\metre\per\second}$, so
+\[
+x(3.0) = (43.3)(3.0) = \SI{130}{\metre}, \qquad
+y(3.0) = (25)(3.0) - \tfrac12(9.8)(3.0)^2 = 75 - 44.1 = \SI{30.9}{\metre}.
+\]
+The same numbers, arrived at by the same arithmetic in a different order. In vector notation the two routes are visibly one:
+\[
+\mathbf{r}(t) = \underbrace{\mathbf{v}_0\,t}_{\text{straight line}} \; - \; \underbrace{\tfrac12 g t^2\,\hat{\mathbf{\jmath}}}_{\text{the fall}},
+\]
+the first term being the dashed line of Figure~\ref{fig:belowline} and the second the drop beneath it.
+
+Sanity check: the shell is still climbing at three seconds ($v_y = 25 - 29.4$, which is just negative, so in fact it has just passed the top, at $t = 25/9.8 = \SI{2.55}{\second}$), and \SI{31}{\metre} is about a ten-storey building. Both are reasonable for a shell three seconds into a flight of about five.\qed
+\end{example}
+
+\begin{checkbox}
+(a) A projectile reaches its greatest height at the position $x = x_{\max}$ rather than at $x = 0$. Write the equation of its trajectory. (b) Now suppose it reaches its greatest height at time $t = t_{\max}$, with $x = 0$ at $t = 0$. Write $y(x)$ again. (c) Could a parabola of the kind in Equation~\eqref{eq:parabola} describe a motion whose vertical velocity is positive at every instant? If so, how; if not, why not?
+\end{checkbox}
+
+\section{Angles, Speeds, and Ranges}
+\label{sec:angles}
+
+Everything so far has been phrased in terms of $v_x$ and $v_{y0}$, because those are what the model needs. A gunner, an athlete, or a garden hose is more naturally described by a \emph{speed} and an \emph{angle}. This section moves between the two descriptions, and then answers the gunners' original question.
+
+\subsection{From components to speed and angle}
+
+The two components of a velocity are at right angles to each other, which makes the conversion a piece of school trigonometry. Draw the horizontal component as an arrow of length $v_x$ and the vertical component as an arrow of length $v_{y0}$ standing on its tip; the arrow from the start of the first to the tip of the second is the velocity itself, and it is the hypotenuse of a right-angled triangle.
+
+\begin{definition}{Speed and direction of a velocity}{speedangle}
+A velocity with components $v_x$ and $v_y$ has \textbf{speed}
+\[
+v = \sqrt{v_x^{2} + v_y^{2}}
+\]
+by Pythagoras, and points at an angle $\theta$ above the horizontal given by
+\[
+\tan\theta = \frac{v_y}{v_x}.
+\]
+Conversely, a velocity of speed $v$ at angle $\theta$ above the horizontal has components
+\[
+v_x = v\cos\theta, \qquad v_y = v\sin\theta.
+\]
+The angle is conventionally measured from the horizontal, and $\theta$ is negative for a velocity pointing below the horizontal.
+\end{definition}
+
+\begin{example}{The launch speed and angle of the ball in Figure~\ref{fig:dotdiag}}{launchangle}
+Worked Example~\ref{ex:readdots} found $v_x = \SI{8.0}{\metre\per\second}$ and $v_{y0} = \SI{19.6}{\metre\per\second}$ for the ball in the dot diagram. What was its launch speed and launch angle?
+
+\elem The two components form a right-angled triangle with legs \SI{8.0}{\metre\per\second} and \SI{19.6}{\metre\per\second}. The hypotenuse is
+\[
+v_0 = \sqrt{(8.0)^2 + (19.6)^2}\ \si{\metre\per\second} = \sqrt{64 + 384}\ \si{\metre\per\second} = \SI{21}{\metre\per\second},
+\]
+and the angle above the horizontal satisfies $\tan\theta = 19.6/8.0 = \num{2.45}$, so $\theta = \SI{68}{\degree}$.
+
+\calc The velocity at launch is the vector $(8.0,\ 19.6)\ \si{\metre\per\second}$; its magnitude is \SI{21.2}{\metre\per\second} and its argument is $\arctan(2.45) = \SI{67.8}{\degree}$. The speed at a general time is $|\mathbf{v}(t)| = \sqrt{v_x^2 + (v_{y0} - gt)^2}$, which is smallest when the second term vanishes, at the top of the flight, where the speed is $v_x = \SI{8.0}{\metre\per\second}$: the horizontal component is all that is left.
+
+Sanity check: the arrow points much more steeply up than along, which matches the tall, narrow shape of Figure~\ref{fig:dotdiag}. Note that $v_0 = \SI{21}{\metre\per\second}$ is \emph{less} than the sum of the components, \SI{27.6}{\metre\per\second}, and more than either one alone; a hypotenuse always behaves this way, and a ``speed'' obtained by adding components is a common and easily spotted error.\qed
+\end{example}
+
+Figure~\ref{fig:velvectors} shows the velocity at several points of a flight, decomposed each time. The picture repays study, because a great deal of the chapter is visible in it at once.
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[x=0.30cm,y=0.30cm]
+  \draw[slate!60,thick] (-1.5,0) -- (36.5,0);
+  % trajectory: v0x=8, v0y=16, g=9.8 -> range = 2*8*16/9.8=26.1 ; scale up
+  % use y = x*2 - x^2*(2/ (17.5)) ... simpler: parabola through (0,0),(35,0), apex 14 at 17.5
+  \draw[line width=1.6pt,slate!30] plot[domain=0:35,samples=90] (\x,{14 - 14*((\x-17.5)/17.5)^2});
+  \foreach \x in {0,8.75,17.5,26.25,35}{
+    \pgfmathsetmacro\yy{14 - 14*((\x-17.5)/17.5)^2}
+    \pgfmathsetmacro\slope{-28*(\x-17.5)/(17.5*17.5)}
+    \pgfmathsetmacro\vy{6*\slope}
+    \fill (\x,\yy) circle (2.4pt);
+    \draw[->,>=Stealth,thick,red!70!black] (\x,\yy) -- ({\x+6},\yy);
+    \ifdim\vy pt=0pt\relax\else
+      \draw[->,>=Stealth,thick,green!45!black] (\x,\yy) -- (\x,{\yy+\vy});
+      \draw[slate!50,densely dotted] ({\x+6},\yy) -- ({\x+6},{\yy+\vy}) -- (\x,{\yy+\vy});
+    \fi
+    \draw[->,>=Stealth,very thick,teal!70!black] (\x,\yy) -- ({\x+6},{\yy+\vy});}
+  \node[font=\small,red!70!black,anchor=north] at (3,-0.4) {$v_x$};
+  \node[font=\small,green!45!black,anchor=east] at (-0.4,5) {$v_{y}$};
+  \node[font=\small,teal!70!black,anchor=south east,fill=white,inner sep=1pt] at (5.4,10.2) {$\mathbf{v}$};
+  \node[font=\small,anchor=south] at (17.5,17.6) {at the top, $v_y = 0$ and the speed is least};
+\end{tikzpicture}
+\caption{Velocity at five points of a flight, with the horizontal component in red and the vertical component in green. The red arrows are all the same length: $v_x$ never changes. The green arrows shrink to nothing at the top and then grow downward, mirror images of those on the way up. The full velocity (teal) is the diagonal of the rectangle built on the two components, so it is longest at the ends of the flight and shortest at the top, where it is horizontal.}
+\label{fig:velvectors}
+\end{figure}
+
+\begin{twoviews}{the speed of a projectile along its flight}
+\elem The horizontal component is fixed and the vertical component is largest at the ends of the flight and zero at the top. A hypotenuse is longest when its legs are longest, so the projectile is fastest at the ends of the flight and slowest at the top, where its speed is exactly $v_x$. On level ground the picture is symmetric, so the projectile lands at the same speed it was launched with, at the same angle below the horizontal as it was launched above.
+
+\calc The speed is $v(t) = \sqrt{v_x^2 + (v_{y0} - gt)^2}$. It is easier to work with $v^2$, since minimising $v^2$ minimises $v$:
+\[
+\deriv{(v^2)}{t} = 2(v_{y0} - gt)(-g) = 0 \quad\Longrightarrow\quad t = \frac{v_{y0}}{g},
+\]
+the time of the top of the flight, where $v = v_x$. The second derivative is $2g^2 > 0$, so it is a minimum. For the landing speed on level ground, use the time-free relation of Table~\ref{tab:components}: at $y = y_0$ we get $v_y^2 = v_{y0}^2$, so $v_y = -v_{y0}$, and the speed $\sqrt{v_x^2 + v_y^2}$ is the launch speed. Gravity has taken back exactly what it gave.
+\end{twoviews}
+
+\subsection{From speed and angle to components}
+
+\begin{example}{Splitting a launch velocity}{splitting}
+A ball is launched at \SI{24}{\metre\per\second}. Find its horizontal and initial vertical components if it is launched at (a) \SI{30}{\degree}, (b) \SI{45}{\degree}, (c) \SI{60}{\degree} above the horizontal.
+
+\solution These three angles are worth knowing by heart, because their sines and cosines are exact: $\sin\SI{30}{\degree} = \cos\SI{60}{\degree} = \tfrac12$, $\sin\SI{60}{\degree} = \cos\SI{30}{\degree} = \tfrac{\sqrt3}{2} \approx \num{0.866}$, and $\sin\SI{45}{\degree} = \cos\SI{45}{\degree} = \tfrac{1}{\sqrt2} \approx \num{0.707}$.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lll}
+\toprule
+$\theta$ & $v_x = v_0\cos\theta$ & $v_{y0} = v_0\sin\theta$ \\
+\midrule
+\SI{30}{\degree} & $24 \times \tfrac{\sqrt3}{2} = \SI{20.8}{\metre\per\second}$ & $24 \times \tfrac12 = \SI{12.0}{\metre\per\second}$ \\
+\SI{45}{\degree} & $24/\sqrt2 = \SI{17.0}{\metre\per\second}$ & $24/\sqrt2 = \SI{17.0}{\metre\per\second}$ \\
+\SI{60}{\degree} & $24 \times \tfrac12 = \SI{12.0}{\metre\per\second}$ & $24 \times \tfrac{\sqrt3}{2} = \SI{20.8}{\metre\per\second}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\elemtag\ Note the symmetry: the components for \SI{30}{\degree} are those for \SI{60}{\degree} swapped over. That is not a coincidence, and it is the seed of a result we prove below. \calctag\ It follows from $\cos(\SI{90}{\degree} - \theta) = \sin\theta$, so that complementary angles exchange the two components. Check in every case that $\sqrt{v_x^2 + v_{y0}^2} = \SI{24}{\metre\per\second}$, as it must be, since $\cos^2\theta + \sin^2\theta = 1$.\qed
+\end{example}
+
+\subsection{Time of flight, height, and range}
+
+With the components in hand, three questions about a flight over level ground answer themselves. Let the projectile be launched from the ground at speed $v_0$ and angle $\theta$, so that $v_x = v_0\cos\theta$ and $v_{y0} = v_0\sin\theta$.
+
+\begin{twoviews}{time of flight, maximum height, and range}
+\elem \emph{Time of flight.} The vertical component is a throw straight up at $v_{y0}$, which we solved in Chapter~2: it takes $v_{y0}/g$ to reach the top, and the same again to come down, so
+\[
+T = \frac{2v_{y0}}{g} = \frac{2v_0\sin\theta}{g}.
+\]
+\emph{Maximum height.} On the way up the vertical velocity falls steadily from $v_{y0}$ to zero, averaging $\tfrac12 v_{y0}$, so
+\[
+H = \tfrac12 v_{y0}\cdot\frac{v_{y0}}{g} = \frac{v_{y0}^{2}}{2g} = \frac{v_0^{2}\sin^{2}\theta}{2g}.
+\]
+\emph{Range.} The horizontal component travels at $v_x$ for the whole time $T$, so
+\[
+R = v_x T = \frac{2 v_0^{2}\sin\theta\cos\theta}{g} = \frac{v_0^{2}\sin 2\theta}{g},
+\]
+using the double-angle identity $2\sin\theta\cos\theta = \sin 2\theta$.
+
+\calc $T$ is the positive root of $y(t) = v_{y0}t - \tfrac12 g t^2 = 0$, that is $t\,(v_{y0} - \tfrac12 g t) = 0$, giving $T = 2v_{y0}/g$. The top of the flight is where $\dd y/\dd t = 0$, at $t = v_{y0}/g$, and substituting gives $H = v_{y0}^2/2g$; the second derivative is $-g < 0$, confirming a maximum. The range is $x(T) = v_x T$. All three results are the same as the elementary ones, as they must be.
+\end{twoviews}
+
+\begin{definition}{Time of flight, maximum height, range}{rangedefs}
+For a projectile launched from and returning to the same horizontal level, the \textbf{time of flight} $T$ is the interval between launch and landing, the \textbf{maximum height} $H$ (or \emph{apex height}) is the greatest value of $y$ reached, and the \textbf{range} $R$ is the horizontal distance between the launch and landing points. Range always refers to a stated pair of levels: a ball thrown from a cliff has a longer range than the same throw on flat ground, and the formulas below do not apply to it.
+\end{definition}
+
+\begin{keyidea}[Flight over level ground]
+For a projectile launched from level ground at speed $v_0$ and angle $\theta$, with air resistance ignored:
+\[
+T = \frac{2v_0\sin\theta}{g}, \qquad
+H = \frac{v_0^{2}\sin^{2}\theta}{2g}, \qquad
+R = \frac{v_0^{2}\sin 2\theta}{g}.
+\]
+The last of these is the \textbf{range equation}. All three assume the projectile lands at the height it was launched from; if it does not, go back to the components and solve for the landing time directly.
+\end{keyidea}
+
+The range equation answers the gunners' questions at last, and it has two features they would have recognised. Table~\ref{tab:angles} and Figure~\ref{fig:angles} display them.
+
+\begin{table}[htb]
+\centering
+\caption{Time of flight, maximum height, and range for a projectile launched from level ground at $v_0 = \SI{24}{\metre\per\second}$, with $g = \SI{9.8}{\metre\per\second\squared}$ and no air resistance. Note the pairs of complementary angles (\SIlist{15;75}{\degree}, \SIlist{30;60}{\degree}, \SIlist{37;53}{\degree}) with equal ranges, and the maximum range at \SI{45}{\degree}. The last column, the ratio of height to range, depends only on the angle: it equals $\tfrac14\tan\theta$.}
+\label{tab:angles}
+\renewcommand{\arraystretch}{1.2}
+\small
+\begin{tabular}{ccccccc}
+\toprule
+$\theta$ & $v_x$ (m/s) & $v_{y0}$ (m/s) & $T$ (s) & $H$ (m) & $R$ (m) & $H/R$ \\
+\midrule
+\SI{15}{\degree} & 23.2 & 6.2 & 1.27 & 1.97 & 29.4 & 0.067 \\
+\SI{30}{\degree} & 20.8 & 12.0 & 2.45 & 7.35 & 50.9 & 0.144 \\
+\SI{37}{\degree} & 19.2 & 14.4 & 2.95 & 10.60 & 56.5 & 0.188 \\
+\SI{45}{\degree} & 17.0 & 17.0 & 3.46 & 14.70 & 58.8 & 0.250 \\
+\SI{53}{\degree} & 14.4 & 19.2 & 3.91 & 18.70 & 56.5 & 0.332 \\
+\SI{60}{\degree} & 12.0 & 20.8 & 4.24 & 22.00 & 50.9 & 0.433 \\
+\SI{75}{\degree} & 6.2 & 23.2 & 4.73 & 27.40 & 29.4 & 0.933 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=13cm,height=7.4cm,
+  xlabel={horizontal distance $x$ (m)},ylabel={height $y$ (m)},
+  xmin=0,xmax=63,ymin=0,ymax=30,
+  xtick={0,10,...,60},ytick={0,5,...,30},
+  grid=major,grid style={gray!25},
+  axis lines=left,
+  tick label style={font=\small},label style={font=\small},
+  legend style={font=\small,at={(0.99,0.99)},anchor=north east,draw=slate!40},
+  legend cell align=left,
+]
+\addplot[teal,thick,domain=0:29.39,samples=60]  {x*tan(15) - 9.8*x^2/(2*576*(cos(15))^2)};
+\addlegendentry{\SI{15}{\degree} (solid) and \SI{75}{\degree} (dashed)}
+\addplot[teal,thick,densely dashed,forget plot,domain=0:29.39,samples=60] {x*tan(75) - 9.8*x^2/(2*576*(cos(75))^2)};
+\addplot[plum,thick,domain=0:50.90,samples=60]  {x*tan(30) - 9.8*x^2/(2*576*(cos(30))^2)};
+\addlegendentry{\SI{30}{\degree} (solid) and \SI{60}{\degree} (dashed)}
+\addplot[plum,thick,densely dashed,forget plot,domain=0:50.90,samples=60] {x*tan(60) - 9.8*x^2/(2*576*(cos(60))^2)};
+\addplot[red!70!black,very thick,domain=0:58.78,samples=80] {x*tan(45) - 9.8*x^2/(2*576*(cos(45))^2)};
+\addlegendentry{$\SI{45}{\degree}$: longest range}
+\end{axis}
+\end{tikzpicture}
+\caption{Trajectories for the same launch speed $v_0 = \SI{24}{\metre\per\second}$ at five angles. Complementary angles (those adding to \SI{90}{\degree}) give the same range by different routes: the steeper one goes higher and stays up longer but moves downrange more slowly. The greatest range is at \SI{45}{\degree}. Air resistance is ignored; with it, all these curves fall short and lose their symmetry, and the best angle drops well below \SI{45}{\degree}.}
+\label{fig:angles}
+\end{figure}
+
+\begin{example}{Complementary angles and the best angle}{bestangle}
+(a) Show that two launch angles give the same range whenever they add to \SI{90}{\degree}. (b) Show that the greatest range is obtained at \SI{45}{\degree}. Assume level ground, the same launch speed in each case, and no air resistance.
+
+\elem (a) Compare $\theta$ with its complement $\SI{90}{\degree} - \theta$. By Worked Example~\ref{ex:splitting}, the complement simply swaps the two components: where the first launch has $(v_x, v_{y0}) = (v_0\cos\theta,\ v_0\sin\theta)$, the second has $(v_0\sin\theta,\ v_0\cos\theta)$. Now the range is the product $R = v_x T$ and $T = 2v_{y0}/g$, so
+\[
+R = \frac{2\,v_x\,v_{y0}}{g},
+\]
+which depends on the two components only through their \emph{product}. Swapping two numbers does not change their product, so the ranges are equal. The two flights are quite different: the steeper one climbs higher and hangs in the air longer, and the shallower one travels downrange faster, and the two effects cancel exactly.
+
+(b) Since $R = 2v_xv_{y0}/g$ and $v_x^2 + v_{y0}^2 = v_0^2$ is fixed, we must make the product of two numbers as large as possible while the sum of their squares is fixed. That happens when they are equal, which follows from
+\[
+2v_xv_{y0} = \left(v_x^{2}+v_{y0}^{2}\right) - \left(v_x - v_{y0}\right)^{2} = v_0^{2} - \left(v_x - v_{y0}\right)^{2},
+\]
+an expression made largest by making the subtracted square zero, that is by $v_x = v_{y0}$. Equal components means $\tan\theta = 1$, or $\theta = \SI{45}{\degree}$, and the maximum range is $R_{\max} = v_0^2/g$.
+
+\calc (a) $R(\theta) = v_0^2\sin 2\theta/g$, and $\sin\big(2(\SI{90}{\degree}-\theta)\big) = \sin(\SI{180}{\degree} - 2\theta) = \sin 2\theta$. (b) Differentiate:
+\[
+\deriv{R}{\theta} = \frac{2v_0^{2}\cos 2\theta}{g} = 0 \quad\Longrightarrow\quad 2\theta = \SI{90}{\degree} \quad\Longrightarrow\quad \theta = \SI{45}{\degree},
+\]
+and $\dd^2R/\dd\theta^2 = -4v_0^2\sin2\theta/g < 0$ there, so it is a maximum, with $R_{\max} = v_0^2/g$. The elementary argument and the derivative locate the same point, and the elementary one also explains \emph{why}: the range is a product of a ``how fast sideways'' factor and a ``how long aloft'' factor, and trading one against the other is worst at the extremes.
+
+Sanity check: at $v_0 = \SI{24}{\metre\per\second}$, $R_{\max} = 576/9.8 = \SI{58.8}{\metre}$, agreeing with Table~\ref{tab:angles}, and a shot put or a long throw of that speed does carry about that far. Real athletes throw at appreciably less than \SI{45}{\degree}, for reasons set out in the Modeling Note below.\qed
+\end{example}
+
+\begin{modelnote}[Why nobody throws at 45 degrees]
+Table~\ref{tab:angles} and Figure~\ref{fig:angles} say that \SI{45}{\degree} is best, yet shot putters release at about \SI{37}{\degree}, javelin throwers at about \SI{33}{\degree}, and long jumpers take off at barely \SI{20}{\degree}. Two things the model leaves out are responsible.
+
+The first is air resistance, which matters for light, fast projectiles such as a golf ball or a baseball. Drag acts along the direction of travel and so eats into the horizontal component as well as the vertical, and it does the most damage to the part of the flight spent moving slowly and high up. The optimum angle for a struck baseball falls to somewhere near \SIrange{25}{34}{\degree}. For a javelin or a shot, which are dense and present a small cross-section, air matters much less.
+
+The second has nothing to do with the air. The model assumes the launch speed is the same at every angle, and for a human being it is not. Throwing upward means working against gravity during the throw itself, so part of the effort goes into lifting rather than into speed. Try it with a heavy stone: you can throw it much faster horizontally than steeply upward. Since $R \propto v_0^2$ but only $\propto \sin2\theta$, a small gain in speed beats a moderate loss of angle, and the best compromise lands below \SI{45}{\degree}. This is a good example of a model failing not because its physics is wrong but because one of its \emph{inputs} was assumed constant when it is not.
+\end{modelnote}
+
+\begin{example}{The shape of a trajectory depends only on its angle}{shape}
+A volcanic rock traces a tall, narrow arc; a basketball shot traces a wide, flat one. Show that the ratio of a trajectory's height to its range depends only on the launch angle, not on the launch speed, and find the angle at which a trajectory is as tall as it is long.
+
+\elem Divide the height by the range:
+\[
+\frac{H}{R} = \frac{v_0^{2}\sin^{2}\theta/2g}{2v_0^{2}\sin\theta\cos\theta/g}
+= \frac{\sin\theta}{4\cos\theta} = \frac{\tan\theta}{4}.
+\]
+The speed $v_0$ and the value of $g$ cancel. A trajectory launched at \SI{45}{\degree} is always four times as long as it is high, whether it is a pebble thrown across a room or a shell fired across a valley, and whether it is thrown on Earth or on the Moon; only the overall size changes. Setting $H/R = 1$ gives $\tan\theta = 4$, that is $\theta = \SI{76}{\degree}$: a trajectory is as tall as it is wide when launched at about \SI{76}{\degree}.
+
+\calc The same by another route: scale the trajectory equation. Writing $u = x/R$ and $w = y/H$ in Equation~\eqref{eq:parabolalaunch} turns every level-ground trajectory into the single curve $w = 4u(1-u)$, independent of $v_0$, $\theta$, and $g$. All projectile arcs are therefore \emph{similar} in the geometric sense, stretched copies of one shape; what differs between the volcano rock and the basketball is only how much the copy is stretched horizontally relative to vertically, and that ratio is $R/H = 4/\tan\theta$.
+
+Sanity check against Table~\ref{tab:angles}: at \SI{60}{\degree}, $\tan\SI{60}{\degree}/4 = 1.732/4 = \num{0.433}$, matching the last column. A volcanic rock ejected almost straight up at, say, \SI{80}{\degree} has $H/R = \num{1.42}$: taller than it is wide, exactly the narrow plume seen in long-exposure photographs.\qed
+\end{example}
+
+\begin{checkbox}
+A projectile is fired straight up at \SI{141}{\metre\per\second}. (a) How fast is it moving at the top of its path? (b) Now suppose it is fired at \SI{141}{\metre\per\second} at \SI{45}{\degree} instead, so its horizontal component is \SI{100}{\metre\per\second}. How fast is it moving at the top? (c) Two golfers strike identical balls at the same speed, one at \SI{60}{\degree} and one at \SI{30}{\degree}. Which ball travels farther, and which lands first? (d) When a rifle is fired at a distant target, why is the barrel not pointed exactly at the target?
+\end{checkbox}
+
+\section{Aiming, and Falling Around the World}
+\label{sec:orbit}
+
+The ``falls beneath the straight line'' picture is worth one more section, because it settles two questions that look unrelated: where to point a gun, and how fast something must go to become a satellite.
+
+\subsection{Where to aim}
+
+If a projectile always ends up $\tfrac12 g t^2$ below the line you aimed along, then aiming straight at a distant target will always miss low, and by an amount that depends only on the time of flight. A rifle's barrel is therefore tilted slightly above the line of sight, so that the bullet's drop is exactly taken up by the time it arrives; that is what the adjustment screws on a telescopic sight are for, and why a sight is zeroed for a stated range.
+
+The same fact produces one of the most-loved demonstrations in physics.
+
+\begin{example}{The monkey and the hunter}{monkey}
+A monkey hangs from a branch a horizontal distance $L$ away and a height $h$ above the muzzle of a tranquilliser gun. The ranger aims \emph{directly at the monkey} and fires. At the instant of the shot, the monkey sees the flash, lets go of the branch, and drops, hoping the dart will pass harmlessly above it. What happens? Does the answer depend on the dart's speed?
+
+\elem Use the falling-beneath-the-line picture for both animals at once.
+
+\emph{The dart.} Aimed along the line from the muzzle to the monkey, it would, with no gravity, be exactly at the monkey's original position after the time $t = L/v_x$ that it takes to cover the horizontal distance $L$. With gravity, it is $\tfrac12 g t^2$ below that point.
+
+\emph{The monkey.} Released from rest, it is $\tfrac12 g t^2$ below \emph{its} original position at the same instant.
+
+Both original positions are the same point, and both drops are the same $\tfrac12 g t^2$, since a monkey and a dart fall alike. So the dart and the monkey arrive at the same place at the same time: the dart hits, and the monkey would have done better to hold on. The dart's speed does not appear anywhere in the argument. It matters only in this: a slow dart takes longer, so the collision happens further down, and if the dart is too slow it reaches the ground before it reaches the tree. Provided the dart gets there at all, it hits.
+
+\calc Put the muzzle at the origin, aimed at $(L, h)$, so the launch direction has $v_{y0}/v_x = h/L$. Then
+\[
+\mathbf{r}_{\text{dart}}(t) = \big(v_x t,\ \ \tfrac{h}{L}v_x t - \tfrac12 g t^2\big),
+\qquad
+\mathbf{r}_{\text{monkey}}(t) = \big(L,\ \ h - \tfrac12 g t^2\big).
+\]
+The $x$ coordinates agree when $t^\ast = L/v_x$. At that instant the dart's height is
+\[
+\frac{h}{L}\,v_x \cdot \frac{L}{v_x} - \tfrac12 g t^{\ast 2} = h - \tfrac12 g t^{\ast 2},
+\]
+which is the monkey's height. Equivalently, subtract the two position vectors: $\mathbf{r}_{\text{dart}} - \mathbf{r}_{\text{monkey}} = (v_xt - L)\,\hat{\mathbf{\imath}} + \tfrac{h}{L}(v_x t - L)\,\hat{\mathbf{\jmath}}$, since the $\tfrac12 gt^2$ terms cancel. The separation vector always points along the original line of sight and shrinks to zero at $t^\ast$. The cancellation of the $\tfrac12 g t^2$ terms \emph{is} the physics: in a frame falling with the monkey, there is no gravity at all and the dart travels in a straight line to the target.
+
+Sanity check on the condition: the dart must arrive before hitting the ground, so we need $v_x$ large enough that $\tfrac12 g (L/v_x)^2 < h$, that is $v_x > L\sqrt{g/2h}$, which is Equation~\eqref{eq:cliff} again in a new costume.\qed
+\end{example}
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[x=1.05cm,y=1.05cm]
+  \draw[slate!60,thick] (-0.5,-0.9) -- (11.6,-0.9);
+  \fill[pattern=north east lines,pattern color=slate!30] (-0.5,-1.15) rectangle (11.6,-0.9);
+  % tree
+  \fill[sanddark!55] (10.85,-0.9) rectangle (11.25,6.5);
+  \draw[sanddark!80!black,line width=2pt] (10.9,6.05) -- (10.05,6.0);
+  % line of sight, stopping at the monkey
+  \draw[red!70!black,dashed,thick] (0,0) -- (10,6);
+  \node[red!70!black,font=\small,anchor=south,rotate=31,fill=white,inner sep=1pt]
+    at (3.9,2.34) {line of sight at the moment of firing};
+  % dart trajectory
+  \draw[very thick,teal] plot[domain=0:10,samples=70] (\x,{0.6*\x-0.025*\x*\x});
+  \node[teal,font=\small,anchor=north west,fill=white,inner sep=1pt] at (2.7,1.30) {dart};
+  % positions at the intermediate time t1 (x = 6)
+  \fill[red!70!black] (6,3.6) circle (2.2pt);
+  \fill (6,2.7) circle (2.6pt);
+  \draw[decorate,decoration={brace,amplitude=4pt},slate] (6.22,3.6) -- (6.22,2.7)
+    node[midway,xshift=15pt,font=\small]{$\tfrac12 gt_1^{2}$};
+  \fill (10,5.1) circle (2.6pt);
+  \draw[decorate,decoration={brace,amplitude=4pt},slate] (10.3,6.0) -- (10.3,5.1)
+    node[midway,xshift=15pt,font=\small]{$\tfrac12 gt_1^{2}$};
+  \node[font=\small,anchor=north west,align=left] at (6.45,2.45)
+    {both have fallen\\ the same amount\\ at time $t_1$};
+  % monkey's continuing fall
+  \fill[black] (10,6) circle (3.0pt);
+  \node[font=\small,anchor=south east,fill=white,inner sep=1.5pt] at (9.95,6.18) {monkey lets go};
+  \draw[very thick,green!45!black,->,>=Stealth] (10,5.0) -- (10,3.68);
+  \fill[black] (10,3.5) circle (3.0pt);
+  \node[font=\small,anchor=east,fill=white,inner sep=1.5pt] at (9.6,3.42) {they meet here};
+  % gun
+  \draw[line width=2.6pt,slate!85] (-0.37,-0.22) -- (0.35,0.21);
+  \fill[black] (0,0) circle (2.4pt);
+  \node[font=\small,anchor=north] at (0.1,-0.35) {gun};
+\end{tikzpicture}
+\caption{The monkey and the hunter. The ranger aims along the dashed line, straight at the monkey. With no gravity the dart would travel along that line and the monkey would stay on the branch; with gravity, both fall $\tfrac12 g t^2$ below where they would otherwise be, in the same time, so they meet. The result does not depend on the dart's speed, only on its being fast enough to arrive before reaching the ground.}
+\label{fig:monkey}
+\end{figure}
+
+\subsection{Fired fast enough never to land}
+
+Here is a question in the spirit of the gunners. Could you fire a cannonball so fast, and so precisely horizontally, that it travelled its first \SI{100}{\metre} without falling at all?
+
+The answer is no, and the reason is worth stating plainly: the instant the ball leaves the muzzle it has $a_y = -g$, so after a time $t$ it has dropped $\tfrac12 g t^2$, a quantity that is zero only when $t$ is zero. Firing faster shortens the time to cover \SI{100}{\metre} and so reduces the drop, but never to nothing. At \SI{500}{\metre\per\second} the drop over \SI{100}{\metre} is $\tfrac12(9.8)(0.2)^2 = \SI{0.196}{\metre}$; at \SI{5}{\kilo\metre\per\second} it is \SI{2}{\milli\metre}; but it is never zero. There is no speed at which gravity switches off.
+
+What \emph{can} happen, if the ball goes fast enough, is something better. All our level-ground formulas assumed the ground is flat, and over a hundred metres it is, to an excellent approximation. Over hundreds of kilometres it is not. Earth's surface curves away beneath a horizontal line by about \SI{5}{\metre} in every \SI{8}{\kilo\metre}, a figure Newton knew and used. So consider firing horizontally from a high mountain, above the atmosphere, at just the speed for which the ball falls \SI{5}{\metre} in the time it takes to travel \SI{8}{\kilo\metre} horizontally.
+
+\begin{example}{How fast must a projectile go to fall around the Earth?}{orbitspeed}
+Earth's surface drops about \SI{5}{\metre} below the horizontal over a horizontal distance of \SI{8}{\kilo\metre}. Estimate the horizontal speed at which a projectile, launched above the atmosphere, falls exactly as fast as the ground curves away.
+
+\elem The vertical question first: how long does it take to fall \SI{5}{\metre} from rest?
+\[
+t = \sqrt{\frac{2(\SI{5}{\metre})}{\SI{9.8}{\metre\per\second\squared}}} = \SI{1.01}{\second}.
+\]
+The horizontal question next: to cover \SI{8000}{\metre} in that time requires
+\[
+v_x = \frac{\SI{8000}{\metre}}{\SI{1.01}{\second}} = \SI{7.9}{\kilo\metre\per\second},
+\]
+about \SI{28000}{\kilo\metre\per\hour}. A projectile moving that fast falls continuously, exactly as a thrown stone does, but the ground curves away from it just as fast, so it never gets any closer. It is in orbit.
+
+\calc The condition can be written as a matching of curvatures. A projectile's trajectory bends away from a straight line at the rate $\dd^2y/\dd x^2 = -g/v_x^2$ (Worked Example~\ref{ex:trajeq}); a circle of radius $R_\oplus$ bends at the rate $-1/R_\oplus$. Setting them equal gives $v_x = \sqrt{g R_\oplus} = \sqrt{(9.8)(6.37\times10^{6})}\ \si{\metre\per\second} = \SI{7.9}{\kilo\metre\per\second}$, the same answer, and it shows where the \SI{5}{\metre} in \SI{8}{\kilo\metre} came from: $ (\SI{8}{\kilo\metre})^2/2R_\oplus = \SI{5.0}{\metre}$.
+
+Sanity check: the International Space Station orbits at about \SI{7.7}{\kilo\metre\per\second}, completing a circuit in about \SI{90}{\minute}. Our estimate is a few percent high because the station orbits a few hundred kilometres up, where $g$ is a little smaller and the circle a little larger. For a one-line estimate from a chapter about cannonballs, that is a good result.\qed
+\end{example}
+
+\begin{modelnote}[A satellite is a projectile]
+Newton drew this argument in a famous figure: a cannon on an impossibly high mountain, firing horizontally, with successively faster shots landing further and further away until one of them misses the Earth entirely and comes round behind the gunner. The point is not a trick. A satellite is not held up by anything and is not beyond gravity's reach; at the height of the space station, $g$ is still about \SI{89}{\percent} of its surface value. A satellite is simply a projectile that is falling and missing. Astronauts float not because gravity is absent but because they and their spacecraft are falling together, exactly as the dart and the monkey do.
+
+Two things in this chapter's model break down at these speeds and have to be repaired before the calculation is more than an estimate: the ground is not flat, which we have just used to our advantage, and $g$ is not constant but weakens with height. Both are taken up in the chapters on gravitation.
+\end{modelnote}
+
+\begin{checkbox}
+(a) Over what horizontal distance does Earth's surface curve away by \SI{20}{\metre}? (Use the fact that the drop grows as the square of the distance.) (b) A ball is thrown horizontally at \SI{10}{\metre\per\second} from a cliff. A friend says its speed one second later is still \SI{10}{\metre\per\second}; you say it is a little over \SI{14}{\metre\per\second}. Who is right, and what has the friend confused? (c) A bullet leaves a rifle horizontally at \SI{400}{\metre\per\second} toward a target \SI{200}{\metre} away. By how much does it drop on the way?
+\end{checkbox}
+
+\section{Air Resistance and the Limits of the Model}
+\label{sec:drag}
+
+Galileo did not solve the cannonball problem. He said so himself. His model leaves out the air, and a cannonball fired from a real cannon travels far enough and fast enough that the air's push on it adds up to a large error. He knew this, stated it, and could not fix it; the mathematics needed to fix it did not exist for another two and a half centuries, and even now the fix is usually a computer rather than a formula.
+
+Figure~\ref{fig:drag} shows what the air does. The trajectory is no longer a parabola and is no longer symmetric. The projectile rises along something close to Galileo's arc, because it is at its highest speed there and losing it fast, then comes down more steeply and lands well short. Notice what it starts to resemble.
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[x=0.049cm,y=0.049cm]
+  \draw[slate!60,thick] (-6,0) -- (256,0);
+  \fill[pattern=north east lines,pattern color=slate!30] (-6,-9) rectangle (256,0);
+  \draw[very thick,teal!45] plot[smooth] coordinates {
+    (0.0,0.0) (17.7,16.5) (35.4,30.5) (53.0,42.0) (70.7,51.1) (88.4,57.8) (106.1,62.0)
+    (123.7,63.7) (141.4,63.0) (159.1,59.9) (176.8,54.3) (194.5,46.2) (212.1,35.7)
+    (229.8,22.8) (247.5,7.4) (255.1,0.0)};
+  \foreach \p in {(0.0,0.0),(17.7,16.5),(35.4,30.5),(53.0,42.0),(70.7,51.1),(88.4,57.8),
+    (106.1,62.0),(123.7,63.7),(141.4,63.0),(159.1,59.9),(176.8,54.3),(194.5,46.2),
+    (212.1,35.7),(229.8,22.8),(247.5,7.4)}{\fill[teal!55] \p circle (2.1pt);}
+  \draw[very thick,plum] plot[smooth] coordinates {
+    (0.0,0.0) (13.0,12.3) (25.4,22.7) (37.3,31.3) (48.7,38.2) (59.8,43.5) (70.5,47.3)
+    (80.9,49.6) (91.0,50.4) (100.8,49.9) (110.4,48.0) (119.7,44.8) (128.8,40.3)
+    (137.6,34.5) (146.1,27.6) (154.4,19.5) (162.5,10.3) (170.3,0.0)};
+  \foreach \p in {(0.0,0.0),(17.1,15.9),(33.2,28.5),(48.5,38.1),(63.1,44.8),(77.2,48.9),
+    (90.6,50.4),(103.6,49.5),(116.2,46.2),(128.3,40.5),(140.0,32.7),(151.2,22.8),(161.9,10.9)}
+    {\fill[plum] \p circle (2.1pt);}
+  \node[teal!60!black,font=\small,anchor=south west,fill=white,inner sep=1.5pt] at (148,58) {Galileo's model (no air)};
+  \node[plum,font=\small,anchor=north east,fill=white,inner sep=1.5pt] at (108,44) {with air resistance};
+  \draw[<->,>=Stealth,red!70!black] (170.3,-6) -- (255.1,-6)
+    node[midway,below,font=\small]{range lost to the air};
+\end{tikzpicture}
+\caption{A projectile launched at \SI{50}{\metre\per\second}, \SI{45}{\degree}, computed with and without air resistance (quadratic drag, terminal speed \SI{60}{\metre\per\second}). Dots are \SI{0.5}{\second} apart in both. The drag trajectory is shorter, lower, and lopsided: it descends more steeply than it rose, and its dots bunch as it slows. Compare the descending branch with stage~3 of Figure~\ref{fig:tartaglia}. Tartaglia's model was fitted to cannonballs, which have plenty of air resistance, and what he was describing is visible here.}
+\label{fig:drag}
+\end{figure}
+
+It resembles Tartaglia. That is not a coincidence and it is worth a moment's respect: Tartaglia was fitting a curve to real cannonballs in real air, and the lopsided, steeply-descending shape he was trying to capture is exactly what drag produces. His model failed not because its shape was absurd but because it had no mechanism, and so could not be extended, corrected, or reasoned from.
+
+\begin{definition}{Air resistance (drag)}{drag}
+\textbf{Air resistance}, or \textbf{drag}, is the backward push the air exerts on an object moving through it. It acts opposite to the object's direction of travel, so it has both a horizontal and a vertical component and therefore couples the two components of the motion together. For the speeds and sizes in this chapter its magnitude grows roughly as the \emph{square} of the speed, which is why it is negligible for a gently tossed apple and dominant for a cannonball. A projectile falling long enough reaches a \textbf{terminal speed}, at which drag exactly balances gravity and the acceleration becomes zero; Galileo's model, which has no terminal speed, predicts unbounded fall speeds and is wrong about every long fall.
+\end{definition}
+
+\subsection{When can the air be ignored?}
+
+The practical question is not whether air resistance exists, which it always does, but whether it is small enough to leave out. There is no exact answer, because the answer depends on how accurate you need to be, but there is a serviceable rule of thumb.
+
+\begin{keyidea}[A heuristic for air resistance]
+Air resistance starts to matter for a solid, non-spinning object once it has travelled a few hundred times its own diameter through the air. Below that, the deflection from Galileo's parabola is usually small compared with the other uncertainties in the problem; well above it, the parabola cannot be trusted at all.
+\end{keyidea}
+
+An apple is about \SI{10}{\centi\metre} across, so a few hundred diameters is a few tens of metres. Toss an apple to a friend three metres away and Galileo's model is excellent. Throw it the length of a football pitch and it is not. The heuristic is rough in three ways worth naming.
+
+\begin{itemize}[itemsep=3pt]
+  \item \emph{It depends on your tolerance.} The air's effect is never exactly zero. If you want the trajectory of a thrown apple to \SI{5}{\centi\metre} you can ignore the air over a much longer throw than if you want it to \SI{0.1}{\milli\metre}. A model is not right or wrong in the abstract, only adequate or inadequate for a stated purpose. This is the point Chapter~1 made about models in general, and it has not changed.
+  \item \emph{It depends on density.} Air resistance has to push a light object around much more easily than a heavy one of the same size, because it is the same push acting on less matter. Roughly, the distance a projectile can travel with a given deflection is proportional to its density. A cannonball is about five times as dense as an apple, so it can go about five times as far before the air bends it by as much. Hollow and light objects fail the test almost immediately: a beach ball is obviously not a parabola, and a soap bubble is not remotely one.
+  \item \emph{It depends on spin and shape.} A spinning ball drags air around with it and is pushed sideways, which is why a well-struck football or a top-spun tennis ball curves in ways no parabola describes. Galileo's model has nothing to say about this at all.
+\end{itemize}
+
+\begin{example}{Would Galileo's model do for a cannonball?}{drageval}
+A sixteenth-century cannonball was about the size of an apple, say \SI{12}{\centi\metre} across, and roughly five times as dense as one. Is Galileo's model adequate for a shot of \SI{500}{\metre}?
+
+\solution Start from the apple. Air matters for an apple at a few hundred diameters, that is at a few tens of metres. The cannonball is about five times as dense, so it can go about five times as far, a few hundred metres, before suffering the same relative deflection.
+
+Now compare with the shot in question. \SI{500}{\metre} is about \num{4000} cannonball diameters, ten to twenty times past where an apple would already be visibly off course, and a factor of five in density does not buy that back. Galileo's model is \emph{not} adequate here, and Figure~\ref{fig:drag} shows why: at these speeds and ranges the real shot falls tens of metres short of the parabola, which is a large error when you are trying to hit a wall.
+
+The verdict matches history. Ballistic tables computed from the parabola were useful for short mortar shots at high angles and low speeds, and increasingly wrong for long flat shots from guns, which is precisely the regime where drag accumulates. The practical rule for artillery remained empirical, a table of measured ranges, until the twentieth century.
+
+Sanity check by another route: an apple thrown \SI{30}{\metre} is deflected by roughly a metre, a few percent of its range. Scaling to a cannonball at \SI{500}{\metre}, the range in diameters is up by a factor of about \num{17} relative to the apple's threshold, and drag effects grow faster than linearly with range, so a deflection of tens of metres is expected. That is exactly what Figure~\ref{fig:drag} shows.\qed
+\end{example}
+
+\subsection{Everything else we left out}
+
+Air resistance is the largest omission but not the only one. A complete account of a real trajectory would have to include at least the following, in roughly decreasing order of importance for a long shot:
+
+\begin{itemize}[itemsep=3pt]
+  \item \emph{Wind.} Air that is itself moving shifts the whole trajectory, and a crosswind moves it sideways out of the vertical plane entirely. Our model is two-dimensional; a real shot in wind is not.
+  \item \emph{The curvature of the Earth}, which we exploited in Section~\ref{sec:orbit} and ignored everywhere else. It matters for artillery at tens of kilometres, and for nothing you can throw.
+  \item \emph{The variation of $g$}, which falls off with height above the surface. Over the few tens of metres of a thrown ball this is utterly negligible; for a rocket it is the dominant correction.
+  \item \emph{The Coriolis effect}, an apparent sideways deflection arising because the Earth turns beneath the projectile while it is in flight. It is measurable for long-range artillery, where it can amount to tens of metres, and for nothing smaller.
+  \item \emph{Spin and the Magnus effect}, mentioned above, which are decisive in most ball sports and absent from our model.
+  \item And, at the level of pedantry, the pressure of sunlight, the projectile shedding pieces of itself, the gravitational pull of the Moon, collisions with insects, and relativity. In any real analysis there is always something left out.
+\end{itemize}
+
+\begin{modelnote}[``All models are wrong, but some are useful'']
+The statistician George Box's remark is the right note to end on. We have spent a chapter on a model that we know is wrong in a way we can even quantify, and this was not wasted effort. Chapter~1's constant-velocity model was wrong too, and Chapter~2's constant-acceleration model, and each was useful within a stated range. The discipline the three chapters share is not in believing the model but in \emph{knowing its range}: say what you are ignoring, estimate how big it is, and check whether it is small compared with the precision you need. A physicist who cannot say when a model breaks does not really have a model, only a formula.
+\end{modelnote}
+
+\begin{checkbox}
+(a) You volley a beach ball back and forth with a friend across a small garden. Is the ball's path close to a parabola? Compare with a tennis ball hit the same distance, and with a steel ball bearing thrown the same distance. (b) A table-tennis ball and a golf ball have similar diameters, but the golf ball is about \num{25} times as dense. Which follows a parabola over a longer flight, and by roughly what factor? (c) Name one influence on a real projectile, however small, not listed in this section.
+\end{checkbox}
+
+\section{Summary}
+
+\subsection*{Key ideas}
+\begin{itemize}
+  \item A \textbf{projectile} is an object moving through the air under gravity alone. Its path is its \textbf{trajectory}. Pre-Galilean models such as Tartaglia's described the flight as a sequence of \emph{stages}; Galileo's describes the whole flight with one rule and no joints.
+  \item A two-dimensional motion can be split by \textbf{projection} into two one-dimensional \textbf{components}, and nothing is lost in the splitting. \elemtag\ Drop each dot of a dot diagram onto each axis. \calctag\ Write the position as a pair $\big(x(t), y(t)\big)$ and differentiate entry by entry.
+  \item \textbf{Galileo's model}: $a_x = 0$ and $a_y = -g$ throughout the flight. The horizontal component is constant-velocity motion (Chapter~1), the vertical component is free fall (Chapter~2), and every projectile formula follows from those two facts.
+  \item The components are \textbf{independent}. \elemtag\ The red dots and the green dots of Figure~\ref{fig:projections} carry no information about each other. \calctag\ The two differential equations are uncoupled. Consequently the time of flight is fixed entirely by the vertical component, and a ball fired horizontally lands at the same instant as one dropped from the same height.
+  \item The \textbf{standard method}: split into components, solve whichever component the question is about, and use the \emph{time} as the bridge between them.
+  \item The trajectory is a \textbf{parabolic arc}, $y = y_{\max} - (g/2v_x^2)(x-x_{\max})^2$. \elemtag\ Eliminate $t$ between $x = v_xt$ and $y = y_{\max} - \tfrac12 gt^2$. \calctag\ $\dd^2 y/\dd x^2 = -g/v_x^2$, a negative constant, which characterises the parabola and is the precise version of ``curves downward everywhere''.
+  \item A projectile is always $\tfrac12 g t^2$ \textbf{below the straight line} it would have followed with no gravity, whatever its launch speed and angle. This one picture settles the monkey-and-hunter problem, explains why gunsights are tilted, and leads to the idea of a satellite.
+  \item A velocity is combined from its components by \textbf{Pythagoras}, $v = \sqrt{v_x^2+v_y^2}$, and split by trigonometry, $v_x = v_0\cos\theta$, $v_{y0} = v_0\sin\theta$. A projectile is slowest at the top of its flight, where its speed is just $v_x$.
+  \item Over level ground, $T = 2v_0\sin\theta/g$, $H = v_0^2\sin^2\theta/2g$, and the \textbf{range equation} $R = v_0^2\sin2\theta/g$. Complementary angles give equal ranges; \SI{45}{\degree} gives the greatest range. The \emph{shape} $H/R = \tfrac14\tan\theta$ depends on the angle alone.
+  \item \textbf{Air resistance} couples the components and destroys all of this. It matters once a solid object has travelled a few hundred of its own diameters, sooner for light or hollow or spinning objects, later for dense ones. Knowing when a model breaks is part of having the model.
+\end{itemize}
+
+\subsection*{Key equations}
+\begin{center}
+\renewcommand{\arraystretch}{2.4}
+\setlength{\tabcolsep}{4pt}
+\small
+\begin{tabular}{lll}
+\toprule
+ & \elemtag & \calctag \\
+\midrule
+the model & $v_x$ constant; vertical motion is free fall & $\dfrac{\dd^2 x}{\dd t^2} = 0$, \; $\dfrac{\dd^2 y}{\dd t^2} = -g$ \\
+horizontal & $x = x_0 + v_x t$ & $x = x_0 + \displaystyle\int_0^t v_x\,\dd t'$ \\
+vertical & $v_y = v_{y0} - gt$, \; $y = y_0 + (v_{y0} - \tfrac12 gt)\,t$ & $y = y_0 + \displaystyle\int_0^t (v_{y0}-gt')\,\dd t'$ \\
+time to fall $h$ from rest & $t = \sqrt{2h/g}$, independent of $v_x$ & solve $y_0 - \tfrac12 gt^2 = 0$ \\
+trajectory & $y = y_{\max} - \dfrac{g}{2v_x^{2}}(x-x_{\max})^{2}$ & $\dfrac{\dd^2 y}{\dd x^2} = -\dfrac{g}{v_x^{2}}$ \\
+from the launch point & $y = \dfrac{v_{y0}}{v_x}x - \dfrac{g}{2v_x^{2}}x^{2}$ & $\mathbf{r} = \mathbf{v}_0 t - \tfrac12 gt^{2}\hat{\mathbf{\jmath}}$ \\
+drop below the aim line & $\tfrac12 g t^{2}$, whatever $v_0$ and $\theta$ & the $-\tfrac12 gt^2\,\hat{\mathbf{\jmath}}$ term \\
+combining components & $v = \sqrt{v_x^{2}+v_y^{2}}$, \; $\tan\theta = v_y/v_x$ & same, with $v_x = \dd x/\dd t$ \\
+splitting a launch & $v_x = v_0\cos\theta$, \quad $v_{y0} = v_0\sin\theta$ & same \\
+time of flight (level) & $T = 2v_{y0}/g = 2v_0\sin\theta/g$ & positive root of $y(t) = 0$ \\
+maximum height & $H = v_{y0}^{2}/2g$ (mean velocity $\times$ time) & where $\dd y/\dd t = 0$ \\
+range (level) & $R = v_xT = \dfrac{2v_xv_{y0}}{g} = \dfrac{v_0^{2}\sin2\theta}{g}$ & $R = x(T)$ \\
+best angle & $2v_xv_{y0} = v_0^2 - (v_x-v_{y0})^2$, best at $v_x = v_{y0}$ & $\dd R/\dd\theta = 0$ at $\theta = \SI{45}{\degree}$ \\
+shape of the arc & $H/R = \tfrac14\tan\theta$; \; scaled: $w = 4u(1-u)$ & same \\
+orbit condition & fall \SI{5}{\metre} while going \SI{8}{\kilo\metre} & $g/v_x^{2} = 1/R_\oplus$, so $v_x = \sqrt{gR_\oplus}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Key terms}
+projectile \textperiodcentered\ trajectory \textperiodcentered\ ballistics \textperiodcentered\ Tartaglia's model \textperiodcentered\ tangent line \textperiodcentered\ curving downward (concave) \textperiodcentered\ projection \textperiodcentered\ component \textperiodcentered\ horizontal component \textperiodcentered\ vertical component \textperiodcentered\ Galileo's model \textperiodcentered\ independence of components \textperiodcentered\ uncoupled equations \textperiodcentered\ time of flight \textperiodcentered\ maximum height \textperiodcentered\ range \textperiodcentered\ parabola \textperiodcentered\ parabolic arc \textperiodcentered\ falling beneath the straight line \textperiodcentered\ launch angle \textperiodcentered\ range equation \textperiodcentered\ complementary angles \textperiodcentered\ air resistance (drag) \textperiodcentered\ terminal speed \textperiodcentered\ Magnus effect \textperiodcentered\ Coriolis effect \textperiodcentered\ satellite
+
+\section{Exercises}
+
+Exercises marked $\star$ require more thought or more than one step. Unless told otherwise, take $g = \SI{9.8}{\metre\per\second\squared}$, ignore air resistance, and measure $y$ upward. Where an exercise can be done both ways, do it by an \elemtag\ route and a \calctag\ route and check that they agree.
+
+\subsection*{Projectiles and their paths}
+\begin{enumerate}[label=\textbf{\thechapter.\arabic*},series=exercises,leftmargin=*]
+  \item Name three projectiles not mentioned in this chapter, and one moving object that looks like a projectile but is not. Say what disqualifies it.
+  \item In what way is Tartaglia's model like Galileo's, and in what way is it fundamentally different? Answer in two sentences.
+  \item Explain why a dot diagram of a projectile has distance on both axes, and how it records time. What would you have to add to it to make a motion diagram?
+  \item A dot diagram of a thrown ball shows dots bunched near the top of the arc and spread out near the ends. (a) Where is the ball moving fastest? (b) Where is it moving slowest? (c) At the slowest point, is it at rest?
+  \item Sketch a curve that curves downward everywhere, one that curves upward everywhere, and one that does both. Draw two tangent lines on each to justify your answer. Which of the three could be a projectile's path?
+  \item $\star$ A student claims that because a projectile's path curves downward everywhere, it must be a parabola. Give a counterexample, and say what \emph{additional} fact about the curvature makes the path a parabola.
+\end{enumerate}
+
+\subsection*{Components and independence}
+\begin{enumerate}[label=\textbf{\thechapter.\arabic*},resume=exercises,leftmargin=*]
+  \item A ball rolls off a bench and is photographed every \SI{0.1}{\second}. Its horizontal positions are \SIlist{0;15;30;45;60}{\centi\metre} and its vertical positions are \SIlist{0;-4.9;-19.6;-44.1;-78.4}{\centi\metre}. (a) Find $v_x$. (b) Show that the vertical gaps obey the odd-number rule. (c) Find $a_y$ from the second differences.
+  \item Two identical balls are released at the same instant from a height of \SI{1.5}{\metre}\label{ex:twoballs}: one is dropped, the other is projected horizontally at \SI{6}{\metre\per\second}. (a) Which lands first? (b) How long does each take? (c) How far apart are they when they land? (d) Which is moving faster on landing?
+  \item Answer Exercise~\ref{ex:twoballs} again with the horizontal launch speed changed to \SI{60}{\metre\per\second}. Which of your four answers change, and which do not?
+  \item You are standing in a bus moving at a steady \SI{15}{\metre\per\second} and you toss a coin straight up, catching it \SI{0.80}{\second} later. (a) How far did the coin travel forward according to someone on the pavement? (b) According to you? (c) How high did it go? (d) Where does it land if the bus is braking while the coin is in the air?\label{ex:acceltrain}
+  \item An aeroplane flying horizontally at \SI{80}{\metre\per\second} drops a supply crate from a height of \SI{500}{\metre}. (a) How long is the crate in the air? (b) How far ahead of the drop point does it land? (c) Where is the aeroplane when the crate lands? (d) At what angle should the pilot look down to see the target at the moment of release?
+  \item Explain, to someone who has not read this chapter, why a bullet fired horizontally and a bullet dropped from the same height hit the ground together. Then explain what is \emph{right} about their intuition that a fast bullet ``has less time to fall''.
+  \item $\star$ Two balls are launched at the same instant from the same point, one at \SI{20}{\metre\per\second} horizontally and one at \SI{20}{\metre\per\second} at \SI{40}{\degree} above the horizontal. Show that the straight line joining them at any instant has a fixed direction, and find that direction. (Hint: subtract the two position vectors.)
+\end{enumerate}
+
+\subsection*{Using the components}
+\begin{enumerate}[label=\textbf{\thechapter.\arabic*},resume=exercises,leftmargin=*]
+  \item A ball rolls horizontally off a table \SI{0.80}{\metre} high at \SI{1.5}{\metre\per\second}. Find (a) its time in the air, (b) where it lands, (c) its speed and direction on landing.
+  \item A diver runs horizontally off a \SI{20}{\metre} cliff at \SI{4.0}{\metre\per\second}. How far from the base of the cliff does the diver enter the water? What is the minimum run-up speed if rocks extend \SI{6.0}{\metre} out?
+  \item Use Equation~\eqref{eq:cliff} to answer, without further calculation: if the cliff in the previous exercise were twice as high, by what factor would the minimum speed change? If the rocks reached twice as far?
+  \item A tennis ball is hit horizontally at \SI{25}{\metre\per\second} from a height of \SI{1.0}{\metre}, just clearing the net. Show that it lands about \SI{11}{\metre} beyond the net, and comment on whether the shot stays in a court whose baseline is \SI{12}{\metre} from the net.
+  \item $\star$ Generalise the previous exercise: show that a ball hit horizontally from a height $y$ lands a distance $d = v\sqrt{2y/g}$ away, so that to land within a court of depth $d$ the speed must satisfy $v \le d\sqrt{g/2y}$. Does the mass of the ball enter? Should it?
+  \item A stone is thrown horizontally at \SI{12}{\metre\per\second} from a bridge and hits the water \SI{2.2}{\second} later. (a) How high is the bridge? (b) How far from the bridge does it land? (c) With what speed and at what angle does it strike the water?
+  \item From Figure~\ref{fig:dotdiag}, without using any formula, state (a) the total time of flight, (b) the horizontal velocity, (c) the maximum height, and (d) the time at which the ball was highest. Then check (c) against $H = v_{y0}^2/2g$.
+  \item $\star$ A ball is thrown from the top of a \SI{25}{\metre} building at \SI{15}{\metre\per\second} horizontally. A second ball is thrown from ground level at the base of the building, \SI{1}{\second} later, straight up at \SI{20}{\metre\per\second}. Do they pass at the same height at any instant? (Set up both $y(t)$ functions with a common clock and compare.)
+\end{enumerate}
+
+\subsection*{The parabola and the straight line}
+\begin{enumerate}[label=\textbf{\thechapter.\arabic*},resume=exercises,leftmargin=*]
+  \item Write the trajectory equation for a projectile whose apex is at $x = x_{\max}$, $y = y_{\max}$. Then write it for one launched from the origin with components $v_x$ and $v_{y0}$, and check that the two agree by locating the apex of the second.
+  \item Write $y(x)$ for a projectile that reaches its greatest height at time $t = t_{\max}$, with $x = 0$ at $t = 0$.
+  \item A projectile has $v_x = \SI{10}{\metre\per\second}$ and reaches a maximum height of \SI{20}{\metre}. (a) Write its trajectory equation with the apex at the origin of $x$. (b) How far horizontally from the apex is it when it has dropped \SI{5}{\metre}? (c) What is its total range if it starts and ends at ground level?
+  \item Could a parabola of the form $y = y_{\max} - kx^2$ describe a motion in which the vertical velocity is positive at every instant? Explain, and state what restriction on $x$ would be needed.
+  \item A shell is fired at \SI{60}{\metre\per\second} at \SI{40}{\degree}. Using only the ``falls beneath the line'' picture, find its position \SI{2.0}{\second} after firing. Then check with the component formulas.
+  \item How far below the straight line of aim is a projectile after \SI{1}{\second}? After \SI{2}{\second}? After \SI{5}{\second}? Does the answer depend on the launch angle? On the launch speed?
+  \item $\star$ Show that the ``falls beneath the line'' rule is equivalent to the trajectory equation~\eqref{eq:parabolalaunch}, by writing the straight-line path as $y_{\text{line}} = (v_{y0}/v_x)x$ and subtracting $\tfrac12 gt^2$ with $t = x/v_x$.
+  \item $\star$ A rifle is sighted so that a bullet leaving at \SI{800}{\metre\per\second} hits the point aimed at when the target is \SI{100}{\metre} away. (a) By how much must the barrel be tilted above the line of sight? Give the angle in degrees. (b) If the same rifle is fired at a target \SI{300}{\metre} away, does the bullet strike above or below the aim point, and by how much?\label{ex:sight}
+\end{enumerate}
+
+\subsection*{Angles, speeds, and ranges}
+\begin{enumerate}[label=\textbf{\thechapter.\arabic*},resume=exercises,leftmargin=*]
+  \item A projectile is launched at \SI{30}{\metre\per\second} at (a) \SI{30}{\degree}, (b) \SI{45}{\degree}, (c) \SI{60}{\degree}. Find $v_x$ and $v_{y0}$ in each case, and check that $v_x^2 + v_{y0}^2 = v_0^2$.\label{ex:splitthree}
+  \item A ball's velocity has components $v_x = \SI{9.0}{\metre\per\second}$ and $v_y = \SI{-12}{\metre\per\second}$. Find its speed and the angle of its motion relative to the horizontal.
+  \item For each case in Exercise~\ref{ex:splitthree}, find the time of flight, the maximum height, and the range over level ground. Which two have the same range, and why?
+  \item A javelin leaves the hand at \SI{28}{\metre\per\second} at \SI{35}{\degree}. Estimate its range and hang time, ignoring air resistance. Real throws with these numbers go a little further than your answer. Suggest why.
+  \item At what launch angle is a projectile's maximum height equal to one quarter of its range? Equal to its range?
+  \item A projectile is launched at \SI{20}{\metre\per\second}. Find the two launch angles that give a range of \SI{30}{\metre}, and show that they are complementary.
+  \item Show that for a fixed launch angle the range is proportional to the square of the launch speed. By what factor must a thrower increase their release speed to throw \SI{10}{\percent} further?
+  \item Explain why two projectiles launched at complementary angles have the same range but different times of flight. Which is in the air longer, and by what factor for the pair \SI{30}{\degree} and \SI{60}{\degree}?
+  \item $\star$ A ball is launched at speed $v_0$ from the top of a \SI{15}{\metre} cliff at \SI{30}{\degree} above the horizontal and lands on the beach below. Show that the range equation of Section~\ref{sec:angles} does \emph{not} apply, and find the landing distance for $v_0 = \SI{18}{\metre\per\second}$ by returning to the components.
+  \item $\star$ Show that a projectile launched at angle $\theta$ lands with speed equal to its launch speed and at angle $\theta$ below the horizontal, over level ground, in two ways: from the symmetry of the velocity--time graph of the vertical component, and from $v_y^2 = v_{y0}^2 - 2g\Delta y$.
+  \item $\star$ Show that the maximum height and the range satisfy $R = 4H/\tan\theta$, and use this to find the launch angle of a trajectory that is drawn six times as wide as it is tall.
+  \item $\star$ Derive the range equation for a projectile launched from a height $h$ above the landing level, and show that it reduces to $R = v_0^2\sin2\theta/g$ when $h = 0$. Is the best angle still \SI{45}{\degree} when $h > 0$? Argue qualitatively which way it moves.
+\end{enumerate}
+
+\subsection*{Aiming, satellites, and air}
+\begin{enumerate}[label=\textbf{\thechapter.\arabic*},resume=exercises,leftmargin=*]
+  \item A ranger aims a tranquilliser dart directly at a monkey \SI{30}{\metre} away and \SI{8.0}{\metre} up, and fires at \SI{40}{\metre\per\second}. The monkey lets go at the instant of firing. (a) Show that the dart hits. (b) How far has the monkey fallen when it is hit? (c) What is the slowest dart speed for which the monkey is still hit before reaching the ground?
+  \item Explain why a marksman does not point the barrel exactly at a distant target, and why a telescopic sight has to be zeroed for a particular range.
+  \item Is it possible to fire a cannonball so fast that it travels its first \SI{200}{\metre} horizontally without dropping at all? Answer, and explain what \emph{does} happen as the speed is increased.
+  \item Earth's surface curves away from the horizontal by \SI{5}{\metre} in \SI{8}{\kilo\metre}. (a) Use $t = \sqrt{2d/g}$ and $v = x/t$ to estimate orbital speed near the surface. (b) How long would one circuit take, given Earth's circumference of about \SI{40000}{\kilo\metre}? Compare with the space station's \SI{90}{\minute}.
+  \item A cannonball has a diameter of about \SI{12}{\centi\metre}. Roughly how far can it be fired before air resistance seriously distorts its trajectory? What about a \SI{7}{\centi\metre} cricket ball of about one-fifth the density?
+  \item A beach ball and a steel ball bearing are thrown the same distance with the same launch angle. Which follows Galileo's model more closely, and why? Which two properties of a projectile decide the answer?
+  \item Estimate how far you could throw an apple before air resistance mattered at the level of a few centimetres. State your assumptions.
+  \item Name three influences on a real trajectory that Galileo's model ignores, and rank them by how large they are for (a) a tennis serve, (b) an artillery shell fired \SI{30}{\kilo\metre}.
+  \item $\star$ Figure~\ref{fig:drag} shows a drag trajectory whose descending branch is steeper than its rising branch. Explain why drag makes the descent steeper, using the fact that drag acts along the direction of travel and grows with speed.
+  \item $\star$ Explain why the best launch angle for a struck baseball is well below \SI{45}{\degree}, giving \emph{two} separate reasons, one involving the air and one that would apply even in a vacuum.
+\end{enumerate}
+
+\subsection*{Hands-on}
+\begin{enumerate}[label=\textbf{\thechapter.\arabic*},resume=exercises,leftmargin=*]
+  \item Make a dot diagram of a real throw. Film a friend tossing a ball across a room, with a metre stick in shot for scale and the camera held still and side-on. Step through the frames and mark the ball's position in each. Then project your dots onto each axis as in Figure~\ref{fig:projections}: are the horizontal gaps equal? Do the vertical gaps obey the odd-number rule? Estimate $v_x$, $v_{y0}$, and $g$ from your marks, and say which is least reliable and why.
+  \item Test the independence of the components. Balance two coins at the edge of a table, flick one horizontally off the edge with a ruler while the other simply drops, and listen: one click or two? Repeat at several flick speeds. What is the smallest difference in landing time your ears could detect, and does that put a useful bound on how independent the components really are?
+  \item Measure a range curve. Using a water hose, a spring-loaded toy, or a rubber band and a small ball, launch a projectile at a fixed speed and several angles, and measure the range each time. Plot range against angle. Is the maximum at \SI{45}{\degree}? Do complementary angles agree? If not, say which of the model's assumptions you think is failing.
+  \item Build the dangling-bead model. Divide a stick into five equal spaces and hang beads from strings of length \SI{1}{}, \SI{4}{}, \SI{9}{}, \SI{16}{}, and \SI{25}{\centi\metre}. Hold the stick horizontally, then at an upward angle, then at a downward one. Explain to a friend what each of the three positions shows, and why the string lengths go as the squares.
+  \item Without using equations, write a short message to a friend explaining why a ball fired horizontally from a cliff hits the ground at the same moment as one dropped, and why this does not mean the two balls are doing the same thing.
+\end{enumerate}
+
+\section*{Answers to Check Your Understanding}
+\begin{description}[leftmargin=2em,itemsep=2pt]
+  \item[3.1] Projectiles: (b) the vaulter after letting go, (d) the sparks (briefly; they are small and hot, so drag catches up with them fast), (e) the rice grains, (g) the water, and (i) the child after letting go. Not projectiles: (a) the vaulter is being pushed by the pole; (c) the rocket is being pushed by its own exhaust; (f) the paper aeroplane is held up by the air, which is exactly the influence a projectile must not have; (h) the swing's ropes pull on the child.
+  \item[3.2] The images overlap where the ball moves least between flashes, and it moves least where it is slowest, which is at the top of each arc: the vertical component of velocity vanishes there and only $v_x$ is left. The dots in Figure~\ref{fig:dotdiag} bunch at the top for the same reason. A dot diagram does not show the \emph{direction} of travel: the same dots would be produced by the ball running the flight backwards. A motion diagram fixes this by drawing an arrow from each dot to the next.
+  \item[3.3] (a) On the car. The crate keeps the aeroplane's \SI{250}{\metre\per\second} horizontally, and nothing horizontal acts on it afterwards. (b) Directly below the aeroplane, since both move horizontally at \SI{250}{\metre\per\second} for the same time. (c) The farmer sees a parabola stretching far downrange; the pilot, looking straight down, sees the crate fall vertically away and stay directly beneath. (d) All of them. With drag, the crate loses horizontal speed, falls behind the aeroplane, and lands short of the car; the farmer's curve steepens and shortens as in Figure~\ref{fig:drag}.
+  \item[3.4] (a) Equal. The maximum height is $v_{y0}^2/2g$, so equal heights means equal $v_{y0}$. (b) Equal, since the time of flight $2v_{y0}/g$ depends only on $v_{y0}$. (c) B, by a factor of two: with $R = v_xT$ and $T$ equal, twice the range needs twice the horizontal velocity. (d) Same range but A higher: A had the larger $v_{y0}$ and was in the air longer, so to cover the same range in more time A must have the \emph{smaller} $v_x$; B's horizontal velocity is the larger.
+  \item[3.5] (a) $y = y_{\max} - \dfrac{g}{2v_x^2}(x - x_{\max})^2$. (b) The apex is reached at $x = v_x t_{\max}$, so $y = y_{\max} - \dfrac{g}{2v_x^2}(x - v_x t_{\max})^2$. (c) Yes, provided $x$ is restricted to values on one side of the apex. With the apex at $x = 0$, every $x < 0$ is on the rising branch, where $\dd y/\dd t = -gt > 0$ because $t < 0$ there. A parabola can model such a motion; it just cannot model the apex or anything past it.
+  \item[3.6] (a) Zero: fired straight up, all of its velocity is vertical, and the vertical component is zero at the top. (b) \SI{100}{\metre\per\second}: at the top only the horizontal component survives, and it never changed. (c) The same distance, since \SI{30}{\degree} and \SI{60}{\degree} are complementary; the \SI{30}{\degree} ball lands first, because its vertical component and so its time of flight are smaller by a factor of $\sqrt3$. (d) Because the bullet falls $\tfrac12 g t^2$ below the line it was fired along, so a barrel pointed exactly at the target sends the bullet below it. The barrel must be tilted up by just enough to cancel the drop at the intended range.
+  \item[3.7] (a) \SI{16}{\kilo\metre}. The drop grows as the square of the distance, and $20/5 = 4$, so the distance goes up by $\sqrt4 = 2$. (b) You are right. The horizontal component is still \SI{10}{\metre\per\second}, but the vertical component is now \SI{9.8}{\metre\per\second}, and the speed is the hypotenuse, $\sqrt{10^2+9.8^2} = \SI{14.0}{\metre\per\second}$. The friend has confused the horizontal \emph{component} with the speed. (c) $t = 200/400 = \SI{0.5}{\second}$, so the drop is $\tfrac12(9.8)(0.5)^2 = \SI{1.2}{\metre}$.
+  \item[3.8] (a) The beach ball's path is not close to a parabola at all: it is large and hollow, so its density is tiny and the air pushes it around easily. The tennis ball is much better, and a steel ball bearing thrown the same distance is nearly perfect. (b) The golf ball, by roughly a factor of \num{25} in distance, since the usable range scales about in proportion to density at fixed diameter. (c) Any reasonable answer: buoyancy in the air, a gusty rather than still atmosphere, variation of air density with height, electrostatic charge on the projectile, the projectile deforming in flight, the Moon's gravitational pull.
+\end{description}
+
+\section*{Answers to Selected Exercises}
+\begin{description}[leftmargin=2.6em,itemsep=3pt,style=sameline]
+  \item[3.2] Both are models of the same flight and both get the landing point roughly right. The difference is structural: Tartaglia's has stages, with the ball switching between kinds of motion at moments the model cannot predict, while Galileo's covers the whole flight with one rule and derives everything from the launch velocity.
+  \item[3.3] Both axes are distances because the motion happens in two dimensions of space and the diagram shows its shape. Time is recorded by \emph{counting} dots, since the flashes are equally spaced. Adding an arrow from each dot to the next makes it a motion diagram and supplies the direction of travel.
+  \item[3.4] (a) At the two ends of the flight, where the vertical component is largest. (b) At the top. (c) No: at the top the vertical component is zero but the horizontal component is unchanged, so the ball is still moving at $v_x$.
+  \item[3.6] Many curves lie below all their tangents without being parabolas: $y = -x^4$, $y = \ln x$, or an arc of a circle. The extra fact is that the curvature is the \emph{same everywhere}: $\dd^2y/\dd x^2 = -g/v_x^2$ is constant, and constant nonzero second derivative characterises the parabola.
+  \item[3.7] (a) $v_x = \SI{0.15}{\metre}/\SI{0.1}{\second} = \SI{1.5}{\metre\per\second}$. (b) Gaps \SIlist{-4.9;-14.7;-24.5;-34.3}{\centi\metre}, which are $1:3:5:7$ times \SI{-4.9}{\centi\metre}. (c) Second differences all \SI{-9.8}{\centi\metre}, so $a_y = \SI{-0.098}{\metre}/(\SI{0.1}{\second})^2 = \SI{-9.8}{\metre\per\second\squared}$.
+  \item[3.8] (a) Neither; they land together. (b) $t = \sqrt{2(1.5)/9.8} = \SI{0.55}{\second}$ each. (c) $\SI{6}{\metre\per\second}\times\SI{0.55}{\second} = \SI{3.3}{\metre}$. (d) The projected ball: both have $v_y = \SI{5.4}{\metre\per\second}$ on landing, but it also has $v_x = \SI{6}{\metre\per\second}$, giving a speed of \SI{8.1}{\metre\per\second} against \SI{5.4}{\metre\per\second}.
+  \item[3.9] Only (c) and the numbers in (d) change: they land \SI{33}{\metre} apart and the projected ball arrives at \SI{60.2}{\metre\per\second}. The landing \emph{time} is unchanged at \SI{0.55}{\second}, which is the whole point.
+  \item[3.10] (a) $15 \times 0.80 = \SI{12}{\metre}$. (b) Zero; it lands in your hand. (c) $v_{y0} = g(0.40) = \SI{3.9}{\metre\per\second}$, so $h = \tfrac12(3.9)(0.40) = \SI{0.78}{\metre}$. (d) Behind you: you leave the floor with the bus's velocity at that instant and keep it, while the bus slows down beneath you.
+  \item[3.11] (a) $t = \sqrt{2(500)/9.8} = \SI{10.1}{\second}$. (b) $80 \times 10.1 = \SI{808}{\metre}$. (c) Directly above the crate. (d) $\arctan(500/808) = \SI{32}{\degree}$ below the horizontal.
+  \item[3.13] The separation is $\mathbf{r}_A - \mathbf{r}_B = (\mathbf{v}_A - \mathbf{v}_B)t$, since the $-\tfrac12 gt^2\,\hat{\mathbf{\jmath}}$ terms cancel. So the line joining them always points along the fixed vector $\mathbf{v}_A - \mathbf{v}_B = (20 - 20\cos\SI{40}{\degree},\ -20\sin\SI{40}{\degree}) = (4.68,\ -12.86)\ \si{\metre\per\second}$, which is \SI{70}{\degree} below the horizontal. (For two equal speeds at angles $0$ and $\theta$, the difference always points at $\theta/2 - \SI{90}{\degree}$.)
+  \item[3.14] (a) $t = \sqrt{2(0.80)/9.8} = \SI{0.40}{\second}$. (b) \SI{0.61}{\metre} from the base of the table. (c) $v_y = \SI{-4.0}{\metre\per\second}$, so $v = \sqrt{1.5^2+4.0^2} = \SI{4.2}{\metre\per\second}$ at \SI{69}{\degree} below the horizontal.
+  \item[3.15] $t = \SI{2.02}{\second}$, landing \SI{8.1}{\metre} out. To clear \SI{6.0}{\metre} of rocks needs $v_x \ge 6.0/2.02 = \SI{3.0}{\metre\per\second}$.
+  \item[3.16] Twice the height: $v_x \propto 1/\sqrt h$, so the minimum speed falls by a factor $\sqrt2$, to about \SI{71}{\percent}. Twice the reach: $v_x \propto d$, so it doubles.
+  \item[3.17] $t = \sqrt{2(1.0)/9.8} = \SI{0.452}{\second}$ and $25 \times 0.452 = \SI{11.3}{\metre}$. It lands about \SI{0.7}{\metre} inside a baseline \SI{12}{\metre} away, so the shot is in, but only just; a real ball also has drag and probably topspin, both of which bring it down sooner.
+  \item[3.18] $t = \sqrt{2y/g}$ and $d = vt$ give $d = v\sqrt{2y/g}$, so $v \le d\sqrt{g/2y}$. The mass does not appear, because Galileo's model contains no mass anywhere. It \emph{should} appear in reality, through air resistance: a heavier ball of the same size is deflected less, so the real limit is a little higher for a heavy ball.
+  \item[3.19] (a) $h = \tfrac12(9.8)(2.2)^2 = \SI{23.7}{\metre}$. (b) $12 \times 2.2 = \SI{26.4}{\metre}$. (c) $v_y = \SI{-21.6}{\metre\per\second}$, so $v = \SI{24.7}{\metre\per\second}$ at \SI{61}{\degree} below the horizontal.
+  \item[3.20] (a) $8\tau = \SI{4.0}{\second}$ (nine dots, eight gaps). (b) \SI{4}{\metre} per \SI{0.5}{\second}, so \SI{8.0}{\metre\per\second}. (c) \SI{19.6}{\metre}. (d) \SI{2.0}{\second}. Check: $v_{y0} = \tfrac12 gT = \SI{19.6}{\metre\per\second}$, so $H = v_{y0}^2/2g = 384/19.6 = \SI{19.6}{\metre}$.
+  \item[3.21] Yes. With one clock started at the first throw, $y_1 = 25 - 4.9t^2$ and $y_2 = 20(t-1) - 4.9(t-1)^2$. Setting them equal gives $29.8t = 49.9$, so $t = \SI{1.67}{\second}$, at a height of \SI{11.3}{\metre}. This is before ball~1 lands (at \SI{2.26}{\second}), so the instant is real. They are of course at different horizontal positions; only the heights match.
+  \item[3.22] $y = y_{\max} - \dfrac{g}{2v_x^2}(x-x_{\max})^2$ and $y = \dfrac{v_{y0}}{v_x}x - \dfrac{g}{2v_x^2}x^2$. Completing the square in the second gives an apex at $x_{\max} = v_xv_{y0}/g$ and $y_{\max} = v_{y0}^2/2g$, which is the familiar top-of-flight result.
+  \item[3.23] $y = y_{\max} - \dfrac{g}{2v_x^2}\big(x - v_xt_{\max}\big)^2$.
+  \item[3.24] (a) $y = 20 - 0.049\,x^2$ (metres). (b) $\sqrt{5/0.049} = \SI{10.1}{\metre}$. (c) $y = 0$ at $x = \pm\SI{20.2}{\metre}$, so the range is \SI{40.4}{\metre}.
+  \item[3.25] Yes, if $x$ is restricted to one side of the apex; see the answer to Check Your Understanding~3.5.
+  \item[3.26] Straight-line position after \SI{2.0}{\second}: \SI{120}{\metre} along the launch direction, that is \SI{91.9}{\metre} downrange and \SI{77.1}{\metre} up. Drop $\tfrac12(9.8)(4) = \SI{19.6}{\metre}$, so the shell is at \SI{91.9}{\metre} downrange and \SI{57.5}{\metre} high. Components: $v_x = 60\cos\SI{40}{\degree} = \SI{46.0}{\metre\per\second}$, $v_{y0} = \SI{38.6}{\metre\per\second}$, giving the same numbers.
+  \item[3.27] \SI{4.9}{\metre}, \SI{19.6}{\metre}, \SI{122.5}{\metre}. It depends on neither the launch angle nor the launch speed, only on the time elapsed. What those do change is the position of the line the projectile is falling below.
+  \item[3.28] $y = y_{\text{line}} - \tfrac12 gt^2$ with $y_{\text{line}} = (v_{y0}/v_x)x$ and $t = x/v_x$ gives $y = (v_{y0}/v_x)x - (g/2v_x^2)x^2$, which is Equation~\eqref{eq:parabolalaunch}.
+  \item[3.29] (a) The drop over \SI{100}{\metre} is $\tfrac12(9.8)(0.125)^2 = \SI{7.7}{\centi\metre}$, so the barrel must be raised above the line of sight by
+  \[
+  \arctan\!\left(\frac{\SI{0.0766}{\metre}}{\SI{100}{\metre}}\right) = \SI{0.044}{\degree},
+  \]
+  about \num{2.6} minutes of arc. (b) At \SI{300}{\metre} the flight takes \SI{0.375}{\second} and the bullet drops \SI{69}{\centi\metre}, while the tilted barrel has lifted the aim line only \SI{23}{\centi\metre}. The bullet strikes about \SI{46}{\centi\metre} \emph{below} the aim point: a sight zeroed at one range is wrong at another, and the error grows faster than the range because the drop goes as $t^2$.
+  \item[3.30] (a) \SI{26.0}{} and \SI{15.0}{\metre\per\second}; (b) \SI{21.2}{} and \SI{21.2}{\metre\per\second}; (c) \SI{15.0}{} and \SI{26.0}{\metre\per\second}. In each case the two components combine to the launch speed of \SI{30}{\metre\per\second}.
+  \item[3.31] $v = \sqrt{81+144} = \SI{15}{\metre\per\second}$, at \SI{53}{\degree} \emph{below} the horizontal.
+  \item[3.32] (a) $T = \SI{3.06}{\second}$, $H = \SI{11.5}{\metre}$, $R = \SI{79.5}{\metre}$. (b) $T = \SI{4.33}{\second}$, $H = \SI{23.0}{\metre}$, $R = \SI{91.8}{\metre}$. (c) $T = \SI{5.30}{\second}$, $H = \SI{34.4}{\metre}$, $R = \SI{79.5}{\metre}$. Cases (a) and (c) share a range because \SI{30}{\degree} and \SI{60}{\degree} are complementary, so their components are swapped and the product $v_xv_{y0}$ is unchanged.
+  \item[3.33] $R = (28)^2\sin\SI{70}{\degree}/9.8 = \SI{75}{\metre}$ and $T = \SI{3.3}{\second}$. Real throws go further than this partly because the javelin is released from about two metres up rather than from the ground, and partly because it is shaped to generate a little lift.
+  \item[3.34] $H/R = \tfrac14\tan\theta$, so $H = R/4$ at $\tan\theta = 1$, that is $\theta = \SI{45}{\degree}$; and $H = R$ at $\tan\theta = 4$, that is $\theta = \SI{76}{\degree}$.
+  \item[3.35] $\sin2\theta = Rg/v_0^2 = 30(9.8)/400 = \num{0.735}$, so $2\theta = \SI{47.3}{\degree}$ or \SI{132.7}{\degree}, giving $\theta = \SI{23.7}{\degree}$ or \SI{66.3}{\degree}. The two add to \SI{90}{\degree}.
+  \item[3.36] $R = v_0^2\sin2\theta/g \propto v_0^2$ at fixed $\theta$. For \SI{10}{\percent} more range, $v_0$ must rise by $\sqrt{1.10} = \num{1.049}$, about \SI{5}{\percent}. Range rewards speed twice over, which is why athletes sacrifice angle for speed.
+  \item[3.37] Complementary angles swap $v_x$ and $v_{y0}$, leaving the product, and hence the range, unchanged; but $T = 2v_{y0}/g$ depends on $v_{y0}$ alone, so the steeper launch is aloft longer. For \SI{60}{\degree} against \SI{30}{\degree} the ratio is $\sin\SI{60}{\degree}/\sin\SI{30}{\degree} = \sqrt3 = \num{1.73}$.
+  \item[3.38] The range equation assumes launch and landing at the same level, and here the ball lands \SI{15}{\metre} lower. Go back to the components: $v_x = \SI{15.6}{\metre\per\second}$, $v_{y0} = \SI{9.0}{\metre\per\second}$, and $-15 = 9.0t - 4.9t^2$ gives $t = \SI{2.89}{\second}$, so the ball lands \SI{45}{\metre} from the foot of the cliff. (The level-ground formula would have said \SI{28.6}{\metre}, a large error.)
+  \item[3.39] The vertical velocity--time graph is a straight line of slope $-g$ crossing zero at the apex, so it is antisymmetric about that instant: at equal times before and after, $v_y$ has equal magnitude and opposite sign. At the landing, $v_y = -v_{y0}$. Since $v_x$ is unchanged, the speed $\sqrt{v_x^2+v_{y0}^2}$ is the launch speed, and $\tan\theta = |v_y|/v_x$ is unchanged, so the angle is the launch angle, below the horizontal. The time-free relation gives it in one step: at $\Delta y = 0$, $v_y^2 = v_{y0}^2$.
+  \item[3.40] From $H/R = \tfrac14\tan\theta$, $R = 4H/\tan\theta$. Six times as wide as tall means $R/H = 6$, so $\tan\theta = 4/6 = \num{0.667}$ and $\theta = \SI{34}{\degree}$.
+  \item[3.41] Landing at $y = -h$ requires $-h = v_0\sin\theta\,t - \tfrac12 gt^2$, whose positive root is
+  \[
+  t = \frac{v_0\sin\theta + \sqrt{v_0^2\sin^2\theta + 2gh}}{g}, \qquad R = v_0\cos\theta\;t .
+  \]
+  Setting $h = 0$ gives $t = 2v_0\sin\theta/g$ and $R = v_0^2\sin2\theta/g$. For $h > 0$ the best angle is \emph{less} than \SI{45}{\degree}: the extra height already buys time in the air, so it pays to spend more of the launch speed on going sideways. (For a shot put released from about \SI{2}{\metre} at \SI{13}{\metre\per\second}, the optimum is near \SI{42}{\degree}.)
+  \item[3.42] (a) The dart is aimed along the line to the monkey and both fall $\tfrac12 gt^2$ below where they would be with no gravity, so they meet. (b) The aim angle is $\arctan(8/30) = \SI{14.9}{\degree}$, so $v_x = 40\cos\SI{14.9}{\degree} = \SI{38.6}{\metre\per\second}$ and $t = 30/38.6 = \SI{0.78}{\second}$; the monkey has fallen $\tfrac12(9.8)(0.78)^2 = \SI{3.0}{\metre}$ and is hit \SI{5.0}{\metre} above the ground. (c) The dart must arrive before falling \SI{8}{\metre}, so $v_x > 30\sqrt{9.8/16} = \SI{23.5}{\metre\per\second}$, that is a launch speed of about \SI{24}{\metre\per\second}.
+  \item[3.43] Because the bullet falls $\tfrac12 gt^2$ below the line of the barrel, and $t$ depends on the range. Pointing the barrel at the target puts the shot low by that amount. A sight is therefore zeroed for one range; at shorter ranges the bullet strikes high, at longer ranges low (Exercise~\ref{ex:sight}).
+  \item[3.44] Not possible. From the instant of firing, $a_y = -g$, so after any nonzero time the ball has dropped $\tfrac12 gt^2 > 0$. Firing faster shortens the time to cover \SI{200}{\metre} and so shrinks the drop without limit, but never to zero: at \SI{1000}{\metre\per\second} the drop is \SI{2}{\centi\metre}. What eventually happens, at about \SI{7.9}{\kilo\metre\per\second}, is that the ball falls no faster than the Earth's surface curves away from it, and it goes into orbit.
+  \item[3.45] (a) $t = \sqrt{2(5)/9.8} = \SI{1.01}{\second}$ and $v = 8000/1.01 = \SI{7.9}{\kilo\metre\per\second}$. (b) $\SI{40000}{\kilo\metre} \div \SI{7.9}{\kilo\metre\per\second} = \SI{5060}{\second}$, about \SI{84}{\minute}, a few minutes short of the station's \SI{90}{\minute} because the station orbits a few hundred kilometres higher, on a longer circle and with a slightly smaller $g$.
+  \item[3.46] A few hundred diameters of \SI{12}{\centi\metre} is a few tens of metres for an apple-density object; multiplying by five for the cannonball's density gives roughly \SI{150}{}--\SI{200}{\metre}. Beyond that the parabola is not trustworthy, which is why a \SI{500}{\metre} shot is badly modelled. The cricket ball, at \SI{7}{\centi\metre} and about one-fifth the cannonball's density (so about an apple's), gives roughly \SI{20}{\metre}: a throw across a garden is a good parabola, a throw across a field is not.
+  \item[3.47] The steel bearing, by a wide margin. The two properties that decide it are the object's \emph{density} (how much matter the air's push has to move) and its \emph{diameter} (how many of its own diameters it has travelled). A beach ball is large and nearly hollow and so fails on both counts; spin would add a third failure.
+  \item[3.48] Assuming a diameter of about \SI{10}{\centi\metre} and the few-hundred-diameters rule, a few tens of metres, say \SI{20}{}--\SI{30}{\metre}, for a deflection at the level of a few centimetres. A gentle toss of two or three metres is affected by less than a millimetre.
+  \item[3.49] Any three of: air resistance, wind, spin (the Magnus effect), Earth's curvature, the variation of $g$ with height, the Coriolis effect. For a tennis serve, drag and spin dominate and the rest are utterly negligible. For a \SI{30}{\kilo\metre} shell, drag is still the largest, followed by wind and the variation of $g$, with the Coriolis effect worth tens of metres and Earth's curvature mattering for the geometry of the target.
+  \item[3.50] Drag acts along the direction of travel and grows roughly as the square of the speed, so it does most of its work early in the flight, when the projectile is fastest. By the apex the horizontal velocity has already been eaten into badly, and it keeps shrinking on the way down. The descent therefore covers much less ground per metre of fall than the ascent did, which is exactly what a steeper branch looks like.
+  \item[3.51] First, air resistance: drag removes horizontal speed throughout the flight and does the most damage to the slow, high part of a steep trajectory, so a flatter shot keeps more of its range and the optimum falls to about \SIrange{25}{34}{\degree}. Second, and in a vacuum too: a person cannot launch at the same speed at every angle, because a steeper launch spends part of the effort lifting the projectile against gravity during the throw itself. Since $R \propto v_0^2$ but only $\propto \sin2\theta$, trading angle for speed pays.
+  \item[3.52--3.56] Answers depend on your own measurements. Typical phone-video throws give horizontal gaps constant to within a few percent and a value of $g$ within \SIrange{5}{15}{\percent} of \SI{9.8}{\metre\per\second\squared}; the least reliable quantity is usually $v_{y0}$, because it comes from the gaps nearest the launch, where the ball is hardest to locate. The coin test almost always gives one click: human hearing separates two sounds at roughly \SI{5}{\milli\second}, which on a \SI{0.4}{\second} fall bounds any dependence of fall time on horizontal speed to about \SI{1}{\percent}. Range curves from hand-launched projectiles usually peak a little below \SI{45}{\degree} and show complementary angles disagreeing, both signs that the launch speed was not the same at every angle.
+\end{description}
+
+\section*{Sources and Further Reading}
+\begin{itemize}[itemsep=3pt]
+  \item P.~G. Hewitt, \emph{Conceptual Physics}, 12th ed. (Pearson, 2014). Chapter~10, Section 10.1 (``Projectile Motion''), on projectiles launched horizontally and at an angle, the independence of the components, the parabolic trajectory, the $\tfrac12 g t^2$ drop beneath the straight-line path, equal ranges from complementary angles, and the maximum range at \SI{45}{\degree}; Section 10.2 (``Fast-Moving Projectiles---Satellites'') for the \SI{5}{\metre} in \SI{8}{\kilo\metre} curvature figure and the idea of a satellite as a projectile that keeps missing. Section 5.6 supplies the vector-component picture of velocity used in Section~\ref{sec:angles}. Several Check Your Understanding questions and exercises here are adapted from that chapter. Hewitt rounds $g$ to \SI{10}{\metre\per\second\squared} and quotes the drop as $5t^2$; we use \SI{9.8}{\metre\per\second\squared} and $4.9t^2$ throughout, and his treatment corresponds to the \elemtag\ route, with the \calctag\ route added here.
+  \item Galileo Galilei, \emph{Discourses and Mathematical Demonstrations Relating to Two New Sciences} (Leiden, 1638), Fourth Day, ``On the Motion of Projectiles.'' Galileo's own statement that a projectile's path is a semi-parabola, derived by compounding uniform horizontal motion with naturally accelerated vertical motion, together with his tables of ranges and his acknowledgement that air resistance is ignored.
+  \item N. Tartaglia, \emph{Nova Scientia} (Venice, 1537). The three-stage trajectory of Figure~\ref{fig:tartaglia}.
+  \item M. Valleriani, ``Tartaglia's Work on Theoretical Ballistics,'' in \emph{Metallurgy, Ballistics and Epistemic Instruments: The Nova scientia of Nicol\`o Tartaglia --- A New Edition} (Max Planck Institute for the History of Science / Edition Open Access, Berlin, 2013). A careful account of what Tartaglia actually claimed, including his awareness of air resistance and his doubts about a sharp transition between stages. Available at \url{https://edition-open-access.de/}.
+  \item P. Rocca and F. Riggi, ``Projectile motion with a drag force: were the Medievals right after all?'', \emph{Physics Education} \textbf{44}, no.~4 (2009). Computes drag trajectories and compares their shape with the medieval three-stage picture; the resemblance noted in Section~\ref{sec:drag} is the subject of this paper.
+  \item S. M. Walley, ``Aristotle, projectiles and guns'' (2018). A survey of pre-Galilean trajectory models and the experiments that displaced them.
+  \item I. Newton, \emph{A Treatise of the System of the World} (written 1685, published 1728). The cannon on the high mountain, and the argument that a sufficiently fast projectile becomes a satellite.
+  \item P. J. Brancazio, ``Trajectory of a fly ball,'' \emph{The Physics Teacher} \textbf{23} (1985), 20--23; and C. Frohlich, ``Aerodynamic drag crisis and its possible effect on the flight of baseballs,'' \emph{American Journal of Physics} \textbf{52} (1984), 325--334. Where the claim that the optimum angle for a struck ball is well below \SI{45}{\degree} comes from.
+  \item The drag trajectory in Figure~\ref{fig:drag} was computed by numerically integrating $\ddot{\mathbf{r}} = -g\hat{\mathbf{\jmath}} - (g/v_T^2)\,|\dot{\mathbf{r}}|\,\dot{\mathbf{r}}$ with terminal speed $v_T = \SI{60}{\metre\per\second}$, a quadratic-drag model appropriate to a dense ball at these speeds.
+\end{itemize}
+
+\end{document}

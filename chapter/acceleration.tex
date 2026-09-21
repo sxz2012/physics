@@ -117,7 +117,7 @@
 
 \chapter{Acceleration}
 
-\begin{tcolorbox}[enhanced,colback=white,colframe=teal,sharp corners,boxrule=1pt,
+\begin{tcolorbox}[enhanced,breakable,colback=white,colframe=teal,sharp corners,boxrule=1pt,
   title=\textbf{In this chapter},coltitle=white,colbacktitle=teal,left=3mm,right=3mm]
 By the end of this chapter you should be able to
 \begin{itemize}[itemsep=2pt,topsep=2pt]
@@ -129,7 +129,11 @@ By the end of this chapter you should be able to
   \item show that the total distance covered from rest grows as $t^2$, both by adding odd numbers and by integrating a constant acceleration twice, and use $\Delta y \propto t^2$ to solve problems about falling objects;
   \item obtain $\Delta y = -\tfrac12 g t^2$ from $v_y = -g t$ both by the area of a triangle and by integration, dispose of the rival hypothesis both by a bounding argument and by solving $\dd s/\dd t = k s$, and explain what the data settle;
   \item define \emph{acceleration}, compute it from data and from formulas, and give its units;
-  \item apply the \emph{constant-acceleration model} to objects dropped from rest and thrown straight upward, locating the top of the flight both by symmetry and by setting a derivative to zero.
+  \item apply the \emph{constant-acceleration model} to objects dropped from rest and thrown straight upward, locating the top of the flight both by symmetry and by setting a derivative to zero;
+  \item build a \emph{velocity--time graph} out of a motion diagram, read the acceleration off it as a slope, and recover velocity and displacement from areas under the acceleration--time and velocity--time graphs;
+  \item explain why a positive acceleration does \emph{not} always mean increasing speed, and why the average acceleration over a complete lift ride is zero;
+  \item analyse a designed motion that speeds up, cruises, and stops, obtain $t_{\text{tot}} = 2\sqrt{H/a_0}$, and use the \emph{proportionality} $t \propto \sqrt{H}$ to scale an answer instead of recomputing it;
+  \item explain what a passenger actually feels during an acceleration, state the \emph{equivalence principle}, and use a bathroom scale to measure an acceleration and then a height.
 \end{itemize}
 \end{tcolorbox}
 
@@ -1001,9 +1005,286 @@ Great jumpers seem to hang in the air. Ask friends to guess how long a basketbal
 An object can have zero velocity and nonzero acceleration (a ball at the top of its flight: $v_y = 0$ but $\dd v_y/\dd t = -g$), or large velocity and zero acceleration (a car cruising at a steady speed on a straight road: $v_x$ large but $\dd v_x/\dd t = 0$). Velocity says how fast and in what direction the object is moving \emph{now}. Acceleration says how that is \emph{changing}. Keep the two ideas separate, remember that one is the rate of change of the other, and most of this chapter's difficulties disappear.
 \end{keyidea}
 
-\section{Where \texorpdfstring{$g$}{g} Comes From, and Where It Differs}
+\section{Acceleration You Can Feel: An Elevator}
+\label{sec:elevator}
 
-The free-fall acceleration is a property of the place, not of the falling object. Galileo's discovery, confirmed countless times since, is that when air resistance is small enough to ignore, \emph{all} objects at a given place fall with the same acceleration, whatever their mass, size, or material. A coin and a feather dropped in a vacuum tube land together. (Why this should be so is a question for the next chapters, where we meet force and mass.)
+Galileo's stones and ramps all started from rest and sped up, and the acceleration was handed to them by gravity. This section takes acceleration into a setting where the motion is designed rather than natural, where it changes sign partway through, and where you can feel it happening: a lift in a tall building. Everything we need is already in hand; what is new is putting it together on a motion that starts, cruises, and stops.
+
+\subsection{A speed that is not constant}
+
+Shanghai Tower rises \SI{632}{\metre}, and its express lifts carry visitors to the observation deck, a little over \SI{550}{\metre} up, in something close to a minute. Suppose the display in the car tells you that in the first \SI{5.2}{\second} you have risen \SI{10}{\metre}, and you want to know how long the whole trip will take.
+
+The tempting calculation is a proportion: \SI{10}{\metre} took \SI{5.2}{\second}, so \SI{550}{\metre} should take fifty-five times as long, about \SI{286}{\second}. The real trip takes about \SI{55}{\second}, five times less. The proportion is not merely inaccurate; it is answering a different question.
+
+\begin{keyidea}[When is distance proportional to time?]
+Distance and time are proportional \emph{only} at constant velocity. Chapter~1's $\Delta x = v\,\Delta t$ is a statement about motion with an unchanging $v$, and every scaling argument built on it inherits that condition. A lift starts from rest, speeds up, cruises, and stops, so its velocity is not constant and the proportion fails. The first question to ask of any proportional reasoning about motion is: \emph{is the velocity constant over the whole interval I am scaling across?}
+\end{keyidea}
+
+\subsection{From a motion diagram to a velocity--time graph}
+
+Figure~\ref{fig:liftdiag}(a) is a motion diagram for the ride, drawn vertically because the motion is vertical. The arrows grow while the lift speeds up, stay equal through the cruise, and shrink as it slows for the top. Nothing here is new; what is new is a way of turning that picture into a graph.
+
+Take the arrows off the diagram and stand them side by side in a row, in the order they occurred, as in Figure~\ref{fig:liftdiag}(b). Reading left to right is now reading forward in time, and each arrow's height is the displacement in one interval, which is the average velocity in that interval times $\tau$. Put axes on the row, join the arrow tops, and rub out the arrows: what is left, Figure~\ref{fig:liftdiag}(c), is a velocity--time graph. Every velocity--time graph in this book could have been built this way.
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm]
+  % --- (a) vertical motion diagram (gaps 0.28,0.56,0.84,0.98,0.98,0.98,0.84,0.56,0.28)
+  \begin{scope}
+    \draw[slate!35] (0,-0.15) -- (0,6.6);
+    \foreach \y in {0,0.28,0.84,1.68,2.66,3.64,4.62,5.46,6.02,6.30}{\fill (0,\y) circle (2.3pt);}
+    \foreach \ya/\yb in {0/0.28,0.28/0.84,0.84/1.68,1.68/2.66,2.66/3.64,3.64/4.62,4.62/5.46,5.46/6.02,6.02/6.30}{
+      \draw[->,>=Stealth,thick,teal] (0.34,\ya) -- (0.34,{\yb-0.03});}
+    \node[font=\small,anchor=north,align=center] at (0.17,-0.4) {(a) motion\\ diagram};
+  \end{scope}
+  % --- (b) the same arrows stood in a row
+  \begin{scope}[xshift=2.6cm]
+    \draw[slate!35] (-0.3,0) -- (3.9,0);
+    \foreach \i/\h in {0/0.28,1/0.56,2/0.84,3/0.98,4/0.98,5/0.98,6/0.84,7/0.56,8/0.28}{
+      \draw[->,>=Stealth,thick,teal] ({0.43*\i},0) -- ({0.43*\i},{3.1*\h});}
+    \node[font=\small,anchor=north,align=center] at (1.72,-0.4) {(b) the same arrows,\\ stood side by side};
+  \end{scope}
+  % --- (c) the graph
+  \begin{scope}[xshift=7.3cm]
+    \draw[slate!45,->,>=Stealth] (-0.3,0) -- (4.7,0) node[right,font=\small,black] {$t$};
+    \draw[slate!45,->,>=Stealth] (-0.3,0) -- (-0.3,3.8) node[above,font=\small,black] {$v_y$};
+    \draw[very thick,teal] (0,0) -- (1.3,3.05) -- (3.0,3.05) -- (4.3,0);
+    \node[font=\scriptsize,teal!60!black,anchor=south] at (2.15,3.12) {cruising};
+    \node[font=\scriptsize,red!70!black,anchor=north west] at (0.72,1.42) {$a_y>0$};
+    \node[font=\scriptsize,red!70!black,anchor=north east] at (3.6,1.42) {$a_y<0$};
+    \node[font=\scriptsize,red!70!black,anchor=south] at (2.15,2.55) {$a_y=0$};
+    \node[font=\small,anchor=north,align=center] at (2.1,-0.4) {(c) velocity--time graph};
+  \end{scope}
+\end{tikzpicture}
+\caption{Building a velocity--time graph out of a motion diagram. (a) The lift's motion diagram, drawn vertically: arrows grow, hold steady, then shrink. (b) The arrows lifted off and stood in a row in time order; each height is the displacement in one interval, and so is proportional to the average velocity over it. (c) Axes added and the arrow tops joined: a velocity--time graph. The slope of this graph is the acceleration, positive on the way up to cruising speed and negative on the approach to the top.}
+\label{fig:liftdiag}
+\end{figure}
+
+\subsection{Average acceleration over the whole ride}
+
+\begin{example}{The average acceleration of a complete lift ride}{liftavg}
+A lift starts at rest on the ground floor and comes to rest at the top. What is its average acceleration over the whole ride? The ride plainly involves acceleration; explain the answer.
+
+\elem Average acceleration is the change in velocity divided by the elapsed time, and the change in velocity depends only on the two \emph{endpoints}. The lift starts at rest and ends at rest, so
+\[
+\Delta v_y = v_{y,\text{final}} - v_{y,\text{initial}} = 0 - 0 = 0,
+\qquad\text{and so}\qquad
+\bar a_y = \frac{\Delta v_y}{\Delta t} = \frac{0}{\SI{55}{\second}} = 0 .
+\]
+The lift certainly accelerated: it could not have got anywhere otherwise. But it accelerated \emph{upward} at the start and \emph{downward} at the end, and the two contributions are equal and opposite. An average hides everything that cancels.
+
+\calc The same statement as an integral. From Equation~\eqref{eq:ftc},
+\[
+\Delta v_y = \int_0^{T} a_y(t)\,\dd t = 0,
+\]
+so the signed area under the acceleration--time graph is zero: the positive hump at the start is exactly cancelled by the negative hump at the end. The mean value of $a_y$ over the ride, $\frac{1}{T}\int_0^T a_y\,\dd t$, is therefore zero even though $a_y(t)$ is nonzero on most of the interval.
+
+Sanity check by analogy: a car that leaves your street and returns has zero average \emph{velocity}, though it was moving the whole time, because displacement is a difference of endpoints. Average acceleration does the same thing one level up. If you want a number that does not cancel, average the \emph{magnitude} $|a_y|$, or report the acceleration during each phase separately, which is what an engineer would do.\qed
+\end{example}
+
+\begin{modelnote}[There is no ``deceleration'' in this book]
+Everyday speech uses ``acceleration'' for speeding up and ``deceleration'' for slowing down, and treats them as different things. Physics does not. Both are changes of velocity, both are $\dd v/\dd t$, and the only difference is a sign, which in turn depends on which direction you chose as positive. Introducing a second word invites the belief that a second rule is needed, and it is not: Definition~\ref{def:accel} already covers slowing down, and the lift's downward acceleration at the top of its ride is as ordinary as its upward acceleration at the bottom. We will say ``negative acceleration,'' or ``acceleration directed downward,'' and leave ``deceleration'' to the newspapers.
+\end{modelnote}
+
+\subsection{A sign trap worth its own subsection}
+
+Here is a question that most people get wrong the first time.
+
+\emph{An object's acceleration is positive. Is its speed increasing or decreasing?}
+
+The natural answer is ``increasing,'' and it is wrong, or at least not always right. Positive acceleration means the \emph{velocity} is increasing, that is, the velocity--time graph slopes upward. But speed is the \emph{size} of the velocity, which on that graph is the distance from the horizontal axis, and a line can slope upward while getting closer to the axis. That is exactly what happens when the velocity is negative.
+
+\begin{keyidea}[Acceleration signs and speed]
+The sign of $a_y$ tells you which way the velocity is changing, not whether the object is speeding up.
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{lll}
+\toprule
+ & $v_y > 0$ (moving up) & $v_y < 0$ (moving down) \\
+\midrule
+$a_y > 0$ & speeding up & \textbf{slowing down} \\
+$a_y < 0$ & \textbf{slowing down} & speeding up \\
+\bottomrule
+\end{tabular}
+\end{center}
+The object speeds up when $a_y$ and $v_y$ have the \emph{same} sign, and slows down when they have opposite signs. Equivalently, speed increases when the acceleration has a component along the direction of motion.
+\end{keyidea}
+
+\begin{example}{Negative acceleration, increasing speed}{signtrap}
+A lift has negative acceleration and its speed is increasing. What is it doing? Describe the motion in a sentence, and sketch the velocity--time graph.
+
+\elem Increasing speed with negative acceleration requires, by the table above, that $v_y$ be negative too: the lift is moving \emph{downward}. Negative acceleration then makes $v_y$ more negative still, which is a larger speed downward. So the lift is near the start of a downward trip, gathering speed as it leaves the top floor.
+
+Its velocity--time graph is the mirror image, through the time axis, of the upward ride in Figure~\ref{fig:liftdiag}(c): it dives from zero to some negative cruising velocity, holds, and returns to zero. Multiplying every velocity in the upward graph by $-1$ turns one into the other, which is exactly what reversing the direction of a trip does.
+
+\calc Write the speed as $|v_y|$ and ask when it grows. For $v_y < 0$ we have $|v_y| = -v_y$, so
+\[
+\deriv{|v_y|}{t} = -\deriv{v_y}{t} = -a_y,
+\]
+which is positive precisely when $a_y < 0$. (For $v_y > 0$ the same calculation gives $\dd|v_y|/\dd t = +a_y$, recovering the other half of the table.) In one line covering both cases, $\dd(v_y^2)/\dd t = 2 v_y a_y$, so the speed grows exactly when the product $v_y a_y$ is positive, that is, when the two signs agree.
+
+Sanity check: at the top of a ball's flight the velocity passes through zero while $a_y = -g$ throughout. Just before the top, $v_y > 0$ and the signs disagree, so the ball is slowing; just after, $v_y < 0$ and the signs agree, so it is speeding up. One constant acceleration, both behaviours, no contradiction.\qed
+\end{example}
+
+\begin{checkbox}
+For each case, say whether the object is speeding up, slowing down, or neither, taking upward as positive. (a) $v_y = +\SI{3}{\metre\per\second}$, $a_y = +\SI{2}{\metre\per\second\squared}$. (b) $v_y = +\SI{3}{\metre\per\second}$, $a_y = \SI{-2}{\metre\per\second\squared}$. (c) $v_y = \SI{-3}{\metre\per\second}$, $a_y = +\SI{2}{\metre\per\second\squared}$. (d) $v_y = \SI{-3}{\metre\per\second}$, $a_y = \SI{-2}{\metre\per\second\squared}$. (e) $v_y = 0$, $a_y = \SI{-9.8}{\metre\per\second\squared}$. Then answer this: a velocity--time graph slopes upward everywhere but lies entirely below the time axis. Is the object speeding up or slowing down?
+\end{checkbox}
+
+\subsection{How fast could the trip be?}
+
+The real lift spends part of its ride at a constant cruising speed. Suppose we could do away with that, accelerating for the first half of the climb and braking for the second. How much time would that save?
+
+\begin{example}{A constant-acceleration trip to the top}{lifttrip}
+A lift climbs a height $H$, accelerating at a constant $a_0$ for the first half and braking at $a_0$ for the second, starting and ending at rest. Find the total time $t_{\text{tot}}$ in terms of $H$ and $a_0$. Then evaluate it for $H = \SI{550}{\metre}$ and $a_0 = \SI{0.9}{\metre\per\second\squared}$, and compare with the real ride's \SI{55}{\second}.
+
+\elem The velocity--time graph is now a triangle: a straight rise of slope $+a_0$ to a peak speed $v_{\max}$ at the halfway point, then a straight fall of slope $-a_0$ back to zero. Two facts follow from the picture.
+
+\emph{First,} the peak. The rise lasts half the trip, $t_{\text{tot}}/2$, and the slope of that segment is $a_0$, so
+\begin{equation}
+v_{\max} = a_0\,\frac{t_{\text{tot}}}{2}.
+\label{eq:liftvmax}
+\end{equation}
+\emph{Second,} the height. The velocity climbs steadily from $0$ to $v_{\max}$ and falls steadily back, so its average over the whole trip is $\tfrac12 v_{\max}$, and
+\begin{equation}
+H = \bar v\,t_{\text{tot}} = \tfrac12 v_{\max}\,t_{\text{tot}}.
+\label{eq:liftH}
+\end{equation}
+(Equivalently, $H$ is the area of the triangle, $\tfrac12 \times \text{base} \times \text{height}$.) Substituting Equation~\eqref{eq:liftvmax} into Equation~\eqref{eq:liftH},
+\[
+H = \tfrac12\left(a_0\,\frac{t_{\text{tot}}}{2}\right)t_{\text{tot}} = \tfrac14 a_0 t_{\text{tot}}^2,
+\]
+and solving,
+\begin{equation}
+t_{\text{tot}} = \sqrt{\frac{4H}{a_0}} = 2\sqrt{\frac{H}{a_0}}.
+\label{eq:lifttime}
+\end{equation}
+Before putting numbers in, check the shape of the answer: $t_{\text{tot}}$ decreases as $a_0$ increases, which is right, and it does so as a square root, for the same reason every constant-acceleration time does.
+
+With $H = \SI{550}{\metre}$ and $a_0 = \SI{0.9}{\metre\per\second\squared}$,
+\[
+t_{\text{tot}} = 2\sqrt{\frac{\SI{550}{\metre}}{\SI{0.9}{\metre\per\second\squared}}} = \SI{49}{\second}.
+\]
+
+\calc Each half is a constant-acceleration motion from rest, so by Equation~\eqref{eq:halfat2} the first half covers $\tfrac12 a_0 (t_{\text{tot}}/2)^2 = \tfrac18 a_0 t_{\text{tot}}^2$, and by symmetry the second half covers the same. The total is $\tfrac14 a_0 t_{\text{tot}}^2 = H$, giving Equation~\eqref{eq:lifttime} again. The peak speed is $v_{\max} = \int_0^{t_{\text{tot}}/2} a_0\,\dd t = a_0 t_{\text{tot}}/2 = \SI{22}{\metre\per\second}$, about \SI{80}{\kilo\metre\per\hour}, straight up.
+
+Sanity check, and the point of the exercise: we have saved about \SI{6}{\second} out of \SI{55}{\second}, roughly a tenth. Removing the cruise phase entirely, and accelerating for the whole climb, buys surprisingly little, because the cruise was already being done at close to the speed the acceleration could have reached. If you want a faster lift, the lever to pull is $a_0$ --- and that is limited not by the machinery but by the passengers, who find sustained accelerations much above about \SI{1}{\metre\per\second\squared} unpleasant.\qed
+\end{example}
+
+\subsection{Scaling: why nine times as tall takes three times as long}
+
+Equation~\eqref{eq:lifttime} contains a \num{2}, a square root, and two variables, but if only the height changes, most of that is scenery. Holding $a_0$ fixed,
+\[
+t_{\text{tot}} \propto \sqrt{H},
+\]
+which is the proportionality of Definition~\ref{def:prop} again, now doing the work Chapter~1 promised it would.
+
+\begin{example}{A skyscraper nine times as tall}{liftscale}
+How long would the constant-acceleration trip of Worked Example~\ref{ex:lifttrip} take in a building nine times as tall, with the same $a_0$? Answer without re-evaluating the square root, and explain the result in words.
+
+\elem Multiplying $H$ by \num{9} multiplies $\sqrt{H}$ by $\sqrt9 = 3$, so
+\[
+t_{\text{tot,super}} = 2\sqrt{\frac{9H}{a_0}} = 3\times 2\sqrt{\frac{H}{a_0}} = 3\,t_{\text{tot}} = 3 \times \SI{49}{\second} = \SI{148}{\second},
+\]
+about two and a half minutes. No new arithmetic was needed; the \num{2}, the $a_0$, and the value of the square root all rode along unchanged.
+
+Why three and not nine? Because the trip gains in two ways at once. It lasts three times as long, and, since the acceleration is the same and it acts for three times as long, the peak speed --- and therefore the average speed --- is also three times as great. Going three times as fast for three times as long covers nine times the distance. The square root is not a quirk of the algebra; it is this double gain, seen from the other end.
+
+\calc Equivalently, differentiate the logarithm: $\ln t_{\text{tot}} = \tfrac12\ln H + \text{const}$, so a fractional change in $H$ produces half that fractional change in $t$. A \SI{1}{\percent} taller building takes \SI{0.5}{\percent} longer to climb.
+
+Sanity check: the answer should be more than $\SI{49}{\second}$ and less than $9 \times \SI{49}{\second} = \SI{441}{\second}$, since the lift is faster than before but not instantaneously so. \SI{148}{\second} sits between them.\qed
+\end{example}
+
+\begin{keyidea}[Proportionality and scaling]
+When you care only about how one quantity responds to another, and everything else is held fixed, drop the constants and write a \textbf{proportionality}. Scaling problems --- ``how does the answer change if I make this nine times bigger?'' --- are then solved by scaling the known answer instead of recomputing from scratch. The constants cancel, so you never need their values. We used this in Section~\ref{sec:rewriting} for falling bodies, and it will recur in every chapter.
+\end{keyidea}
+
+\subsection{Feeling acceleration}
+
+A lift is one of the few places where acceleration is unmistakable to the passenger, and it is worth asking what exactly is being felt.
+
+In a car that accelerates hard forward, you feel pressed \emph{back} into the seat: opposite to the acceleration. When the driver stops accelerating and holds a steady speed, the feeling stops, however fast the car is going. Brake, and you are thrown forward, again opposite the acceleration. You are, as Chapter~1's bus test suggested, an acceleration detector and not a velocity detector.
+
+\begin{modelnote}[Feeling gees, and Einstein's idea]
+The sensation of an acceleration $a$ is indistinguishable from the sensation of an extra gravitational pull of the same size in the opposite direction. A car accelerating forward at \SI{5}{\metre\per\second\squared} feels exactly as though gravity had acquired an extra backward component of \SI{5}{\metre\per\second\squared} on top of the usual downward one, which is why accelerations are often quoted in multiples of $g$ and called ``gees.''
+
+This is not merely a convenient way of talking. Einstein took the indistinguishability seriously, promoted it to a principle --- the \textbf{equivalence principle} --- and built general relativity, our current theory of gravity, on top of it. The claim in its sharpest form is that no experiment performed inside a sealed box can distinguish a box at rest on a planet's surface from a box being accelerated in deep space. You will meet it properly in a later course; for now, notice that the elevator you ride to school is the very thought experiment Einstein used.
+\end{modelnote}
+
+In a lift accelerating upward at $a$, you feel heavier: the floor must push you up harder than usual to accelerate you. A bathroom scale under your feet reads that push, so it reads high by a fraction $a/g$ of your normal weight. An acceleration of \SI{2}{\metre\per\second\squared} makes the scale read about \SI{20}{\percent} high, since $2/9.8 \approx 0.2$. Accelerating downward, it reads low by the same fraction. This gives a way to measure an acceleration with nothing but a scale --- and, as the next example shows, to measure the height of a building you cannot see out of.
+
+\begin{example}{How tall is the lift shaft?}{liftheight}
+You stand on a bathroom scale in a lift and film the dial. Normally it reads \SI{64.0}{\kilo\gram}. As the lift starts upward the reading rises to about \SI{67.2}{\kilo\gram}, holds there for about \SI{3.0}{\second}, returns to \SI{64.0}{\kilo\gram} for the middle of the ride, and dips by a similar amount for the last \SI{3.0}{\second}. The whole ride lasts \SI{15}{\second}. How far did the lift rise?
+
+\elem \emph{The acceleration.} The reading is high by $67.2 - 64.0 = \SI{3.2}{\kilo\gram}$ out of \SI{64.0}{\kilo\gram}, a fraction
+\[
+\frac{\SI{3.2}{\kilo\gram}}{\SI{64.0}{\kilo\gram}} = 0.050 .
+\]
+So $a/g = 0.050$ and
+\[
+a = 0.050 \times \SI{9.8}{\metre\per\second\squared} = \SI{0.49}{\metre\per\second\squared}.
+\]
+\emph{The cruising speed.} That acceleration acts for \SI{3.0}{\second}, so
+\[
+v_{\max} = a\,t_{\text{acc}} = (\SI{0.49}{\metre\per\second\squared})(\SI{3.0}{\second}) = \SI{1.47}{\metre\per\second}.
+\]
+\emph{The height.} The velocity--time graph is a trapezium: up for \SI{3.0}{\second}, flat for \SI{9.0}{\second}, down for \SI{3.0}{\second}. Its area is the displacement. A trapezium of parallel sides \SI{15}{\second} and \SI{9}{\second} and height \SI{1.47}{\metre\per\second} has area
+\[
+\Delta y = \tfrac12(15 + 9)(1.47)\ \si{\metre} = \SI{17.6}{\metre}.
+\]
+A neat way to see the same thing: slide the triangle at the end of the graph leftward to fill the notch at the beginning, and the trapezium becomes a single rectangle of height $v_{\max}$ and width $\SI{15}{\second} - \SI{3.0}{\second} = \SI{12}{\second}$, giving $1.47 \times 12 = \SI{17.6}{\metre}$ directly.
+
+\calc $\Delta y = \int_0^{15} v_y\,\dd t$, with $v_y$ piecewise linear. Splitting the integral into the three phases gives $\tfrac12(0.49)(3.0)^2 + (1.47)(9.0) + \left[(1.47)(3.0) - \tfrac12(0.49)(3.0)^2\right] = 2.205 + 13.23 + 2.205 = \SI{17.6}{\metre}$.
+
+Sanity check, and what it is good for: a storey of an office building is about \SI{4.3}{\metre}, so $17.6/4.3 \approx 4.1$ storeys. The lift went up about four floors. Note how crude the inputs were --- a reading estimated off a wobbling dial, a duration counted off a video --- and yet the answer is good to roughly the nearest floor, which is all anyone wanted. It would be dishonest to quote \SI{17.64}{\metre}; \SI{18}{\metre}, or ``about four storeys,'' is the honest report.\qed
+\end{example}
+
+\subsection{Areas again: from acceleration to velocity to position}
+
+Worked Example~\ref{ex:liftheight} used the area under a velocity--time graph to get a displacement, which is the rule from Section~\ref{sec:calculus}. The same rule applies one level up, and it is worth seeing why in pictures, because the argument is identical and students often accept it for velocity while doubting it for acceleration.
+
+\begin{twoviews}{area under an acceleration--time graph}
+\elem Rule a fine grid over the acceleration--time graph. One small rectangle is $\Delta t$ wide and $\Delta a$ tall, so the quantity it stands for is an acceleration times a time, which is a change in velocity. A rectangle \SI{0.5}{\second} wide and \SI{0.1}{\metre\per\second\squared} tall represents $\SI{0.05}{\metre\per\second}$ of velocity change, and so does every other rectangle of that size. Count the rectangles that lie between the curve and the horizontal axis, counting those \emph{below} the axis as negative, allow part-rectangles to count in part, and multiply by \SI{0.05}{\metre\per\second}. The result is the total change in velocity over the time plotted. Counting over part of the graph gives the change over that part.
+
+\calc Chopping into rectangles, multiplying, adding, and letting the rectangles shrink is the definition of the definite integral, so the count converges to
+\[
+\Delta v_y = \int_{t_1}^{t_2} a_y(t)\,\dd t,
+\]
+which is Equation~\eqref{eq:ftc}. Nothing about the argument used the fact that the quantity plotted was an acceleration: the same reasoning on a velocity--time graph gives $\Delta y = \int v_y\,\dd t$, because there a rectangle is a velocity times a time, which is a displacement. Each graph in the chain position--velocity--acceleration is recovered from the next by taking an area and from the previous by taking a slope.
+\end{twoviews}
+
+\begin{keyidea}[The staircase of slopes and areas]
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm,every node/.style={font=\small}]
+  \node (y) at (0,0) {position $y(t)$};
+  \node (v) at (4.6,0) {velocity $v_y(t)$};
+  \node (a) at (9.6,0) {acceleration $a_y(t)$};
+  \draw[->,>=Stealth,thick,teal] ($(y.north east)+(0,0.12)$) to[bend left=32]
+    node[above,font=\scriptsize,teal!60!black]{slope} ($(v.north west)+(0,0.12)$);
+  \draw[->,>=Stealth,thick,teal] ($(v.north east)+(0,0.12)$) to[bend left=32]
+    node[above,font=\scriptsize,teal!60!black]{slope} ($(a.north west)+(0,0.12)$);
+  \draw[<-,>=Stealth,thick,plum] ($(y.south east)+(0,-0.12)$) to[bend right=32]
+    node[below,font=\scriptsize,plum]{area} ($(v.south west)+(0,-0.12)$);
+  \draw[<-,>=Stealth,thick,plum] ($(v.south east)+(0,-0.12)$) to[bend right=32]
+    node[below,font=\scriptsize,plum]{area} ($(a.south west)+(0,-0.12)$);
+\end{tikzpicture}
+\end{center}
+Going right, take slopes (\elemtag\ $\Delta/\Delta t$ over a short interval; \calctag\ differentiate). Going left, take signed areas (\elemtag\ average value times elapsed time, or count rectangles; \calctag\ integrate). Going left also needs one starting value --- an area gives you a \emph{change}, and you must know where the quantity started.
+\end{keyidea}
+
+\begin{checkbox}
+An acceleration--time graph for a lift is a rectangle of height $+\SI{0.6}{\metre\per\second\squared}$ from $t=0$ to $t=\SI{4}{\second}$, zero from \SI{4}{\second} to \SI{10}{\second}, and a rectangle of height $\SI{-0.8}{\metre\per\second\squared}$ from \SI{10}{\second} to \SI{13}{\second}. The lift starts at rest. (a) Find its velocity at $t = \SI{4}{\second}$, \SI{10}{\second}, and \SI{13}{\second}. (b) Is the lift at rest at the end? (c) Sketch $v_y$ against $t$ and use its area to find how far the lift travelled. (d) What is the average acceleration over the whole \SI{13}{\second}, and why is it not a useful description of the ride?
+\end{checkbox}
+
+\section{Where \texorpdfstring{$g$}{g} Comes From, and Where It Differs}
+\label{sec:gvalues}
+
+The free-fall acceleration is a property of the place, not of the falling object. Galileo's discovery, confirmed countless times since, is that when air resistance is small enough to ignore, \emph{all} objects at a given place fall with the same acceleration, whatever their mass, size, or material. A coin and a feather dropped in a vacuum tube land together.
+
+\begin{modelnote}[The biggest vacuum chamber on Earth]
+A tube is a small stage for this demonstration, and a sceptic can always wonder whether something about the glass is doing the work. NASA owns a better one. The Space Power Facility in Ohio, built to test spacecraft under space-like conditions, contains a chamber roughly \SI{37}{\metre} tall from which almost all the air can be pumped out. Drop a bowling ball and a feather in it with the air still in, and the result is the one everybody expects: the ball reaches the floor in under three seconds while the feather drifts. Pump the air out and repeat, and the two fall side by side, land together, and hit hard --- a \SI{37}{\metre} fall takes \SI{2.7}{\second} and ends at about \SI{27}{\metre\per\second}, which is \SI{96}{\kilo\metre\per\hour}, for the feather as much as for the ball.
+
+What the experiment isolates is worth being precise about. It does not show that air resistance is unimportant; it shows that air resistance is the \emph{entire} reason the two objects usually behave differently. Remove it and the difference vanishes, exactly as Galileo argued it would four centuries before anyone could build the chamber to check.
+\end{modelnote} (Why this should be so is a question for the next chapters, where we meet force and mass.)
 
 The value of $g$ depends on where you are. On Earth it varies by about half a percent between the equator and the poles, and decreases slowly with altitude. On other worlds the differences are dramatic, as Table~\ref{tab:gvalues} shows.
 
@@ -1045,11 +1326,18 @@ It took people nearly two thousand years, from Aristotle to Galileo, to separate
   \item \textbf{Acceleration} has SI unit \si{\metre\per\second\squared}. It covers speeding up, slowing down, and changing direction. It is a rate of a rate, and it is not the same as velocity.
   \item The \textbf{free-fall acceleration} near Earth's surface is $g \approx \SI{9.8}{\metre\per\second\squared}$, the same for all objects at a given place when air resistance is negligible, but different on different worlds.
   \item An object thrown straight up has $a_y = -g$ throughout, so $v_y = v_0 - gt$ and $y = v_0 t - \tfrac12 g t^2$. The top of the flight is at $t = v_0/g$, height $v_0^2/2g$: \elemtag\ where the speed lost equals the launch speed; \calctag\ where $\dd y/\dd t = 0$. It passes each height at the same speed going up and coming down, since $v_y^2 = v_0^2 - 2g\,\Delta y$.
+  \item A \textbf{velocity--time graph} can be built by standing a motion diagram's arrows side by side in time order and joining their tops. Its slope is the acceleration; the signed area beneath it is the displacement.
+  \item \textbf{Average acceleration hides what cancels.} A lift that starts and ends at rest has $\Delta v = 0$ and so zero average acceleration over the whole ride, though it accelerated hard twice. Averages are differences of endpoints.
+  \item \textbf{Positive acceleration does not mean speeding up.} The speed grows when $a$ and $v$ share a sign and shrinks when they do not; equivalently, $\dd(v^2)/\dd t = 2va$. An object at a negative velocity with positive acceleration is slowing down.
+  \item The \textbf{signed area} under an acceleration--time graph is $\Delta v$, by exactly the rectangle-counting argument that makes the area under a velocity--time graph $\Delta x$. Position, velocity, and acceleration form a staircase: slopes going one way, areas the other, with one starting value needed each time you go back.
+  \item A trip that accelerates at $a_0$ for half the distance and brakes for the other half takes $t_{\text{tot}} = 2\sqrt{H/a_0}$, so $t \propto \sqrt{H}$ at fixed $a_0$. Nine times the height takes three times the time, because the trip is three times longer \emph{and} three times faster.
+  \item You feel accelerations, not velocities, and an acceleration $a$ feels exactly like an extra gravitational pull $a$ in the opposite direction. Promoted to a principle, this is the \textbf{equivalence principle} on which general relativity is built. A scale in a lift reads high or low by the fraction $a/g$, which makes it an accelerometer.
 \end{itemize}
 
 \subsection*{Key equations}
 \begin{center}
 \renewcommand{\arraystretch}{2.4}
+\setlength{\tabcolsep}{4pt}
 \small
 \begin{tabular}{lll}
 \toprule
@@ -1064,6 +1352,12 @@ scaling a fall & $\dfrac{\Delta x_1}{\Delta x_2} = \dfrac{t_1^2}{t_2^2}$, \quad 
 free fall from rest & $v = gt$, \quad $d = \tfrac12 g t^2$, \quad $t = \sqrt{2d/g}$ & $a_y = -g$, \; $v_y = -gt$, \; $\Delta y = -\tfrac12 g t^2$ \\
 average velocity & $v_{\text{avg}} = \tfrac12(v_{\text{initial}} + v_{\text{final}})$ (constant $a$) & $\bar v = \dfrac{1}{\Delta t}\displaystyle\int v\,\dd t$ (any motion) \\
 thrown vertically & $v_y = v_0 - gt$, \quad $y = (v_0 - \tfrac12 gt)\,t$ & $y = \displaystyle\int_0^t (v_0 - gt')\,\dd t' = v_0 t - \tfrac12 g t^2$ \\
+average acceleration & $\bar a = \dfrac{v_{\text{final}} - v_{\text{initial}}}{\Delta t}$ & $\bar a = \dfrac{1}{\Delta t}\displaystyle\int a\,\dd t$ \\
+speeding up or slowing & speed grows when $a$, $v$ share a sign & $\dfrac{\dd (v^2)}{\dd t} = 2va$ \\
+velocity from acceleration & $\Delta v$ = signed area under $a$--$t$ graph & $\Delta v = \displaystyle\int a\,\dd t$ \\
+accelerate-then-brake & $H = \tfrac12 v_{\max}t_{\text{tot}}$, \; $v_{\max} = \tfrac12 a_0 t_{\text{tot}}$ & $t_{\text{tot}} = 2\sqrt{H/a_0}$, \; $v_{\max} = \sqrt{a_0H}$ \\
+scaling a trip & $t_{\text{tot}} \propto \sqrt{H}$ at fixed $a_0$ & same \\
+scale in a lift & reading high by the fraction $a/g$ & $a = g\,\Delta(\text{reading})/\text{reading}$ \\
 top of flight & $t_{\text{top}} = v_0/g$, \quad $y_{\text{top}} = v_0^2/2g$ & where $\dd y/\dd t = 0$ \\
 velocity vs height & $v_y^2 = v_0^2 - 2g\,\Delta y$ (eliminate $t$) & $v_y\,\dd v_y = -g\,\dd y$ (chain rule) \\
 rejected hypothesis & doubling time between $1/2k$ and $1/k$ & $\dfrac{\dd s}{\dd t} = ks \Rightarrow s = s_0 e^{kt}$ \\
@@ -1072,7 +1366,7 @@ rejected hypothesis & doubling time between $1/2k$ and $1/k$ & $\dfrac{\dd s}{\d
 \end{center}
 
 \subsection*{Key terms}
-free fall \textperiodcentered\ hypothesis \textperiodcentered\ proportionality \textperiodcentered\ instantaneous velocity \textperiodcentered\ derivative \textperiodcentered\ integral \textperiodcentered\ differential equation \textperiodcentered\ inclined plane \textperiodcentered\ motion diagram \textperiodcentered\ odd-number rule \textperiodcentered\ first difference \textperiodcentered\ second difference \textperiodcentered\ acceleration \textperiodcentered\ constant (uniform) acceleration \textperiodcentered\ square numbers \textperiodcentered\ telescoping sum \textperiodcentered\ velocity--time graph \textperiodcentered\ area under the graph \textperiodcentered\ mean-speed theorem \textperiodcentered\ exponential growth \textperiodcentered\ free-fall acceleration $g$ \textperiodcentered\ constant-acceleration model \textperiodcentered\ deceleration \textperiodcentered\ hang time
+free fall \textperiodcentered\ hypothesis \textperiodcentered\ proportionality \textperiodcentered\ instantaneous velocity \textperiodcentered\ derivative \textperiodcentered\ integral \textperiodcentered\ differential equation \textperiodcentered\ inclined plane \textperiodcentered\ motion diagram \textperiodcentered\ odd-number rule \textperiodcentered\ first difference \textperiodcentered\ second difference \textperiodcentered\ acceleration \textperiodcentered\ constant (uniform) acceleration \textperiodcentered\ square numbers \textperiodcentered\ telescoping sum \textperiodcentered\ velocity--time graph \textperiodcentered\ area under the graph \textperiodcentered\ mean-speed theorem \textperiodcentered\ exponential growth \textperiodcentered\ free-fall acceleration $g$ \textperiodcentered\ constant-acceleration model \textperiodcentered\ deceleration \textperiodcentered\ hang time \textperiodcentered\ average acceleration \textperiodcentered\ signed area \textperiodcentered\ scaling \textperiodcentered\ equivalence principle \textperiodcentered\ feeling gees \textperiodcentered\ accelerometer
 
 \section{Exercises}
 
@@ -1157,12 +1451,27 @@ Exercises marked $\star$ require more thought or more than one step. Unless told
   \item $\star$ Complete the elementary derivation of $v_y^2 = v_0^2 - 2g\,\Delta y$: eliminate $t$ between $v_y = v_0 - gt$ and $\Delta y = v_0 t - \tfrac12 g t^2$ and simplify.\label{ex:elimt}
 \end{enumerate}
 
+\subsection*{Acceleration in a lift}
+\begin{enumerate}[label=\textbf{\thechapter.\arabic*},resume=exercises,leftmargin=*]
+  \item A lift rises \SI{10}{\metre} in the first \SI{5.2}{\second} of its climb. A student scales this up and predicts that \SI{550}{\metre} will take $55 \times \SI{5.2}{\second} = \SI{286}{\second}$. What assumption has the student made, and will the true time be longer or shorter? Explain without calculating.
+  \item A lift starts at rest on the ground floor and ends at rest at the top. Show, without using any numbers, that its average acceleration over the ride is zero. Is its average \emph{speed} also zero? Is its average \emph{velocity}?
+  \item Sketch a velocity--time graph for a lift that descends from the tenth floor to the ground: at rest, speeding up downward, cruising, slowing, stopping. Take upward as positive. Mark the intervals where $a_y > 0$, where $a_y < 0$, and where $a_y = 0$, and say where the lift is speeding up.
+  \item State whether the object's speed is increasing, decreasing, or momentarily neither, taking upward as positive: (a) $v_y = \SI{-5}{\metre\per\second}$, $a_y = \SI{-3}{\metre\per\second\squared}$; (b) $v_y = +\SI{5}{\metre\per\second}$, $a_y = \SI{-3}{\metre\per\second\squared}$; (c) $v_y = \SI{-5}{\metre\per\second}$, $a_y = +\SI{3}{\metre\per\second\squared}$; (d) $v_y = +\SI{2}{\metre\per\second}$, $a_y = +\SI{7}{\metre\per\second\squared}$.
+  \item A velocity--time graph is a straight line running from $v_y = \SI{-6}{\metre\per\second}$ at $t = 0$, through zero at $t = \SI{3}{\second}$, to $v_y = +\SI{6}{\metre\per\second}$ at $t = \SI{6}{\second}$. (a) What is the acceleration? (b) Describe the motion in words. (c) During which interval is the object speeding up? (d) Is the acceleration ever zero?
+  \item Show that for the constant-acceleration trip of Worked Example~\ref{ex:lifttrip} the peak speed is $v_{\max} = \sqrt{a_0 H}$, and check it against the values in that example.
+  \item Using $t_{\text{tot}} \propto \sqrt{H}$ at fixed $a_0$: (a) by what factor does the trip lengthen in a building \num{4} times as tall? (b) \num{2.25} times as tall? (c) By what factor must $a_0$ increase to halve the trip time in a building of fixed height?
+  \item $\star$ A lift accelerates at \SI{1.0}{\metre\per\second\squared} for the first \SI{3.0}{\second}, cruises, then brakes at \SI{1.0}{\metre\per\second\squared} for the last \SI{3.0}{\second}; the whole ride lasts \SI{20}{\second}. Find (a) the cruising speed, (b) the total rise, and (c) the fraction of the rise covered during the two acceleration phases. Comment on (c) in the light of Worked Example~\ref{ex:lifttrip}.
+  \item $\star$ Standing on a bathroom scale in a lift, you read \SI{5}{\percent} above your normal weight for \SI{2.0}{\second}, your normal weight for \SI{8.0}{\second}, and \SI{5}{\percent} below it for \SI{2.0}{\second}. (a) Find the magnitude of the acceleration. (b) Find the cruising speed. (c) Find the distance risen. (d) Roughly how many \SI{4.3}{\metre} storeys is that? (e) Which of your answers would change if you weighed twice as much?
+  \item $\star$ An acceleration--time graph starts at zero, rises linearly to \SI{2.0}{\metre\per\second\squared} at $t = \SI{2}{\second}$, then falls linearly back to zero at $t = \SI{6}{\second}$. The object starts from rest. (a) Use the area to find its velocity at $t = \SI{6}{\second}$. (b) Find its velocity at $t = \SI{2}{\second}$. Is it a third of the final value, and why is that not obvious from the graph's shape? (c) Does the object ever slow down? How can you tell at a glance?\label{ex:atgraph}
+\end{enumerate}
+
 \subsection*{Hands-on}
 \begin{enumerate}[label=\textbf{\thechapter.\arabic*},resume=exercises,leftmargin=*]
   \item Build Galileo's experiment. Prop a board or length of track at a shallow angle and mark the release point. Using a phone's slow-motion video or a metronome app, find where the ball is at equal time intervals and mark those positions. Measure the gaps between marks and compute the first and second differences. How close do you get to $1:3:5:7$? Compute $a = 2d/\tau^2$. What are the main sources of error?
   \item Measure $g$ with a drop. Hold a ball at a measured height of \SI{1.5}{\metre} or more and film its release and landing at your phone's highest frame rate. Count frames to find the fall time, then compute $g = 2d/t^2$. Repeat five times and report the mean and the spread as $g \pm \delta g$. Compare with \SI{9.8}{\metre\per\second\squared}.
   \item Measure your own hang time. Film a standing vertical jump and count frames from when your feet leave the floor until they land. Compare with the prediction $2\sqrt{2d/g}$ from your measured jump height $d$ (the rise of your hips, not your reach).
   \item Without using equations, write a short message to a friend explaining the difference between velocity and acceleration, and why a ball at the very top of its flight has one of them but not the other.
+  \item Weigh yourself in a lift. Stand on a bathroom scale in a lift with a tall run and film the dial, or use a phone's accelerometer app. Record how long the reading is high at the start, how long the whole ride lasts, and by what fraction the reading changes. Compute the acceleration, the cruising speed, and the distance risen, then compare with the number of floors you actually passed. Which of your three measurements limits the accuracy most?
 \end{enumerate}
 
 \section*{Answers to Check Your Understanding}
@@ -1174,6 +1483,8 @@ Exercises marked $\star$ require more thought or more than one step. Unless told
   \item[2.5] Nine; three; $\sqrt{2} \approx 1.41$.
   \item[2.6] \SI{50}{\metre\per\second}, \SI{60}{\metre\per\second}, and \SI{65}{\metre\per\second}, from $v = gt$. No: it falls \SI{125}{\metre}. \elemtag\ Its speed was below \SI{50}{\metre\per\second} for the whole five seconds except the last instant, so the average speed was only \SI{25}{\metre\per\second}, and $25 \times 5 = 125$. \calctag\ $\int_0^5 10t\,\dd t = \tfrac12 (10)(25) = \SI{125}{\metre}$.
   \item[2.7] Zero, because its velocity is not changing. The skateboard: both gain \SI{5}{\kilo\metre\per\hour}, but the skateboard does so in one-tenth the time, so its acceleration is ten times larger (\SI{5}{\kilo\metre\per\hour\per\second} versus \SI{0.5}{\kilo\metre\per\hour\per\second}). The airliner is moving far faster, but acceleration is about change, not speed.
+  \item[2.8] (a) Speeding up ($v_y$ and $a_y$ agree in sign). (b) Slowing down. (c) Slowing down: the velocity is negative and the acceleration positive, so the velocity is climbing \emph{toward} zero and its size is shrinking. (d) Speeding up: both negative, so the velocity becomes more negative. (e) Neither, at that instant: the speed is momentarily zero and is at a minimum, about to increase. For the graph, the object is \emph{slowing down}: lying below the axis means $v_y < 0$, sloping upward means $a_y > 0$, the signs disagree, and the graph is approaching the axis, which is where speed is zero.
+  \item[2.9] (a) $v_y(4) = 0 + (0.6)(4) = \SI{2.4}{\metre\per\second}$; $v_y(10) = \SI{2.4}{\metre\per\second}$, since the acceleration is zero in between; $v_y(13) = 2.4 - (0.8)(3) = 0$. (b) Yes --- which is the check that the two areas, $+2.4$ and $-2.4$, cancel. (c) The velocity--time graph is a trapezium: up from $0$ to \SI{2.4}{\metre\per\second} over \SI{4}{\second}, flat for \SI{6}{\second}, down to zero over \SI{3}{\second}. Its area is $\tfrac12(13 + 6)(2.4) = \SI{22.8}{\metre}$. (d) $\bar a_y = \Delta v_y/\Delta t = 0/13 = 0$. It is useless here because it describes neither phase of a ride whose whole character is the two nonzero phases; see Worked Example~\ref{ex:liftavg}.
 \end{description}
 
 \section*{Answers to Selected Exercises}
@@ -1234,7 +1545,17 @@ Exercises marked $\star$ require more thought or more than one step. Unless told
   \Delta y &= v_0\frac{v_0 - v_y}{g} - \tfrac12 g\frac{(v_0 - v_y)^2}{g^2} = \frac{(v_0 - v_y)}{2g}\left[2v_0 - (v_0 - v_y)\right] \\
   &= \frac{(v_0 - v_y)(v_0 + v_y)}{2g} = \frac{v_0^2 - v_y^2}{2g}.
   \end{align*}
-  \item[2.52--2.55] Answers depend on your own measurements. Typical ramp results give second differences constant to within \SIrange{10}{20}{\percent}; typical phone-video drops give $g$ within a few percent of \SI{9.8}{\metre\per\second\squared} once several trials are averaged; typical hang times are \SIrange{0.4}{0.6}{\second}.
+  \item[2.52] The student has assumed distance is proportional to time, which holds only at constant velocity. The lift is still speeding up during its first \SI{5.2}{\second}, so that interval is unrepresentatively slow and scaling it up overestimates badly. The true time is much \emph{shorter} --- about \SI{55}{\second}.
+  \item[2.53] Average acceleration is $\Delta v_y/\Delta t$, and $\Delta v_y$ depends only on the endpoints: $0 - 0 = 0$. The average \emph{speed} is not zero --- it is the height climbed divided by the time --- and neither is the average \emph{velocity}, which is $+H/T$. Only the acceleration averages away, because it is the one quantity whose positive and negative phases cancel here.
+  \item[2.54] With upward positive, $v_y$ is negative for the whole descent. At the start $a_y < 0$ (the velocity is becoming more negative, so the lift is speeding up); during the cruise $a_y = 0$; at the end $a_y > 0$ (the velocity is climbing back toward zero, so the lift is slowing). The lift speeds up only during the first phase, when $v_y$ and $a_y$ share a sign.
+  \item[2.55] (a) Increasing (both negative). (b) Decreasing. (c) Decreasing. (d) Increasing.
+  \item[2.56] (a) The slope is $\SI{12}{\metre\per\second}/\SI{6}{\second} = +\SI{2.0}{\metre\per\second\squared}$, constant. (b) The object moves downward, slowing, comes momentarily to rest at $t = \SI{3}{\second}$, then moves upward, speeding up. (c) From \SI{3}{\second} to \SI{6}{\second}, where $v_y$ and $a_y$ are both positive. (d) No. The acceleration is $+\SI{2.0}{\metre\per\second\squared}$ throughout, including at the instant the object is at rest --- the same point Key Idea ``Acceleration is not velocity'' makes for a ball at the top of its flight.
+  \item[2.57] From Equation~\eqref{eq:liftvmax}, $v_{\max} = a_0 t_{\text{tot}}/2$, and substituting Equation~\eqref{eq:lifttime} gives $v_{\max} = a_0\sqrt{H/a_0} = \sqrt{a_0 H}$. For $a_0 = \SI{0.9}{\metre\per\second\squared}$ and $H = \SI{550}{\metre}$, $\sqrt{495} = \SI{22}{\metre\per\second}$, as found there.
+  \item[2.58] (a) $\sqrt4 = 2$. (b) $\sqrt{2.25} = 1.5$. (c) Since $t_{\text{tot}} \propto 1/\sqrt{a_0}$ at fixed $H$, halving the time needs $a_0$ multiplied by \num{4}. This is why lifts are not made dramatically faster by stronger motors: the time gain goes only as the square root, and passenger comfort caps $a_0$ near \SI{1}{\metre\per\second\squared}.
+  \item[2.59] (a) $v_{\max} = (1.0)(3.0) = \SI{3.0}{\metre\per\second}$. (b) Sliding the end triangle into the starting notch gives a rectangle of height \SI{3.0}{\metre\per\second} and width $20 - 3.0 = \SI{17}{\second}$, so $\Delta y = \SI{51}{\metre}$. (c) The two acceleration phases cover $2 \times \tfrac12(1.0)(3.0)^2 = \SI{9.0}{\metre}$, which is $9/51 \approx \SI{18}{\percent}$. Over \SI{80}{\percent} of the climb happens at cruising speed, which is exactly why abolishing the cruise in Worked Example~\ref{ex:lifttrip} saved so little time.
+  \item[2.60] (a) $a = 0.05 \times 9.8 = \SI{0.49}{\metre\per\second\squared}$. (b) $v_{\max} = (0.49)(2.0) = \SI{0.98}{\metre\per\second}$. (c) The ride lasts $2.0 + 8.0 + 2.0 = \SI{12}{\second}$, so $\Delta y = v_{\max}(12 - 2.0) = \SI{9.8}{\metre}$. (d) $9.8/4.3 \approx 2.3$, so about two storeys. (e) None of them. The scale's \emph{fractional} change is $a/g$ whatever your mass, so a heavier passenger reads a bigger change in kilograms but the same \SI{5}{\percent}, and every result above follows from the fraction.
+  \item[2.61] (a) The area is the triangle $\tfrac12 \times \SI{6}{\second} \times \SI{2.0}{\metre\per\second\squared} = \SI{6.0}{\metre\per\second}$. (b) The area up to $t = \SI{2}{\second}$ is $\tfrac12 \times 2 \times 2.0 = \SI{2.0}{\metre\per\second}$, which is indeed a third. It is not obvious from the shape because the velocity is fixed by \emph{area}, not by how far along the peak sits: the narrow rising part contributes $\SI{2.0}{\metre\per\second}$ while the wider falling part contributes \SI{4.0}{\metre\per\second}. (c) No. The graph never goes below the time axis, so $a_y \ge 0$ throughout, so $v_y$ never decreases --- and since $v_y$ also starts at zero and stays positive, the speed never decreases either.
+  \item[2.62--2.66] Answers depend on your own measurements. Typical ramp results give second differences constant to within \SIrange{10}{20}{\percent}; typical phone-video drops give $g$ within a few percent of \SI{9.8}{\metre\per\second\squared} once several trials are averaged; typical hang times are \SIrange{0.4}{0.6}{\second}.
 \end{description}
 
 \section*{Sources and Further Reading}
@@ -1244,6 +1565,9 @@ Exercises marked $\star$ require more thought or more than one step. Unless told
   \item S. Drake, ``The Role of Music in Galileo's Experiments,'' \emph{Scientific American} 232 (June 1975), 98--104. The argument, based on Galileo's working notes, that he used musical rhythm to mark equal time intervals on the inclined plane.
   \item M. Clagett, \emph{Nicole Oresme and the Medieval Geometry of Qualities and Motions} (University of Wisconsin Press, 1968). Oresme's geometric proof of the mean-speed theorem, about two hundred years before Galileo.
   \item Museo Galileo, Florence. The replica inclined plane with bells is described at \url{https://catalogue.museogalileo.it/object/InclinedPlane.html}.
+  \item Scholars High School Physics~1: Mechanics (AoPS course 4926), Lesson~2 class transcript, 18 September 2026. Section~\ref{sec:elevator} follows the arc of that lesson: the skyscraper lift as an everyday setting for changing velocity, building a velocity--time graph from a motion diagram, the zero average acceleration of a complete ride, the positive-acceleration-with-decreasing-speed trap, the constant-acceleration trip and its $\sqrt{H}$ scaling, feeling gees, and measuring a lift shaft with a bathroom scale. All numbers, examples, and prose here are our own.
+  \item NASA Glenn Research Center, Space Power Facility, Sandusky, Ohio. The \SI{37}{\metre} vacuum chamber used for the bowling-ball-and-feather drop described in Section~\ref{sec:gvalues}; footage of the experiment was made for the BBC series \emph{Human Universe} (2014).
+  \item A. Einstein, ``\"Uber das Relativit\"atsprinzip und die aus demselben gezogenen Folgerungen,'' \emph{Jahrbuch der Radioaktivit\"at und Elektronik} \textbf{4} (1907), 411--462, where the equivalence of a uniformly accelerated frame and a uniform gravitational field is first set out --- the idea Einstein later called the happiest thought of his life.
   \item The Apollo~15 hammer-and-feather demonstration (1971) is available on video from NASA and shows the two objects landing together on the Moon.
 \end{itemize}
 
