@@ -133,7 +133,10 @@ By the end of this chapter you should be able to
   \item build a \emph{velocity--time graph} out of a motion diagram, read the acceleration off it as a slope, and recover velocity and displacement from areas under the acceleration--time and velocity--time graphs;
   \item explain why a positive acceleration does \emph{not} always mean increasing speed, and why the average acceleration over a complete lift ride is zero;
   \item analyse a designed motion that speeds up, cruises, and stops, obtain $t_{\text{tot}} = 2\sqrt{H/a_0}$, and use the \emph{proportionality} $t \propto \sqrt{H}$ to scale an answer instead of recomputing it;
-  \item explain what a passenger actually feels during an acceleration, state the \emph{equivalence principle}, and use a bathroom scale to measure an acceleration and then a height.
+  \item explain what a passenger actually feels during an acceleration, state the \emph{equivalence principle}, and use a bathroom scale to measure an acceleration and then a height;
+  \item split a \emph{stopping distance} into a reaction part proportional to $v_0$ and a braking part proportional to $v_0^2$, and solve the resulting quadratic when the distance is fixed and the speed is not;
+  \item say why timing errors matter twice as much as distance errors when measuring $g$, why slowing a motion down reduces them, and what that trade costs;
+  \item distinguish \emph{random} from \emph{systematic} error, explain why repeating a measurement fixes only the first, and describe how to go looking for the second.
 \end{itemize}
 \end{tcolorbox}
 
@@ -355,6 +358,7 @@ Assume $v_y \propto \Delta y$, that is, $\dd s/\dd t = k s$. At the instant a st
 \end{checkbox}
 
 \section{Slowing Motion Down: The Inclined Plane}
+\label{sec:inclined}
 
 \subsection{Why a ramp?}
 
@@ -905,6 +909,104 @@ Here is a test you can perform on a bus. If the bus moves at constant velocity a
 A racing car flashes past you at a steady \SI{300}{\kilo\metre\per\hour} along a straight. What is its acceleration? Which has the larger acceleration: an airliner that goes from \SI{1000}{\kilo\metre\per\hour} to \SI{1005}{\kilo\metre\per\hour} in \SI{10}{\second}, or a skateboard that goes from rest to \SI{5}{\kilo\metre\per\hour} in \SI{1}{\second}?
 \end{checkbox}
 
+\subsection{Stopping a car}
+\label{sec:stopping}
+
+Braking is the most consequential piece of constant-acceleration physics most people ever meet, and the model has one feature that catches everybody out. Stopping a car is not one process but two, laid end to end.
+
+\begin{definition}{Reaction, braking, and stopping distance}{stopping}
+When a driver meets a hazard, the \textbf{reaction distance} is the distance the vehicle covers between the hazard appearing and the brakes beginning to act, during which the vehicle travels at its original speed. The \textbf{braking distance} is the distance covered from the moment the brakes act until the vehicle is at rest. Their sum is the \textbf{stopping distance}. The interval taken up by the first is the driver's \textbf{reaction time} $t_r$, typically between \SI{0.7}{\second} and \SI{1.5}{\second} for an alert driver and considerably longer for a distracted one.
+\end{definition}
+
+The two pieces obey different rules, and that is the whole point.
+
+\begin{twoviews}{the two parts of a stopping distance}
+\elem During the reaction time nothing has changed the car's motion, so it is Chapter~1's constant-velocity problem: distance is speed times time,
+\[
+d_r = v_0 t_r .
+\]
+Once the brakes bite, the car has a constant negative acceleration of magnitude $a$ and comes to rest, so it is this chapter's problem run backwards. Its velocity falls steadily from $v_0$ to zero, averaging $\tfrac12 v_0$, and it takes a time $v_0/a$ to do so, so
+\[
+d_b = \tfrac12 v_0 \times \frac{v_0}{a} = \frac{v_0^{2}}{2a}.
+\]
+On a velocity--time graph the first piece is a rectangle and the second a triangle, and the stopping distance is the total area.
+
+\calc Both pieces are integrals of the same velocity function, which is $v_0$ up to $t_r$ and $v_0 - a(t - t_r)$ afterwards:
+\[
+d_r = \int_0^{t_r} v_0\,\dd t = v_0 t_r,
+\qquad
+d_b = \int_{t_r}^{t_r + v_0/a}\left[v_0 - a(t - t_r)\right]\dd t = \frac{v_0^{2}}{2a}.
+\]
+The braking distance also drops straight out of the time-free relation of Section~\ref{sec:accelgeneral}: setting $v = 0$ in $v^2 = v_0^2 - 2a\,d_b$ gives $d_b = v_0^2/2a$ without any mention of time at all, which is usually the quickest route.
+\end{twoviews}
+
+\begin{keyidea}[The stopping-distance model]
+\[
+d_{\text{stop}} = \underbrace{v_0 t_r}_{\text{reaction}} \;+\; \underbrace{\frac{v_0^{2}}{2a}}_{\text{braking}} .
+\]
+The first term is \emph{proportional} to the speed; the second is proportional to the \emph{square} of the speed. Doubling your speed doubles the reaction distance and \emph{quadruples} the braking distance. This is why stopping distances grow so alarmingly with speed, and why the reaction term dominates at low speed while the braking term dominates at high speed.
+\end{keyidea}
+
+\begin{example}{How far to stop?}{stopdist}
+A car travels at \SI{20}{\metre\per\second} (\SI{72}{\kilo\metre\per\hour}) on a dry road. The driver's reaction time is \SI{0.70}{\second} and the brakes can produce a deceleration of \SI{7.0}{\metre\per\second\squared}. (a) Find the stopping distance. (b) Repeat for twice the speed, and compare.
+
+\elem (a) Reaction distance first, at unchanged speed:
+\[
+d_r = v_0 t_r = (\SI{20}{\metre\per\second})(\SI{0.70}{\second}) = \SI{14}{\metre}.
+\]
+Then braking. The velocity falls from \SI{20}{\metre\per\second} to zero, so its average is \SI{10}{\metre\per\second}, and the braking lasts $v_0/a = 20/7.0 = \SI{2.86}{\second}$:
+\[
+d_b = (\SI{10}{\metre\per\second})(\SI{2.86}{\second}) = \SI{28.6}{\metre}.
+\]
+The total is $14 + 28.6 = \SI{43}{\metre}$.
+
+(b) At \SI{40}{\metre\per\second} the reaction distance doubles to \SI{28}{\metre}, but the braking distance quadruples to \SI{114}{\metre}, for a total of \SI{142}{\metre}. Doubling the speed has multiplied the stopping distance by \num{3.3}, not by \num{2}.
+
+\calc Using $d_{\text{stop}} = v_0t_r + v_0^2/2a$ directly: at $v_0 = \SI{20}{\metre\per\second}$, $14 + 400/14 = \SI{42.6}{\metre}$; at $v_0 = \SI{40}{\metre\per\second}$, $28 + 1600/14 = \SI{142.3}{\metre}$. Differentiating shows how the balance shifts:
+\[
+\deriv{d_{\text{stop}}}{v_0} = t_r + \frac{v_0}{a},
+\]
+so each extra metre per second of speed costs \SI{0.70}{\metre} of reaction distance plus $v_0/a$ metres of braking distance --- a penalty that itself grows with speed.
+
+Sanity check: \SI{43}{\metre} is about ten car lengths, and \SI{142}{\metre} is longer than a football pitch. Both match the figures printed in driving manuals, which is reassuring, since those come from measurement rather than from this model.\qed
+\end{example}
+
+The same model is more often needed the other way round. A sight line, a bend, or a parked lorry fixes how much road you can see; the question is how fast you may safely go.
+
+\begin{example}{How fast may you go?}{stopspeed}
+On a narrow street you can see only \SI{30}{\metre} of clear road ahead. With a reaction time of \SI{0.70}{\second} and a braking deceleration of \SI{7.0}{\metre\per\second\squared}, what is the fastest speed from which you could still stop within sight?
+
+\solution Now $d_{\text{stop}}$ is known and $v_0$ is not. Substituting into the model,
+\[
+v_0 t_r + \frac{v_0^{2}}{2a} = d_{\text{stop}} .
+\]
+This is a \emph{quadratic} in $v_0$, because the unknown appears both to the first power and squared --- which is exactly the structure the two-part model guarantees. Multiply through by $2a$ and collect terms:
+\[
+v_0^{2} + 2a t_r\,v_0 - 2a\,d_{\text{stop}} = 0 .
+\]
+With $a = \SI{7.0}{\metre\per\second\squared}$, $t_r = \SI{0.70}{\second}$, $d_{\text{stop}} = \SI{30}{\metre}$, the coefficients are $2at_r = \num{9.8}$ and $2ad_{\text{stop}} = \num{420}$:
+\[
+v_0^{2} + 9.8\,v_0 - 420 = 0
+\qquad\Longrightarrow\qquad
+v_0 = \frac{-9.8 + \sqrt{9.8^{2} + 4(420)}}{2} = \SI{16.2}{\metre\per\second},
+\]
+taking the positive root, since a negative speed is not a candidate answer here. That is about \SI{58}{\kilo\metre\per\hour}.
+
+Check by substituting back: the reaction distance is $16.2 \times 0.70 = \SI{11.3}{\metre}$ and the braking distance is $16.2^2/14 = \SI{18.7}{\metre}$, totalling \SI{30.0}{\metre} as required. Always do this; the quadratic formula is a reliable place to lose a sign.
+
+Sanity check on the shape of the answer: had we forgotten the reaction term entirely we would have got $v_0 = \sqrt{2 a d} = \SI{20.5}{\metre\per\second}$, noticeably too fast. Reaction time costs you about four metres per second of allowed speed here, which is the kind of margin that decides whether a \SI{50}{\kilo\metre\per\hour} limit is generous or tight.\qed
+\end{example}
+
+\begin{modelnote}[What the stopping model leaves out]
+Every number in Definition~\ref{def:stopping} is a stand-in for something variable. The deceleration $a$ depends on the tyres, the road surface, the temperature, and the load: \SI{7}{\metre\per\second\squared} is reasonable for a car with good tyres on dry tarmac, but wet tarmac may give \SI{4}{\metre\per\second\squared} and ice a small fraction of that. A gradient adds or subtracts a component of gravity. A heavily laden vehicle takes longer. And real braking is not constant: the deceleration builds over the first fraction of a second and eases at the very end.
+
+The reaction time is the most variable term of all. \SI{0.7}{\second} assumes an alert driver already watching the road. A driver reading a phone may take two seconds or more, and at \SI{20}{\metre\per\second} each extra second is another \SI{20}{\metre} travelled entirely unbraked --- as much as the whole braking distance in Worked Example~\ref{ex:stopdist}. The model is crude, but it is crude in a way that makes the point: the part of stopping you control best is the part before the brakes are touched.
+\end{modelnote}
+
+\begin{checkbox}
+A driver travelling at \SI{15}{\metre\per\second} has a reaction time of \SI{0.80}{\second} and brakes at \SI{6.0}{\metre\per\second\squared}. (a) Find the reaction distance, the braking distance, and the stopping distance. (b) Which of the three roughly doubles, and which roughly quadruples, if the speed is doubled? (c) On a wet road the braking deceleration falls to \SI{3.0}{\metre\per\second\squared}. Which of the two distances changes, and by what factor? (d) At what speed are the reaction and braking distances equal, for the dry-road figures?
+\end{checkbox}
+
 \subsection{Thrown straight up}
 
 So far our objects have only fallen. Throw a ball straight up and it rises, slows, stops for an instant at the top, and falls back. What is its acceleration during all this?
@@ -1310,6 +1412,94 @@ Everything in this chapter transfers to those places unchanged except the number
 
 It took people nearly two thousand years, from Aristotle to Galileo, to separate ``how fast'' from ``how far'' from ``how quickly how fast changes,'' and another half-century after Galileo for Newton and Leibniz to invent the calculus that makes the three a single idea viewed through one derivative, then two. Galileo did it with a ramp, some bells, and a willingness to let a measurement overrule an argument. If the distinction takes you a few hours, you are in good company.
 
+\section{Designing a Measurement}
+\label{sec:designing}
+
+Galileo's ramp was not a compromise forced on him by bad equipment. It was a design decision, and understanding why it was the right one is worth a section, because the same reasoning applies to every measurement you will ever make.
+
+\subsection{Where the error actually is}
+
+Suppose you measure $g$ the obvious way: drop something through a measured height $d$, time the fall, and use
+\[
+g = \frac{2d}{t^{2}} .
+\]
+Two quantities are measured, so two uncertainties feed in. Chapter~1 showed how to push them through: a fractional uncertainty passes unchanged through a multiplication or division, and a quantity that is \emph{squared} contributes twice its fractional uncertainty. So
+\begin{equation}
+\frac{\delta g}{g} \approx \frac{\delta d}{d} + 2\,\frac{\delta t}{t}.
+\label{eq:gerror}
+\end{equation}
+The factor of two is the whole story. Timing errors hurt twice as much as distance errors, because $t$ appears squared. And distances are easy to measure well --- a tape measure gives a metre to a millimetre, one part in a thousand --- while times, taken by a human with a stopwatch, are not.
+
+\begin{example}{Why Galileo used a ramp}{rampdesign}
+A student measures $g$ by dropping a ball through \SI{1.50}{\metre} and timing it by hand. Their stopwatch reaction introduces an uncertainty of about \SI{\pm0.05}{\second}. (a) What fractional uncertainty does this give in $g$? (b) They instead roll a ball \SI{1.50}{\metre} down a ramp shallow enough that its acceleration is \SI{0.50}{\metre\per\second\squared}. What is the fractional uncertainty now? (c) Where does the improvement come from, and what does it cost?
+
+\elem (a) The fall takes
+\[
+t = \sqrt{\frac{2d}{g}} = \sqrt{\frac{2(1.50)}{9.8}}\ \si{\second} = \SI{0.55}{\second},
+\]
+so the fractional uncertainty in the time is $0.05/0.55 = \SI{9}{\percent}$, and by Equation~\eqref{eq:gerror} the fractional uncertainty in $g$ is about twice that, \SI{18}{\percent}. A measurement of $g$ good to only one part in five is nearly worthless: it cannot tell \SI{8}{\metre\per\second\squared} from \SI{12}{\metre\per\second\squared}.
+
+(b) On the ramp the same distance takes
+\[
+t = \sqrt{\frac{2(1.50)}{0.50}}\ \si{\second} = \SI{2.45}{\second},
+\]
+so the timing uncertainty is now $0.05/2.45 = \SI{2}{\percent}$, and the acceleration is known to about \SI{4}{\percent}. The same student, the same stopwatch, the same thumb --- and a result four times better.
+
+(c) The improvement comes from nothing but a longer clock reading. The stopwatch error $\delta t$ has not changed; what changed is the $t$ it is divided by. Since $t = \sqrt{2d/a}$, making $a$ smaller makes $t$ longer:
+\[
+\frac{\delta t/t_{\text{ramp}}}{\delta t/t_{\text{fall}}} = \frac{t_{\text{fall}}}{t_{\text{ramp}}} = \sqrt{\frac{a}{g}} = \sqrt{\frac{0.50}{9.8}} = \frac{1}{4.4}.
+\]
+The gain is exactly $\sqrt{g/a}$, so a ramp ten times shallower would buy another factor of three.
+
+\calc Equation~\eqref{eq:gerror} is the tangent-line rule of Chapter~1 applied to $g(d,t) = 2d/t^{2}$:
+\[
+\frac{\delta g}{g} \approx \left|\frac{\partial \ln g}{\partial \ln d}\right|\frac{\delta d}{d} + \left|\frac{\partial \ln g}{\partial \ln t}\right|\frac{\delta t}{t} = 1\cdot\frac{\delta d}{d} + 2\cdot\frac{\delta t}{t},
+\]
+the exponents in $g \propto d\,t^{-2}$ appearing directly as the weights. Reading the exponents off a formula is the fastest way to see which measurement deserves your care.
+
+What it costs is the subject of the rest of this section. The ramp does not fall freely: it rubs, and the ball rolls rather than slides. Neither effect is in the model $g = 2d/t^{2}$, and neither is fixed by timing more carefully.\qed
+\end{example}
+
+\begin{keyidea}[Slow the motion down]
+When a measurement is limited by how well you can time it, make the motion take longer. You can increase the distance, or reduce the acceleration, and the second is usually cheaper. The fractional timing error falls as $\sqrt{a}$, so a ramp with $a = g/100$ times the free-fall value gives times ten times longer and timing errors ten times smaller. This is the design decision behind Galileo's inclined plane in Section~\ref{sec:inclined}, and behind every piece of apparatus that trades away speed to buy precision.
+\end{keyidea}
+
+\subsection{Two kinds of error}
+
+The ramp bought precision and, in the same stroke, introduced a new problem. It is a different \emph{kind} of problem, and physics gives the two kinds different names.
+
+\begin{definition}{Random and systematic error}{errors}
+A \textbf{random error} scatters repeated measurements around the true value, sometimes high and sometimes low. Stopwatch reaction is the standard example: you are as likely to press late as early. Random errors are reduced by repeating the measurement and averaging, and averaging $N$ trials reduces the scatter by a factor of about $\sqrt{N}$.
+
+A \textbf{systematic error} shifts every measurement in the \emph{same} direction. Friction in a ramp makes every run slower than the model predicts, so every value of $g$ inferred from it comes out low. Systematic errors are not reduced by repeating at all: a hundred trials give a hundred results that agree beautifully with each other and are all wrong by the same amount.
+\end{definition}
+
+\begin{keyidea}[Repeating helps only half the time]
+Averaging many trials shrinks random error as $1/\sqrt{N}$ and does \emph{nothing} to systematic error. A set of measurements that agree closely with each other is evidence of small random error only. It is not evidence that the answer is right, and it is a common way to be confidently wrong.
+\end{keyidea}
+
+This is why the ramp is a trade and not a free win. Timing by hand, the free-fall drop has a large random error and almost no systematic error; the ramp has a small random error and a systematic one from friction and rolling. Which is better depends on how big the systematic effect is, and the only way to find out is to look for it.
+
+\begin{modelnote}[How to hunt a systematic error]
+A systematic error hides inside an answer and does not announce itself in the scatter, so you have to go looking. Three methods, in rough order of usefulness.
+
+\emph{Vary something that should not matter.} If the model says the answer does not depend on some quantity, change that quantity and see whether the answer moves. Galileo did exactly this: he tilted the ramp to different angles, and checked that the \emph{form} of the rule survived. If the value you extract drifts as you change the angle, something the model ignores is at work.
+
+\emph{Measure the same thing a second way.} Time the fall with a stopwatch and again by counting video frames. The random errors are unrelated, but a systematic error in the apparatus shows up in both; a disagreement between the two methods points at one of them.
+
+\emph{Compare with a known value.} If you can measure something whose answer is already established, do that first. A method that returns \SI{9.1}{\metre\per\second\squared} where the accepted value is \SI{9.81}{\metre\per\second\squared} has a systematic error of about \SI{7}{\percent}, and you now know its size even if you do not yet know its cause.
+
+Honest practice is to report both: a best estimate, a random uncertainty from the scatter of your trials, and a statement of what systematic effects you have thought about and how large you believe they are. Exercise~\ref{ex:wellsound} in this chapter is a small worked case of exactly that reasoning.
+\end{modelnote}
+
+\begin{modelnote}[Choosing what to time]
+One more design choice is worth naming, because it is easy to get backwards. When you time a motion between two marks, it is the \emph{interval} you are measuring, and every timing error lands on it whole. Two marks close together therefore give a short interval and a large fractional error, even if each mark is placed perfectly. The instinct to make a measurement ``tidy'' by putting the start and finish close together is exactly wrong: spread them as far apart as the apparatus allows, and let the long interval dilute the error. The same logic explains why Galileo strung his bells down the whole length of the ramp rather than clustering them near the top.
+\end{modelnote}
+
+\begin{checkbox}
+A student times a \SI{2.0}{\metre} fall ten times with a stopwatch and gets values between \SI{0.58}{\second} and \SI{0.70}{\second}, averaging \SI{0.64}{\second}. (a) What value of $g$ does the average give? (b) Is the spread evidence of random error, systematic error, or both? (c) The student then repeats the experiment \num{100} times instead of \num{10}. By roughly what factor does the random uncertainty improve, and what happens to any systematic error? (d) A classmate suggests dropping from \SI{8.0}{\metre} instead. By what factor does the fractional timing error improve, and why is that a smaller gain than using a ramp with $a = g/16$?
+\end{checkbox}
+
 \section{Summary}
 
 \subsection*{Key ideas}
@@ -1332,6 +1522,10 @@ It took people nearly two thousand years, from Aristotle to Galileo, to separate
   \item The \textbf{signed area} under an acceleration--time graph is $\Delta v$, by exactly the rectangle-counting argument that makes the area under a velocity--time graph $\Delta x$. Position, velocity, and acceleration form a staircase: slopes going one way, areas the other, with one starting value needed each time you go back.
   \item A trip that accelerates at $a_0$ for half the distance and brakes for the other half takes $t_{\text{tot}} = 2\sqrt{H/a_0}$, so $t \propto \sqrt{H}$ at fixed $a_0$. Nine times the height takes three times the time, because the trip is three times longer \emph{and} three times faster.
   \item You feel accelerations, not velocities, and an acceleration $a$ feels exactly like an extra gravitational pull $a$ in the opposite direction. Promoted to a principle, this is the \textbf{equivalence principle} on which general relativity is built. A scale in a lift reads high or low by the fraction $a/g$, which makes it an accelerometer.
+  \item A \textbf{stopping distance} is two motions end to end: a reaction distance $v_0 t_r$ at unchanged speed, and a braking distance $v_0^2/2a$. The first is proportional to the speed and the second to its square, so doubling the speed doubles one term and quadruples the other. Fixing the distance and solving for the speed gives a quadratic.
+  \item In $g = 2d/t^2$, \textbf{timing errors count twice}: $\delta g/g \approx \delta d/d + 2\,\delta t/t$. The exponents in a formula are the weights its uncertainties carry.
+  \item To beat a timing error, \textbf{slow the motion down}. Since $t \propto 1/\sqrt{a}$, a ramp with acceleration $a$ improves the fractional timing error by $\sqrt{g/a}$. This is what Galileo's inclined plane was for.
+  \item \textbf{Random errors} scatter either side of the truth and average away as $1/\sqrt{N}$. \textbf{Systematic errors} shift every measurement the same way and do not average away at all. Agreement between trials is evidence about the first only; precision is not accuracy.
 \end{itemize}
 
 \subsection*{Key equations}
@@ -1358,6 +1552,11 @@ velocity from acceleration & $\Delta v$ = signed area under $a$--$t$ graph & $\D
 accelerate-then-brake & $H = \tfrac12 v_{\max}t_{\text{tot}}$, \; $v_{\max} = \tfrac12 a_0 t_{\text{tot}}$ & $t_{\text{tot}} = 2\sqrt{H/a_0}$, \; $v_{\max} = \sqrt{a_0H}$ \\
 scaling a trip & $t_{\text{tot}} \propto \sqrt{H}$ at fixed $a_0$ & same \\
 scale in a lift & reading high by the fraction $a/g$ & $a = g\,\Delta(\text{reading})/\text{reading}$ \\
+stopping distance & $d = v_0 t_r + \dfrac{v_0^{2}}{2a}$ & braking part from $v^2 = v_0^2 - 2ad$ \\
+max speed for a given $d$ & $v_0^{2} + 2at_r v_0 - 2ad = 0$ & positive root of the quadratic \\
+error in $g = 2d/t^2$ & $\dfrac{\delta g}{g} \approx \dfrac{\delta d}{d} + 2\dfrac{\delta t}{t}$ & exponents of $d\,t^{-2}$ are the weights \\
+gain from a ramp & timing error improves by $\sqrt{g/a}$ & since $t \propto 1/\sqrt{a}$ \\
+averaging $N$ trials & random error $\div \sqrt{N}$; systematic unchanged & --- \\
 top of flight & $t_{\text{top}} = v_0/g$, \quad $y_{\text{top}} = v_0^2/2g$ & where $\dd y/\dd t = 0$ \\
 velocity vs height & $v_y^2 = v_0^2 - 2g\,\Delta y$ (eliminate $t$) & $v_y\,\dd v_y = -g\,\dd y$ (chain rule) \\
 rejected hypothesis & doubling time between $1/2k$ and $1/k$ & $\dfrac{\dd s}{\dd t} = ks \Rightarrow s = s_0 e^{kt}$ \\
@@ -1366,7 +1565,7 @@ rejected hypothesis & doubling time between $1/2k$ and $1/k$ & $\dfrac{\dd s}{\d
 \end{center}
 
 \subsection*{Key terms}
-free fall \textperiodcentered\ hypothesis \textperiodcentered\ proportionality \textperiodcentered\ instantaneous velocity \textperiodcentered\ derivative \textperiodcentered\ integral \textperiodcentered\ differential equation \textperiodcentered\ inclined plane \textperiodcentered\ motion diagram \textperiodcentered\ odd-number rule \textperiodcentered\ first difference \textperiodcentered\ second difference \textperiodcentered\ acceleration \textperiodcentered\ constant (uniform) acceleration \textperiodcentered\ square numbers \textperiodcentered\ telescoping sum \textperiodcentered\ velocity--time graph \textperiodcentered\ area under the graph \textperiodcentered\ mean-speed theorem \textperiodcentered\ exponential growth \textperiodcentered\ free-fall acceleration $g$ \textperiodcentered\ constant-acceleration model \textperiodcentered\ deceleration \textperiodcentered\ hang time \textperiodcentered\ average acceleration \textperiodcentered\ signed area \textperiodcentered\ scaling \textperiodcentered\ equivalence principle \textperiodcentered\ feeling gees \textperiodcentered\ accelerometer
+free fall \textperiodcentered\ hypothesis \textperiodcentered\ proportionality \textperiodcentered\ instantaneous velocity \textperiodcentered\ derivative \textperiodcentered\ integral \textperiodcentered\ differential equation \textperiodcentered\ inclined plane \textperiodcentered\ motion diagram \textperiodcentered\ odd-number rule \textperiodcentered\ first difference \textperiodcentered\ second difference \textperiodcentered\ acceleration \textperiodcentered\ constant (uniform) acceleration \textperiodcentered\ square numbers \textperiodcentered\ telescoping sum \textperiodcentered\ velocity--time graph \textperiodcentered\ area under the graph \textperiodcentered\ mean-speed theorem \textperiodcentered\ exponential growth \textperiodcentered\ free-fall acceleration $g$ \textperiodcentered\ constant-acceleration model \textperiodcentered\ deceleration \textperiodcentered\ hang time \textperiodcentered\ average acceleration \textperiodcentered\ signed area \textperiodcentered\ scaling \textperiodcentered\ equivalence principle \textperiodcentered\ feeling gees \textperiodcentered\ accelerometer \textperiodcentered\ reaction time \textperiodcentered\ reaction distance \textperiodcentered\ braking distance \textperiodcentered\ stopping distance \textperiodcentered\ fractional uncertainty \textperiodcentered\ random error \textperiodcentered\ systematic error \textperiodcentered\ precision versus accuracy
 
 \section{Exercises}
 
@@ -1449,6 +1648,13 @@ Exercises marked $\star$ require more thought or more than one step. Unless told
   \item $\star$ A ball thrown straight up passes a window \SI{5.0}{\metre} above the launch point on the way up and again on the way down. Use $v_y^2 = v_0^2 - 2g\,\Delta y$ to explain why its speed is the same at both passes, and use the symmetry of Figure~\ref{fig:thrown} to explain why the time between the passes equals twice the time from the window to the top.
   \item A student measures a standing vertical jump of \SI{0.60}{\metre}. Find the student's hang time. Why can the student not lengthen it by pumping their arms while airborne?
   \item $\star$ Complete the elementary derivation of $v_y^2 = v_0^2 - 2g\,\Delta y$: eliminate $t$ between $v_y = v_0 - gt$ and $\Delta y = v_0 t - \tfrac12 g t^2$ and simplify.\label{ex:elimt}
+  \item A car travels at \SI{25}{\metre\per\second}. The driver's reaction time is \SI{0.80}{\second} and the brakes give \SI{8.0}{\metre\per\second\squared}. Find the reaction distance, the braking distance, and the stopping distance.
+  \item For the car of the previous exercise, sketch the velocity--time graph for the whole stop, from the moment the hazard appears. Identify the rectangle and the triangle, and say which area is which distance.
+  \item Show that the reaction and braking distances are equal when $v_0 = 2at_r$, and find that speed for $t_r = \SI{1.0}{\second}$ and $a = \SI{6.0}{\metre\per\second\squared}$. Below that speed, which term dominates?
+  \item A driver's stopping distance at \SI{14}{\metre\per\second} is measured as \SI{25}{\metre}. Assuming a reaction time of \SI{0.70}{\second}, what braking deceleration does this imply?
+  \item $\star$ A clear stretch of road \SI{45}{\metre} long is visible ahead. With $t_r = \SI{0.80}{\second}$ and $a = \SI{6.5}{\metre\per\second\squared}$, find the greatest speed from which a driver could stop within sight. Check your answer by substituting back.\label{ex:sightline}
+  \item $\star$ Show that if the reaction time were zero the answer to the previous exercise would be $\sqrt{2ad}$, and compute how much speed the reaction time costs. Explain why the loss is larger on a short sight line than on a long one.
+  \item $\star$ On a wet road the braking deceleration halves while the reaction time is unchanged. Does the stopping distance double? Answer in general, then check with $v_0 = \SI{20}{\metre\per\second}$, $t_r = \SI{0.70}{\second}$, and a dry-road $a = \SI{7.0}{\metre\per\second\squared}$.
 \end{enumerate}
 
 \subsection*{Acceleration in a lift}
@@ -1463,6 +1669,19 @@ Exercises marked $\star$ require more thought or more than one step. Unless told
   \item $\star$ A lift accelerates at \SI{1.0}{\metre\per\second\squared} for the first \SI{3.0}{\second}, cruises, then brakes at \SI{1.0}{\metre\per\second\squared} for the last \SI{3.0}{\second}; the whole ride lasts \SI{20}{\second}. Find (a) the cruising speed, (b) the total rise, and (c) the fraction of the rise covered during the two acceleration phases. Comment on (c) in the light of Worked Example~\ref{ex:lifttrip}.
   \item $\star$ Standing on a bathroom scale in a lift, you read \SI{5}{\percent} above your normal weight for \SI{2.0}{\second}, your normal weight for \SI{8.0}{\second}, and \SI{5}{\percent} below it for \SI{2.0}{\second}. (a) Find the magnitude of the acceleration. (b) Find the cruising speed. (c) Find the distance risen. (d) Roughly how many \SI{4.3}{\metre} storeys is that? (e) Which of your answers would change if you weighed twice as much?
   \item $\star$ An acceleration--time graph starts at zero, rises linearly to \SI{2.0}{\metre\per\second\squared} at $t = \SI{2}{\second}$, then falls linearly back to zero at $t = \SI{6}{\second}$. The object starts from rest. (a) Use the area to find its velocity at $t = \SI{6}{\second}$. (b) Find its velocity at $t = \SI{2}{\second}$. Is it a third of the final value, and why is that not obvious from the graph's shape? (c) Does the object ever slow down? How can you tell at a glance?\label{ex:atgraph}
+\end{enumerate}
+
+\subsection*{Designing a measurement}
+\begin{enumerate}[label=\textbf{\thechapter.\arabic*},resume=exercises,leftmargin=*]
+  \item Using $g = 2d/t^2$, explain why a \SI{1}{\percent} error in the measured time damages the result twice as much as a \SI{1}{\percent} error in the measured distance.
+  \item A ball is dropped \SI{1.2}{\metre} and timed by hand with an uncertainty of \SI{\pm0.04}{\second}. (a) Find the fall time. (b) Find the fractional uncertainty in $t$, and in $g$. (c) How far would you have to drop the ball for the fractional uncertainty in $g$ to fall below \SI{5}{\percent}?
+  \item A ramp is set so that a ball accelerates at \SI{0.80}{\metre\per\second\squared}. By what factor are the fall times longer than in free fall over the same distance, and by what factor is the fractional timing error reduced?
+  \item Classify each as mainly a random or mainly a systematic error, and say whether repeating the measurement many times would help: (a) pressing a stopwatch slightly late each time because you anticipate the landing; (b) pressing it early on some trials and late on others; (c) a tape measure that has stretched and reads \SI{1}{\percent} short; (d) friction in a ramp that the model ignores; (e) reading a scale from an angle, always from the same side.
+  \item Ten timings of the same fall give a mean of \SI{0.55}{\second} with a spread of about \SI{\pm0.04}{\second}. A classmate says the close agreement shows the result is accurate. What is wrong with that reasoning?
+  \item Describe two different ways you could look for a systematic error in a ramp experiment for measuring $g$, without being told the accepted value.
+  \item $\star$ Galileo tilted his ramp to many different angles and checked that the same rule held at each. Explain what kind of error this procedure is designed to expose, and why simply repeating a single ramp angle many times could not expose it.
+  \item $\star$ You may time a motion between any two of a row of marks. Explain why choosing two marks far apart gives a smaller fractional timing error than two marks close together, even though the stopwatch error $\delta t$ is the same in both cases. What limits how far apart you can sensibly put them?
+  \item $\star$ A student wants $g$ to \SI{2}{\percent} using a hand stopwatch with $\delta t = \SI{0.05}{\second}$, timing a ball down a ramp over \SI{2.0}{\metre}. Ignoring distance uncertainty, what acceleration must the ramp have, and how long will each run take? Comment on whether the experiment is practical.
 \end{enumerate}
 
 \subsection*{Hands-on}
@@ -1483,8 +1702,10 @@ Exercises marked $\star$ require more thought or more than one step. Unless told
   \item[2.5] Nine; three; $\sqrt{2} \approx 1.41$.
   \item[2.6] \SI{50}{\metre\per\second}, \SI{60}{\metre\per\second}, and \SI{65}{\metre\per\second}, from $v = gt$. No: it falls \SI{125}{\metre}. \elemtag\ Its speed was below \SI{50}{\metre\per\second} for the whole five seconds except the last instant, so the average speed was only \SI{25}{\metre\per\second}, and $25 \times 5 = 125$. \calctag\ $\int_0^5 10t\,\dd t = \tfrac12 (10)(25) = \SI{125}{\metre}$.
   \item[2.7] Zero, because its velocity is not changing. The skateboard: both gain \SI{5}{\kilo\metre\per\hour}, but the skateboard does so in one-tenth the time, so its acceleration is ten times larger (\SI{5}{\kilo\metre\per\hour\per\second} versus \SI{0.5}{\kilo\metre\per\hour\per\second}). The airliner is moving far faster, but acceleration is about change, not speed.
-  \item[2.8] (a) Speeding up ($v_y$ and $a_y$ agree in sign). (b) Slowing down. (c) Slowing down: the velocity is negative and the acceleration positive, so the velocity is climbing \emph{toward} zero and its size is shrinking. (d) Speeding up: both negative, so the velocity becomes more negative. (e) Neither, at that instant: the speed is momentarily zero and is at a minimum, about to increase. For the graph, the object is \emph{slowing down}: lying below the axis means $v_y < 0$, sloping upward means $a_y > 0$, the signs disagree, and the graph is approaching the axis, which is where speed is zero.
-  \item[2.9] (a) $v_y(4) = 0 + (0.6)(4) = \SI{2.4}{\metre\per\second}$; $v_y(10) = \SI{2.4}{\metre\per\second}$, since the acceleration is zero in between; $v_y(13) = 2.4 - (0.8)(3) = 0$. (b) Yes --- which is the check that the two areas, $+2.4$ and $-2.4$, cancel. (c) The velocity--time graph is a trapezium: up from $0$ to \SI{2.4}{\metre\per\second} over \SI{4}{\second}, flat for \SI{6}{\second}, down to zero over \SI{3}{\second}. Its area is $\tfrac12(13 + 6)(2.4) = \SI{22.8}{\metre}$. (d) $\bar a_y = \Delta v_y/\Delta t = 0/13 = 0$. It is useless here because it describes neither phase of a ride whose whole character is the two nonzero phases; see Worked Example~\ref{ex:liftavg}.
+  \item[2.8] (a) $d_r = 15 \times 0.80 = \SI{12}{\metre}$; $d_b = 15^2/(2\times 6.0) = \SI{18.8}{\metre}$; stopping distance \SI{31}{\metre}. (b) The reaction distance doubles (to \SI{24}{\metre}) because it is proportional to $v_0$; the braking distance quadruples (to \SI{75}{\metre}) because it goes as $v_0^2$. The total rises from \SI{31}{\metre} to \SI{99}{\metre}, a factor of \num{3.2}. (c) Only the braking distance, which doubles to \SI{37.5}{\metre}; the reaction distance is untouched by the road surface, since the brakes are not yet acting. The total becomes \SI{50}{\metre}. (d) Set $v_0 t_r = v_0^2/2a$, giving $v_0 = 2at_r = 2(6.0)(0.80) = \SI{9.6}{\metre\per\second}$ --- about \SI{35}{\kilo\metre\per\hour}. Below that speed the reaction distance is the larger of the two; above it, braking dominates.
+  \item[2.9] (a) Speeding up ($v_y$ and $a_y$ agree in sign). (b) Slowing down. (c) Slowing down: the velocity is negative and the acceleration positive, so the velocity is climbing \emph{toward} zero and its size is shrinking. (d) Speeding up: both negative, so the velocity becomes more negative. (e) Neither, at that instant: the speed is momentarily zero and is at a minimum, about to increase. For the graph, the object is \emph{slowing down}: lying below the axis means $v_y < 0$, sloping upward means $a_y > 0$, the signs disagree, and the graph is approaching the axis, which is where speed is zero.
+  \item[2.10] (a) $v_y(4) = 0 + (0.6)(4) = \SI{2.4}{\metre\per\second}$; $v_y(10) = \SI{2.4}{\metre\per\second}$, since the acceleration is zero in between; $v_y(13) = 2.4 - (0.8)(3) = 0$. (b) Yes --- which is the check that the two areas, $+2.4$ and $-2.4$, cancel. (c) The velocity--time graph is a trapezium: up from $0$ to \SI{2.4}{\metre\per\second} over \SI{4}{\second}, flat for \SI{6}{\second}, down to zero over \SI{3}{\second}. Its area is $\tfrac12(13 + 6)(2.4) = \SI{22.8}{\metre}$. (d) $\bar a_y = \Delta v_y/\Delta t = 0/13 = 0$. It is useless here because it describes neither phase of a ride whose whole character is the two nonzero phases; see Worked Example~\ref{ex:liftavg}.
+  \item[2.11] (a) $g = 2d/t^2 = 2(2.0)/(0.64)^2 = \SI{9.8}{\metre\per\second\squared}$, which is close to the accepted value. (b) Random error. The ten trials scatter about the mean because the student presses the stopwatch a little early or late each time. The spread says nothing whatever about systematic error, which would move all ten values together and leave the scatter unchanged. (c) Ten times as many trials improves the random uncertainty by $\sqrt{100/10} = \sqrt{10} \approx 3.2$. Any systematic error is entirely unaffected --- the student would simply have a more precisely determined wrong answer. (d) Since $t \propto \sqrt{d}$, quadrupling the height doubles the time and so halves the fractional timing error: a factor of \num{2}. The ramp with $a = g/16$ gives $t \propto 1/\sqrt{a}$, a factor of $\sqrt{16} = 4$, twice as good --- and it needs no \SI{8}{\metre} drop. The ramp's cost is the friction it adds, which the drop does not have.
 \end{description}
 
 \section*{Answers to Selected Exercises}
@@ -1545,17 +1766,37 @@ Exercises marked $\star$ require more thought or more than one step. Unless told
   \Delta y &= v_0\frac{v_0 - v_y}{g} - \tfrac12 g\frac{(v_0 - v_y)^2}{g^2} = \frac{(v_0 - v_y)}{2g}\left[2v_0 - (v_0 - v_y)\right] \\
   &= \frac{(v_0 - v_y)(v_0 + v_y)}{2g} = \frac{v_0^2 - v_y^2}{2g}.
   \end{align*}
-  \item[2.52] The student has assumed distance is proportional to time, which holds only at constant velocity. The lift is still speeding up during its first \SI{5.2}{\second}, so that interval is unrepresentatively slow and scaling it up overestimates badly. The true time is much \emph{shorter} --- about \SI{55}{\second}.
-  \item[2.53] Average acceleration is $\Delta v_y/\Delta t$, and $\Delta v_y$ depends only on the endpoints: $0 - 0 = 0$. The average \emph{speed} is not zero --- it is the height climbed divided by the time --- and neither is the average \emph{velocity}, which is $+H/T$. Only the acceleration averages away, because it is the one quantity whose positive and negative phases cancel here.
-  \item[2.54] With upward positive, $v_y$ is negative for the whole descent. At the start $a_y < 0$ (the velocity is becoming more negative, so the lift is speeding up); during the cruise $a_y = 0$; at the end $a_y > 0$ (the velocity is climbing back toward zero, so the lift is slowing). The lift speeds up only during the first phase, when $v_y$ and $a_y$ share a sign.
-  \item[2.55] (a) Increasing (both negative). (b) Decreasing. (c) Decreasing. (d) Increasing.
-  \item[2.56] (a) The slope is $\SI{12}{\metre\per\second}/\SI{6}{\second} = +\SI{2.0}{\metre\per\second\squared}$, constant. (b) The object moves downward, slowing, comes momentarily to rest at $t = \SI{3}{\second}$, then moves upward, speeding up. (c) From \SI{3}{\second} to \SI{6}{\second}, where $v_y$ and $a_y$ are both positive. (d) No. The acceleration is $+\SI{2.0}{\metre\per\second\squared}$ throughout, including at the instant the object is at rest --- the same point Key Idea ``Acceleration is not velocity'' makes for a ball at the top of its flight.
-  \item[2.57] From Equation~\eqref{eq:liftvmax}, $v_{\max} = a_0 t_{\text{tot}}/2$, and substituting Equation~\eqref{eq:lifttime} gives $v_{\max} = a_0\sqrt{H/a_0} = \sqrt{a_0 H}$. For $a_0 = \SI{0.9}{\metre\per\second\squared}$ and $H = \SI{550}{\metre}$, $\sqrt{495} = \SI{22}{\metre\per\second}$, as found there.
-  \item[2.58] (a) $\sqrt4 = 2$. (b) $\sqrt{2.25} = 1.5$. (c) Since $t_{\text{tot}} \propto 1/\sqrt{a_0}$ at fixed $H$, halving the time needs $a_0$ multiplied by \num{4}. This is why lifts are not made dramatically faster by stronger motors: the time gain goes only as the square root, and passenger comfort caps $a_0$ near \SI{1}{\metre\per\second\squared}.
-  \item[2.59] (a) $v_{\max} = (1.0)(3.0) = \SI{3.0}{\metre\per\second}$. (b) Sliding the end triangle into the starting notch gives a rectangle of height \SI{3.0}{\metre\per\second} and width $20 - 3.0 = \SI{17}{\second}$, so $\Delta y = \SI{51}{\metre}$. (c) The two acceleration phases cover $2 \times \tfrac12(1.0)(3.0)^2 = \SI{9.0}{\metre}$, which is $9/51 \approx \SI{18}{\percent}$. Over \SI{80}{\percent} of the climb happens at cruising speed, which is exactly why abolishing the cruise in Worked Example~\ref{ex:lifttrip} saved so little time.
-  \item[2.60] (a) $a = 0.05 \times 9.8 = \SI{0.49}{\metre\per\second\squared}$. (b) $v_{\max} = (0.49)(2.0) = \SI{0.98}{\metre\per\second}$. (c) The ride lasts $2.0 + 8.0 + 2.0 = \SI{12}{\second}$, so $\Delta y = v_{\max}(12 - 2.0) = \SI{9.8}{\metre}$. (d) $9.8/4.3 \approx 2.3$, so about two storeys. (e) None of them. The scale's \emph{fractional} change is $a/g$ whatever your mass, so a heavier passenger reads a bigger change in kilograms but the same \SI{5}{\percent}, and every result above follows from the fraction.
-  \item[2.61] (a) The area is the triangle $\tfrac12 \times \SI{6}{\second} \times \SI{2.0}{\metre\per\second\squared} = \SI{6.0}{\metre\per\second}$. (b) The area up to $t = \SI{2}{\second}$ is $\tfrac12 \times 2 \times 2.0 = \SI{2.0}{\metre\per\second}$, which is indeed a third. It is not obvious from the shape because the velocity is fixed by \emph{area}, not by how far along the peak sits: the narrow rising part contributes $\SI{2.0}{\metre\per\second}$ while the wider falling part contributes \SI{4.0}{\metre\per\second}. (c) No. The graph never goes below the time axis, so $a_y \ge 0$ throughout, so $v_y$ never decreases --- and since $v_y$ also starts at zero and stays positive, the speed never decreases either.
-  \item[2.62--2.66] Answers depend on your own measurements. Typical ramp results give second differences constant to within \SIrange{10}{20}{\percent}; typical phone-video drops give $g$ within a few percent of \SI{9.8}{\metre\per\second\squared} once several trials are averaged; typical hang times are \SIrange{0.4}{0.6}{\second}.
+  \item[2.52] $d_r = 25 \times 0.80 = \SI{20}{\metre}$; $d_b = 25^2/(2 \times 8.0) = \SI{39}{\metre}$; stopping distance \SI{59}{\metre}.
+  \item[2.53] The graph is flat at \SI{25}{\metre\per\second} for \SI{0.80}{\second}, then falls linearly to zero over $25/8.0 = \SI{3.1}{\second}$. The rectangle ($25 \times 0.80$) is the reaction distance; the triangle ($\tfrac12 \times 3.1 \times 25$) is the braking distance. The stopping distance is the whole area, and the picture makes clear why the two parts scale differently: stretching the graph horizontally by doubling $v_0$ also raises its height.
+  \item[2.54] Setting $v_0 t_r = v_0^2/2a$ and cancelling one factor of $v_0$ gives $v_0 = 2at_r$. For $t_r = \SI{1.0}{\second}$ and $a = \SI{6.0}{\metre\per\second\squared}$ this is \SI{12}{\metre\per\second}, about \SI{43}{\kilo\metre\per\hour}. Below it the reaction distance is the larger term, which is why reaction time matters most in towns and braking performance most on motorways.
+  \item[2.55] $25 = 14(0.70) + 14^2/(2a)$ gives $98/a = 25 - 9.8 = \num{15.2}$, so $a = \SI{6.4}{\metre\per\second\squared}$.
+  \item[2.56] $v_0^2 + 2(6.5)(0.80)v_0 - 2(6.5)(45) = 0$, that is $v_0^2 + 10.4 v_0 - 585 = 0$, so
+  \[
+  v_0 = \frac{-10.4 + \sqrt{10.4^2 + 4(585)}}{2} = \SI{19.5}{\metre\per\second} \approx \SI{70}{\kilo\metre\per\hour}.
+  \]
+  Check: $19.5 \times 0.80 = \SI{15.6}{\metre}$ and $19.5^2/13 = \SI{29.4}{\metre}$, totalling \SI{45}{\metre}.
+  \item[2.57] With $t_r = 0$ the model reduces to $v_0^2/2a = d$, so $v_0 = \sqrt{2ad} = \sqrt{585} = \SI{24.2}{\metre\per\second}$. The reaction time costs $24.2 - 19.5 = \SI{4.7}{\metre\per\second}$. As $d$ grows the absolute cost approaches the fixed value $at_r = \SI{5.2}{\metre\per\second}$, so it is roughly constant --- but the allowed speed itself grows as $\sqrt{d}$, so the cost is a shrinking \emph{fraction} of it. On a \SI{45}{\metre} sight line the loss is about \SI{19}{\percent} of the no-reaction speed; on a \SI{200}{\metre} one it is under \SI{10}{\percent}.
+  \item[2.58] No. Only the braking term doubles; the reaction term does not depend on the road surface at all, so the total less than doubles. In general $d_{\text{wet}}/d_{\text{dry}} = (v_0t_r + v_0^2/a)/(v_0t_r + v_0^2/2a) < 2$. Numerically: dry, $14 + 28.6 = \SI{42.6}{\metre}$; wet, $14 + 57.1 = \SI{71.1}{\metre}$; the ratio is \num{1.67}.
+  \item[2.59] The student has assumed distance is proportional to time, which holds only at constant velocity. The lift is still speeding up during its first \SI{5.2}{\second}, so that interval is unrepresentatively slow and scaling it up overestimates badly. The true time is much \emph{shorter} --- about \SI{55}{\second}.
+  \item[2.60] Average acceleration is $\Delta v_y/\Delta t$, and $\Delta v_y$ depends only on the endpoints: $0 - 0 = 0$. The average \emph{speed} is not zero --- it is the height climbed divided by the time --- and neither is the average \emph{velocity}, which is $+H/T$. Only the acceleration averages away, because it is the one quantity whose positive and negative phases cancel here.
+  \item[2.61] With upward positive, $v_y$ is negative for the whole descent. At the start $a_y < 0$ (the velocity is becoming more negative, so the lift is speeding up); during the cruise $a_y = 0$; at the end $a_y > 0$ (the velocity is climbing back toward zero, so the lift is slowing). The lift speeds up only during the first phase, when $v_y$ and $a_y$ share a sign.
+  \item[2.62] (a) Increasing (both negative). (b) Decreasing. (c) Decreasing. (d) Increasing.
+  \item[2.63] (a) The slope is $\SI{12}{\metre\per\second}/\SI{6}{\second} = +\SI{2.0}{\metre\per\second\squared}$, constant. (b) The object moves downward, slowing, comes momentarily to rest at $t = \SI{3}{\second}$, then moves upward, speeding up. (c) From \SI{3}{\second} to \SI{6}{\second}, where $v_y$ and $a_y$ are both positive. (d) No. The acceleration is $+\SI{2.0}{\metre\per\second\squared}$ throughout, including at the instant the object is at rest --- the same point Key Idea ``Acceleration is not velocity'' makes for a ball at the top of its flight.
+  \item[2.64] From Equation~\eqref{eq:liftvmax}, $v_{\max} = a_0 t_{\text{tot}}/2$, and substituting Equation~\eqref{eq:lifttime} gives $v_{\max} = a_0\sqrt{H/a_0} = \sqrt{a_0 H}$. For $a_0 = \SI{0.9}{\metre\per\second\squared}$ and $H = \SI{550}{\metre}$, $\sqrt{495} = \SI{22}{\metre\per\second}$, as found there.
+  \item[2.65] (a) $\sqrt4 = 2$. (b) $\sqrt{2.25} = 1.5$. (c) Since $t_{\text{tot}} \propto 1/\sqrt{a_0}$ at fixed $H$, halving the time needs $a_0$ multiplied by \num{4}. This is why lifts are not made dramatically faster by stronger motors: the time gain goes only as the square root, and passenger comfort caps $a_0$ near \SI{1}{\metre\per\second\squared}.
+  \item[2.66] (a) $v_{\max} = (1.0)(3.0) = \SI{3.0}{\metre\per\second}$. (b) Sliding the end triangle into the starting notch gives a rectangle of height \SI{3.0}{\metre\per\second} and width $20 - 3.0 = \SI{17}{\second}$, so $\Delta y = \SI{51}{\metre}$. (c) The two acceleration phases cover $2 \times \tfrac12(1.0)(3.0)^2 = \SI{9.0}{\metre}$, which is $9/51 \approx \SI{18}{\percent}$. Over \SI{80}{\percent} of the climb happens at cruising speed, which is exactly why abolishing the cruise in Worked Example~\ref{ex:lifttrip} saved so little time.
+  \item[2.67] (a) $a = 0.05 \times 9.8 = \SI{0.49}{\metre\per\second\squared}$. (b) $v_{\max} = (0.49)(2.0) = \SI{0.98}{\metre\per\second}$. (c) The ride lasts $2.0 + 8.0 + 2.0 = \SI{12}{\second}$, so $\Delta y = v_{\max}(12 - 2.0) = \SI{9.8}{\metre}$. (d) $9.8/4.3 \approx 2.3$, so about two storeys. (e) None of them. The scale's \emph{fractional} change is $a/g$ whatever your mass, so a heavier passenger reads a bigger change in kilograms but the same \SI{5}{\percent}, and every result above follows from the fraction.
+  \item[2.68] (a) The area is the triangle $\tfrac12 \times \SI{6}{\second} \times \SI{2.0}{\metre\per\second\squared} = \SI{6.0}{\metre\per\second}$. (b) The area up to $t = \SI{2}{\second}$ is $\tfrac12 \times 2 \times 2.0 = \SI{2.0}{\metre\per\second}$, which is indeed a third. It is not obvious from the shape because the velocity is fixed by \emph{area}, not by how far along the peak sits: the narrow rising part contributes $\SI{2.0}{\metre\per\second}$ while the wider falling part contributes \SI{4.0}{\metre\per\second}. (c) No. The graph never goes below the time axis, so $a_y \ge 0$ throughout, so $v_y$ never decreases --- and since $v_y$ also starts at zero and stays positive, the speed never decreases either.
+  \item[2.69] In $g = 2d/t^2$ the distance appears to the first power and the time to the second. A fractional change in a quantity raised to the power $n$ produces $n$ times that fractional change in the result, so $\delta g/g = \delta d/d + 2\,\delta t/t$. Reading the exponents off the formula is the quickest way to see which measurement deserves the most care.
+  \item[2.70] (a) $t = \sqrt{2(1.2)/9.8} = \SI{0.49}{\second}$. (b) $\delta t/t = 0.04/0.49 = \SI{8.1}{\percent}$, so $\delta g/g \approx \SI{16}{\percent}$. (c) We need $2\,\delta t/t < 0.05$, so $t > 0.04/0.025 = \SI{1.6}{\second}$, which needs $d = \tfrac12 g t^2 = \SI{13}{\metre}$ --- a three-storey drop. That this is the honest answer is exactly why hand-timed free fall is a poor way to measure $g$, and why Galileo went to a ramp instead.
+  \item[2.71] $t \propto 1/\sqrt{a}$, so the ratio is $\sqrt{g/a} = \sqrt{9.8/0.80} = \sqrt{12.25} = \num{3.5}$. The times are \num{3.5} times longer and the fractional timing error is \num{3.5} times smaller.
+  \item[2.72] (a) Systematic: anticipating pushes every reading the same way. Repeating does not help. (b) Random; repeating and averaging helps. (c) Systematic; every distance is \SI{1}{\percent} short however many times you measure. (d) Systematic; friction slows every run. (e) Systematic, because the viewing angle is always the same --- this is parallax. (Had the student read the scale from a different angle each time, it would have been random instead.)
+  \item[2.73] Close agreement between trials shows only that the \emph{random} error is small. It is entirely consistent with a large systematic error shifting all ten readings by the same amount, which the scatter cannot reveal. Precision is not accuracy, and a tight cluster around a wrong value is the most persuasive kind of wrong answer.
+  \item[2.74] Any two of: vary something the model says should not matter (the ramp angle, the ball's mass or diameter, the release point) and see whether the extracted $g$ drifts; measure the same motion a second, independent way, such as counting video frames as well as using the stopwatch, and compare; or check the apparatus against a motion whose answer is already known.
+  \item[2.75] It is designed to expose a \emph{systematic} error --- one whose size depends on the ramp angle, such as friction or the energy taken up by rolling. Repeating a single angle many times only averages down the random scatter; a systematic bias at that angle is reproduced identically in every run and sits invisibly inside the mean. Only by changing the condition can you see the bias move.
+  \item[2.76] The stopwatch error $\delta t$ is the same either way, but the interval $t$ it is compared against grows with the separation, so the fractional error $\delta t/t$ shrinks. What limits the separation: the length of the apparatus; the model ceasing to hold over the longer run (air resistance growing, or the ramp not being uniform along its length); and the practical need to see both marks.
+  \item[2.77] We need $\delta g/g = 2\,\delta t/t = 0.02$, so $\delta t/t = 0.01$ and $t = 0.05/0.01 = \SI{5.0}{\second}$. Over \SI{2.0}{\metre} that requires $a = 2d/t^2 = 4.0/25 = \SI{0.16}{\metre\per\second\squared}$, a slope of roughly \SI{1}{\degree}. Runs of \SI{5}{\second} are comfortable to time, so the experiment is practical in that sense --- but at such a shallow angle friction is a much larger fraction of what drives the ball, so the systematic error grows just as the random error is brought under control. Beyond some point, slowing the motion down stops helping.
+  \item[2.78--2.@82] Answers depend on your own measurements. Typical ramp results give second differences constant to within \SIrange{10}{20}{\percent}; typical phone-video drops give $g$ within a few percent of \SI{9.8}{\metre\per\second\squared} once several trials are averaged; typical hang times are \SIrange{0.4}{0.6}{\second}.
 \end{description}
 
 \section*{Sources and Further Reading}
