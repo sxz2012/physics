@@ -122,7 +122,9 @@
 By the end of this chapter you should be able to
 \begin{itemize}[itemsep=2pt,topsep=2pt]
   \item explain what a \emph{conceptual model} is, why scientists use them, and what makes a model scientific;
-  \item draw and read \emph{dot diagrams} to compare the speeds of moving objects, and measure a real speed from video frames by using an object of known size as a \emph{scale};
+  \item draw and read \emph{dot diagrams} to compare the speeds of moving objects, and measure a real speed from video frames or from a printed diagram by using an object of known size as a \emph{scale};
+  \item recognise that positions read off a grid are in \emph{grid units}, not metres, and convert them only with a scale you have measured or been given;
+  \item check a rearranged formula by substituting units, and estimate an instantaneous speed from a dot diagram using a \emph{centred} interval;
   \item use $\text{distance} = \text{speed}\times\text{time}$ and rearrange it for any one of the three quantities, and convert speeds between \si{\metre\per\second}, \si{\kilo\metre\per\hour}, and \si{\mile\per\hour};
   \item explain why every speed is measured \emph{relative} to something, and say what that something usually is;
   \item distinguish \emph{average} speed from \emph{instantaneous} speed two ways: as a ratio over a shrinking interval, and as a \emph{derivative}; recover distance from speed two ways: as average speed times time, and as an \emph{integral};
@@ -395,6 +397,86 @@ Asked to guess a cyclist's speed from a video, a room full of people will produc
 You film a friend running past a parked car and want their speed. (a) Name two things in the shot you could use as a scale, and one that would be a poor choice. (b) The car is much closer to the camera than your friend is. Why does using the car as the scale make your answer wrong, and does it make the speed come out too high or too low? (c) You step from frame \num{40} to frame \num{46} at \num{60} frames per second. How much time has passed?
 \end{checkbox}
 
+\subsection{Grid units are not metres}
+\label{sec:gridunits}
+
+The scale idea has a second home, and it is where most people meet it as a mistake rather than a technique. A dot diagram printed in a book or drawn on a screen sits on some grid, and it is natural to read the dots' positions off that grid as numbers: dot one at \num{0}, dot two at \num{2}, dot three at \num{8}, and so on. Those numbers are real and useful. They are also \emph{not} distances, any more than the pixel counts of Section~\ref{sec:video} were. They are counts of grid squares, and until you know what one square is worth, they cannot be divided by a time to give a speed.
+
+\begin{keyidea}[Three steps, and never fewer]
+To get a physical speed out of a diagram:
+\begin{enumerate}[itemsep=1pt,topsep=2pt]
+  \item \textbf{Read} the positions in the diagram's own units --- grid squares, pixels, millimetres on the page. Do not call them metres.
+  \item \textbf{Convert}, using a scale you have \emph{measured or been given}: one length in the diagram whose true size you know. This turns the reading into a real distance.
+  \item \textbf{Divide} by the elapsed time, and then \textbf{check} the answer against something you can picture.
+\end{enumerate}
+Skipping step~2 is the same as assuming one grid square equals one metre. That is an assumption, not a reading, and it is almost never true.
+\end{keyidea}
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[x=0.235cm,y=0.235cm]
+  \foreach \i in {0,2,...,50}{\draw[gray!30,very thin] (\i,2.2) -- (\i,6.6);}
+  \foreach \i in {0,10,...,50}{\draw[gray!60,thin] (\i,1.8) -- (\i,6.6);
+    \node[font=\scriptsize,gray!60!black,anchor=north] at (\i,1.6) {\i};}
+  \foreach \p in {0,2,8,18,32,50}{\fill (\p,4.4) circle (2.4pt);}
+  \node[font=\small,anchor=east] at (-1.8,4.4) {dots};
+  \node[font=\small,anchor=south] at (25,7.1) {$\tau = \SI{0.5}{\second}$ between dots};
+  \draw[red!70!black,densely dotted] (32,1.5) -- (32,-1.4);
+  \draw[red!70!black,densely dotted] (50,1.5) -- (50,-1.4);
+  \draw[<->,>=Stealth,red!70!black] (32,-1.6) -- (50,-1.6);
+  \node[font=\small,red!70!black,anchor=north] at (41,-2.0) {ruler: \SI{2.7}{\centi\metre}};
+  \node[font=\scriptsize,gray!60!black,anchor=north] at (12,-0.1) {position in grid squares};
+\end{tikzpicture}
+\caption{A dot diagram on a grid. Reading the dots gives the positions \num{0}, \num{2}, \num{8}, \num{18}, \num{32}, \num{50} --- in \emph{grid squares}. One measurement converts the whole diagram: a ruler laid across the last gap, which spans $50 - 32 = 18$ squares, reads \SI{2.7}{\centi\metre}, so one square is \SI{1.5}{\milli\metre}. Without that measurement the grid numbers have no physical size at all.}
+\label{fig:gridscale}
+\end{figure}
+
+\begin{example}{Average speed from a printed dot diagram}{gridspeed}
+Figure~\ref{fig:gridscale} shows a dot diagram whose dots were made $\tau = \SI{0.5}{\second}$ apart. Reading off the grid, the dots sit at \num{0}, \num{2}, \num{8}, \num{18}, \num{32}, and \num{50} squares. A ruler laid across the last gap, from the \num{32} square to the \num{50} square, measures \SI{2.7}{\centi\metre}. Find the object's average speed over the whole diagram, and estimate its instantaneous speed at the second-to-last dot.
+
+\solution \emph{Step 1: read.} The total displacement is $50 - 0 = 50$ squares. There are six dots, so there are \emph{five} intervals (the fencepost count of Section~\ref{sec:dotdiagrams}), and the total time is
+\[
+t = 5 \times \SI{0.5}{\second} = \SI{2.5}{\second}.
+\]
+
+\emph{Step 2: convert.} The ruler measurement is the scale. The last gap spans $50 - 32 = 18$ squares and measures \SI{2.7}{\centi\metre}, so
+\[
+1\ \text{square} = \frac{\SI{2.7}{\centi\metre}}{18} = \SI{0.15}{\centi\metre} = \SI{1.5}{\milli\metre}.
+\]
+The total distance is therefore
+\[
+d = 50\ \text{squares} \times \frac{\SI{0.15}{\centi\metre}}{1\ \text{square}} = \SI{7.5}{\centi\metre} = \SI{0.075}{\metre}.
+\]
+
+\emph{Step 3: divide, and check.}
+\[
+\bar v = \frac{d}{t} = \frac{\SI{0.075}{\metre}}{\SI{2.5}{\second}} = \SI{0.030}{\metre\per\second} = \SI{3.0}{\centi\metre\per\second}.
+\]
+Three centimetres per second is a slow crawl: a few times a garden snail's pace, and near the top of Table~\ref{tab:speeds} where the slowest things live. That is exactly right for something whose whole journey fits inside \SI{7.5}{\centi\metre} of paper in two and a half seconds.
+
+\emph{The instantaneous speed.} The second-to-last dot is the one at \num{32}. Take the two dots on either side of it, at \num{18} and \num{50}, so that the interval is centred on the dot we care about:
+\[
+v \approx \frac{(50 - 18)\ \text{squares} \times \SI{0.15}{\centi\metre}}{2 \times \SI{0.5}{\second}} = \frac{\SI{4.8}{\centi\metre}}{\SI{1.0}{\second}} = \SI{4.8}{\centi\metre\per\second}.
+\]
+Larger than the average, as it must be: the gaps are growing, so the object is quickest near the end.
+
+Sanity check on the whole approach: had we skipped step~2 and treated squares as metres, we would have got $50/2.5 = \SI{20}{\metre\per\second}$ --- a highway speed, for a dot diagram a few centimetres long. The error would have been a factor of nearly \num{700}, and the sanity check alone would have caught it.\qed
+\end{example}
+
+\begin{modelnote}[Three habits that catch this error]
+The grid-unit mistake is easy to make and easy to catch, and each of the three catches is a habit worth building.
+
+\emph{Name your units at every step.} Write ``\num{50} squares,'' not ``\num{50}.'' A bare number invites you to divide it by seconds and call the result metres per second. A number with ``squares'' attached makes the missing conversion visible, because \si{\text{squares}\per\second} is not a speed.
+
+\emph{Ask where the metres came from.} Every physical distance in an answer has to trace back to something actually measured with a real ruler, or given in the problem. If you cannot point at that measurement, you have assumed a scale rather than found one.
+
+\emph{Sanity-check the size.} This is Chapter~1's recurring theme, and it is the cheapest of the three. A dot diagram you can cover with your hand cannot describe a car on a motorway. When an answer is out by a factor of hundreds, the number itself will usually tell you, if you convert it into units you have a feel for before you write it down.
+\end{modelnote}
+
+\begin{checkbox}
+A dot diagram on squared paper has dots at grid positions \num{0}, \num{3}, \num{12}, \num{27}, \num{48}, made \SI{0.2}{\second} apart. A ruler shows that the gap from \num{27} to \num{48} measures \SI{4.2}{\centi\metre}. (a) How many intervals are there, and what is the total time? (b) What is one grid square worth in centimetres? (c) Find the average speed in \si{\centi\metre\per\second} and in \si{\metre\per\second}. (d) A student answers $\SI{48}{\metre}/(5 \times \SI{0.2}{\second}) = \SI{48}{\metre\per\second}$. Name the \emph{two} separate mistakes in that line, and say roughly how far out the final answer is.
+\end{checkbox}
+
 \section{Speed: Distance and Time}
 \label{sec:speed}
 
@@ -484,6 +566,16 @@ Equation~\eqref{eq:dvt-symbols} can be rearranged to find whichever quantity is 
 d = v\,t, \qquad v = \frac{d}{t}, \qquad t = \frac{d}{v}.
 \]
 You do not need to memorize three formulas. Memorize $d = vt$ and rearrange.
+
+\begin{modelnote}[Check a rearrangement with its units]
+Rearranging is where a formula most often goes wrong, and the error is invisible if you only look at the letters. Suppose you wrote ``$d = v/t$'' instead of $d = vt$. Nothing about the symbols objects. The units do, immediately:
+\[
+\frac{\si{\metre\per\second}}{\si{\second}} = \si{\metre\per\second\squared},
+\]
+which is not a distance. Whereas $v\,t$ gives $\si{\metre\per\second}\times\si{\second} = \si{\metre}$, as it must.
+
+Make this a reflex. Every time you rearrange, substitute the units in place of the quantities and check that both sides come out the same. It takes a few seconds, needs no understanding of the physics, and catches a large fraction of all algebra slips. It is also the only check available when you have no numbers yet, which is exactly when a wrong rearrangement is most likely to survive into the rest of a solution.
+\end{modelnote}
 
 \begin{example}{Paint drops from a wheel}{wheel}
 A car travels along a highway at \SI{25}{\metre\per\second}. A blob of wet paint on one tyre touches the road once per rotation, and the wheel turns once every \SI{0.079}{\second}. How far apart are the paint marks, and what does that distance represent physically?
@@ -633,6 +725,16 @@ The \textbf{instantaneous speed} is the speed at one particular moment: what a s
 \end{definition}
 
 For an object moving at constant speed, average and instantaneous speed are the same, and every gap in its dot diagram is the same length. For an object that speeds up or slows down, the average speed over a long interval can be quite different from the instantaneous speed at any one point.
+
+There is a practical corollary for dot diagrams, where the shortest interval available is the gap between two dots. If you want the instantaneous speed \emph{at} a particular dot, do not take the gap before it or the gap after it; take the interval from the dot \emph{before} to the dot \emph{after}, and divide by the two intervals of time it spans. The answer is an average, but it is an average over an interval \emph{centred} on the dot you care about, and centring is what makes it a good estimate: the object is running slower than the true value for the first half of the interval and faster for the second, and the two errors largely cancel. Taking the gap on one side alone gives a value that belongs, at best, to the midpoint of that gap rather than to the dot. Worked Example~\ref{ex:gridspeed} uses this.
+
+\begin{keyidea}[Estimating an instantaneous speed from a dot diagram]
+To estimate the speed at dot $n$, use the dots on either side:
+\[
+v_n \approx \frac{x_{n+1} - x_{n-1}}{2\tau},
+\]
+where $\tau$ is the time between dots. Phrase it carefully too: the instantaneous speed does not ``occur between'' two dots. It is the speed \emph{at} one instant, and the centred average over the surrounding interval is our best \emph{estimate} of it.
+\end{keyidea}
 
 \begin{example}{Bolt's race, twenty metres at a time}{splits}
 In Bolt's world-record race in Berlin in 2009, timing equipment recorded when he passed each \SI{20}{\metre} mark. The times, measured from the starting gun, were \SI{2.88}{\second}, \SI{4.64}{\second}, \SI{6.31}{\second}, \SI{7.92}{\second}, and \SI{9.58}{\second}. Use them to describe how his speed changed during the race.
@@ -1217,6 +1319,35 @@ Speed answers ``how fast?'' Velocity answers ``how fast, and which way?'' If a c
 A quantity that needs both a magnitude and a direction for its complete description is a \textbf{vector quantity}. Velocity is a vector quantity; so are force and acceleration, which you will meet in later chapters. A quantity that is fully described by a magnitude alone is a \textbf{scalar quantity}. Speed is a scalar, and so are distance, time, and mass.
 \end{definition}
 
+\begin{keyidea}[The symbols, and what the subscript means]
+A single letter's worth of difference separates three quantities that are easy to say but easy to mix up. The rule is short: \textbf{a subscript names an axis and keeps the sign; a bare $v$ means speed and never carries one.}
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\small
+\begin{tabular}{llll}
+\toprule
+symbol & name & sign & read it as \\
+\midrule
+$x$ & coordinate along the $x$ axis & either & ``where it is, relative to the origin'' \\
+$\Delta x$ & displacement along $x$ & either & ``how far and which way it moved'' \\
+$v_x$ & velocity along $x$ & either & ``how fast and which way it is going'' \\
+$v$ & speed & never negative & ``how fast it is going'' \\
+\bottomrule
+\end{tabular}
+\end{center}
+They are tied together by
+\[
+\Delta x = x_{\text{final}} - x_{\text{initial}}, \qquad
+\bar v_x = \frac{\Delta x}{\Delta t}, \qquad
+v = |v_x| .
+\]
+The same pattern runs on every other axis: vertical motion uses $y$, $\Delta y$, and $v_y$, and in the next chapter accelerations join in as $a_x$ and $a_y$. Only the bare speed $v$ stands outside the scheme, because it has thrown its direction away and so has no axis to name.
+\end{keyidea}
+
+\begin{checkbox}
+An object moves along the $x$ axis. At one instant $x = \SI{-7}{\metre}$ and $v_x = +\SI{4}{\metre\per\second}$. (a) What is its speed? (b) Is it moving toward or away from the origin? (c) Write the symbol for each of: its distance from the origin; its velocity; the change in its coordinate over the next \SI{2}{\second}. (d) A classmate writes ``$v = \SI{-4}{\metre\per\second}$.'' What is wrong with that, and what did they probably mean?
+\end{checkbox}
+
 In this chapter, where motion is along a single line, the direction of a vector is carried by its sign, and that is all the vector machinery we need. In two or three dimensions a velocity is drawn as an arrow whose length gives the speed and whose orientation gives the direction. We return to that picture when we study motion in a plane.
 
 \begin{keyidea}[Constant velocity means straight-line motion at constant speed]
@@ -1304,6 +1435,9 @@ It took people nearly two thousand years, from Aristotle to Galileo, to arrive a
   \item A video is a dot diagram: the \textbf{frame rate} supplies equal time intervals, and an object of known size in the shot supplies a \textbf{scale} converting pixels to metres. The scale must lie at the same distance from the camera as the motion.
   \item An object's \textbf{position} is where it is; its \textbf{coordinate} is the number we assign once an origin and a positive direction are chosen. Moving the origin changes every coordinate and nothing else: displacement, velocity, speed, and distance are all unchanged, which is why $\Delta x$ deserves a symbol of its own.
   \item The sign of $x$ and the sign of $v_x$ are independent. $v_x > 0$ means the coordinate is \emph{increasing}, whatever the coordinate's own sign; an object at a negative coordinate moving toward the origin has a positive velocity.
+  \item Numbers read off a diagram are in the \textbf{diagram's own units} --- grid squares, pixels, millimetres on the page. Turning them into metres takes three steps: \emph{read} in diagram units, \emph{convert} with a measured scale, \emph{divide} and then \emph{check}. Skipping the middle step silently assumes one grid square is one metre.
+  \item \textbf{Check a rearrangement with units.} Substituting \si{\metre} and \si{\second} for the quantities catches a wrong rearrangement in seconds: $v/t$ is \si{\metre\per\second\squared}, not a distance, while $vt$ is \si{\metre}.
+  \item To estimate an instantaneous speed at a dot, use the \textbf{centred} interval from the dot before to the dot after, $v_n \approx (x_{n+1}-x_{n-1})/2\tau$. An average over an interval centred on the point is a far better estimate than one taken to the side, and for steadily changing speed it is exact.
 \end{itemize}
 
 \subsection*{Key equations}
@@ -1330,7 +1464,7 @@ relative velocity & $v_{A\text{ rel }B} = v_A - v_B$ & $\dfrac{\dd}{\dd t}(x_A -
 \end{center}
 
 \subsection*{Key terms}
-conceptual model \textperiodcentered\ scientific attitude \textperiodcentered\ stride \textperiodcentered\ step \textperiodcentered\ dot diagram \textperiodcentered\ fencepost error \textperiodcentered\ ticker-tape timer \textperiodcentered\ frame rate \textperiodcentered\ pixel \textperiodcentered\ scale \textperiodcentered\ speed \textperiodcentered\ rate of change \textperiodcentered\ derivative \textperiodcentered\ motion is relative \textperiodcentered\ average speed \textperiodcentered\ instantaneous speed \textperiodcentered\ integral \textperiodcentered\ area under the graph \textperiodcentered\ position--time graph \textperiodcentered\ chord \textperiodcentered\ tangent \textperiodcentered\ slope \textperiodcentered\ harmonic mean \textperiodcentered\ relative speed \textperiodcentered\ sanity check \textperiodcentered\ interpolation \textperiodcentered\ extrapolation \textperiodcentered\ tangent approximation \textperiodcentered\ uncertainty \textperiodcentered\ percentage uncertainty \textperiodcentered\ propagation of uncertainty \textperiodcentered\ coordinate \textperiodcentered\ coordinate system \textperiodcentered\ origin \textperiodcentered\ one-dimensional motion \textperiodcentered\ position \textperiodcentered\ displacement \textperiodcentered\ velocity \textperiodcentered\ vector quantity \textperiodcentered\ scalar quantity \textperiodcentered\ constant velocity \textperiodcentered\ relative velocity
+conceptual model \textperiodcentered\ scientific attitude \textperiodcentered\ stride \textperiodcentered\ step \textperiodcentered\ dot diagram \textperiodcentered\ fencepost error \textperiodcentered\ ticker-tape timer \textperiodcentered\ frame rate \textperiodcentered\ pixel \textperiodcentered\ scale \textperiodcentered\ grid units \textperiodcentered\ scale bar \textperiodcentered\ units check \textperiodcentered\ centred estimate \textperiodcentered\ speed \textperiodcentered\ rate of change \textperiodcentered\ derivative \textperiodcentered\ motion is relative \textperiodcentered\ average speed \textperiodcentered\ instantaneous speed \textperiodcentered\ integral \textperiodcentered\ area under the graph \textperiodcentered\ position--time graph \textperiodcentered\ chord \textperiodcentered\ tangent \textperiodcentered\ slope \textperiodcentered\ harmonic mean \textperiodcentered\ relative speed \textperiodcentered\ sanity check \textperiodcentered\ interpolation \textperiodcentered\ extrapolation \textperiodcentered\ tangent approximation \textperiodcentered\ uncertainty \textperiodcentered\ percentage uncertainty \textperiodcentered\ propagation of uncertainty \textperiodcentered\ coordinate \textperiodcentered\ coordinate system \textperiodcentered\ origin \textperiodcentered\ one-dimensional motion \textperiodcentered\ position \textperiodcentered\ displacement \textperiodcentered\ velocity \textperiodcentered\ vector quantity \textperiodcentered\ scalar quantity \textperiodcentered\ constant velocity \textperiodcentered\ relative velocity
 
 \section{Exercises}
 
@@ -1349,6 +1483,10 @@ Exercises marked $\star$ require more thought or more than one step. Wherever an
   \item A video is shot at \num{60} frames per second. How much time passes between frame \num{15} and frame \num{27}? Between consecutive frames? If instead the clip is a slow-motion recording at \num{240} frames per second, answer both questions again.
   \item In a photograph, a bicycle whose wheelbase is known to be \SI{1.05}{\metre} measures \num{84} pixels. (a) How many metres does one pixel represent? (b) A crack in the road measures \num{30} pixels across the same photograph; how wide is it? (c) Why would it be wrong to use this conversion factor on a different photograph taken from twice as far away?
   \item $\star$ A skateboarder is filmed at \num{30} frames per second. A doorway of height \SI{2.05}{\metre} measures \num{123} pixels, and between frames \num{8} and \num{14} the front wheel advances \num{62} pixels. (a) Find the skateboarder's average speed over that interval. (b) If the pixel measurement is uncertain by $\pm\num{3}$ pixels, what is the percentage uncertainty, and what speed would you report? (c) Is the answer an average or an instantaneous speed?\label{ex:skatevideo}
+  \item A dot diagram is drawn on squared paper with dots \SI{0.25}{\second} apart. The dots sit at grid positions \num{0}, \num{4}, \num{16}, \num{36}, \num{64}. A ruler laid from the \num{36} square to the \num{64} square measures \SI{3.5}{\centi\metre}. (a) What is one grid square worth? (b) Find the average speed over the whole diagram. (c) Estimate the instantaneous speed at the dot at \num{36}.
+  \item A classmate reads the same diagram as the previous exercise and reports an average speed of \SI{64}{\metre\per\second}. Explain, in two sentences, exactly which step they omitted, and give one check they could have done in five seconds that would have revealed the error.
+  \item $\star$ The same dot diagram is printed at two sizes, the second an enlargement of the first by a factor of \num{2.5}. (a) Do the dots' \emph{grid} positions change? (b) Does a ruler measurement of the last gap change? (c) If both readers assume that ruler centimetres are real centimetres, will they get the same speed? (d) What must be printed alongside a diagram before \emph{either} answer can be trusted?\label{ex:enlargement}
+  \item Explain why the quantity ``grid squares per second'' is not a speed, and what has to be supplied to turn it into one.
 \end{enumerate}
 
 \subsection*{Speed, distance, and time}
@@ -1364,6 +1502,8 @@ Exercises marked $\star$ require more thought or more than one step. Wherever an
   \item A courier company bills you for \SI{9600}{\kilo\metre} of driving over a two-day hire. Convert this to \si{\kilo\metre\per\hour} and to \si{\mile\per\hour}, and say whether the bill can be right. (Use $\SI{8}{\kilo\metre} \approx \SI{5}{\mile}$.)
   \item Earth's circumference is about \SI{40000}{\kilo\metre}. At a steady \SI{100}{\kilo\metre\per\hour}, how many days of non-stop driving would it take to go right around? Use your answer to explain in one sentence why the figure in Worked Example~\ref{ex:rentalcar} is impossible.
   \item $\star$ A newspaper reports that a glacier is advancing at \SI{3}{\metre\per\day}. Convert this to \si{\kilo\metre\per\hour} and to \si{\milli\metre\per\second}. Which of the three units gives you the best feel for the motion, and why does the answer depend on what you are comparing it with?
+  \item Check each of these rearrangements by substituting units, and say which are wrong: (a) $d = v/t$; (b) $t = d/v$; (c) $v = dt$; (d) $t = v/d$; (e) $d = vt$. For each wrong one, say what physical quantity its units \emph{do} describe, if any.
+  \item A student writes ``distance $=$ speed $/$ time'' and then correctly computes $\SI{12}{\metre}/\SI{4}{\second} = \SI{3}{\metre\per\second}$ for a speed. Their arithmetic is right and their answer is right. What went wrong, and why is it still worth fixing?
 \end{enumerate}
 
 \subsection*{Average and instantaneous speed; graphs}
@@ -1386,6 +1526,8 @@ Exercises marked $\star$ require more thought or more than one step. Wherever an
   \item A cyclist's speed--time graph is a horizontal line at \SI{8.0}{\metre\per\second} from $t = 0$ to $t = \SI{30}{\second}$, then a horizontal line at \SI{4.0}{\metre\per\second} until $t = \SI{90}{\second}$. Find the total distance \elemtag\ as the area of two rectangles and \calctag\ as $\int v\,\dd t$, and then the average speed.
   \item $\star$ A sprinter's speed is modelled by $v(t) = v_{\max}(1 - e^{-t/\tau})$ with $v_{\max} = \SI{11.0}{\metre\per\second}$ and $\tau = \SI{1.4}{\second}$. (a) \calctag\ Show by integration that $x(t) = v_{\max}[t - \tau(1 - e^{-t/\tau})]$. (b) Find the time to reach \SI{100}{\metre} by trial (a calculator is fine). (c) Find the average speed over the race and the instantaneous speed at the finish.
   \item $\star$ Show that for two legs of equal length at speeds $v_1$ and $v_2$ the average speed $2v_1v_2/(v_1 + v_2)$ is never larger than $(v_1 + v_2)/2$. (Hint: consider $(v_1 - v_2)^2 \ge 0$.) When are they equal?\label{ex:harmonic}
+  \item A dot diagram has dots at \num{0}, \num{5}, \num{14}, \num{27}, \num{44}, \num{65} grid squares, $\tau = \SI{0.1}{\second}$. Estimate the instantaneous speed, in grid squares per second, at the dot at \num{27}: (a) using the gap before it; (b) using the gap after it; (c) using the centred interval from \num{14} to \num{44}. Which is the best estimate, and why do (a) and (b) bracket it?\label{ex:centred}
+  \item $\star$ Explain why, for a dot diagram of an object with steadily increasing speed, the centred estimate of Key Idea ``Estimating an instantaneous speed from a dot diagram'' is exact rather than approximate. (Hint: write the positions as $x_n = \tfrac12 a (n\tau)^2$ and compute $(x_{n+1} - x_{n-1})/2\tau$.)
 \end{enumerate}
 
 \subsection*{Models and sanity checks}
@@ -1446,13 +1588,15 @@ Exercises marked $\star$ require more thought or more than one step. Wherever an
   \item[1.1] Farther apart. With more time between taps, the cart moves farther between dots.
   \item[1.2] The same rate for both. If the rates differed, dot spacing would no longer measure speed alone; only diagrams with equal time intervals can be compared directly.
   \item[1.3] (a) Good scales: a metre stick or a sheet of paper laid in the plane your friend runs through, a doorway or paving slab of measured size, or your friend's own height once you have measured it. A poor scale is anything whose true size you do not know (a tree, a cloud) or anything that is not rigid. (b) The number of pixels an object covers depends on how far it is from the camera, so a scale must sit at the same distance as the motion. The nearby car covers \emph{more} pixels for its true length than it would at your friend's distance, which makes the conversion factor (metres per pixel) come out too small. Every distance you then compute, including your friend's displacement, is too small, so the speed comes out \emph{too low}. (c) From frame \num{40} to frame \num{46} is \num{6} frame intervals, so $6/60 = \SI{0.10}{\second}$.
-  \item[1.4] Three times faster. In the second case, A covers three times the distance in twice the time, so A is $3/2 = 1.5$ times faster than B.
-  \item[1.5] Into the breeze, toward you, at \SI{3}{\metre\per\second} relative to the air. Its velocity relative to the air then exactly cancels the breeze, so relative to you (and the ground) it is at rest, hovering. This is why a breeze is such an effective deterrent to mosquito bites.
-  \item[1.6] (a) $\SI{40}{\kilo\metre}/\SI{0.5}{\hour} = \SI{80}{\kilo\metre\per\hour}$. (b) No. Starting from rest, the car's instantaneous speed was below \SI{80}{\kilo\metre\per\hour} for some of the time, so it must have exceeded \SI{80}{\kilo\metre\per\hour} at other times to average \num{80}. (c) Instantaneous speed: a radar gun or speed camera measures how fast the car was going at that moment.
-  \item[1.7] (a) $x(4) = \SI{24}{\metre}$, so the average speed is $24/4 = \SI{6.0}{\metre\per\second}$. (b) \elemtag\ $x(4.1) - x(3.9) = 1.5(16.81 - 15.21) = \SI{2.40}{\metre}$ in \SI{0.2}{\second}: \SI{12.0}{\metre\per\second}. \calctag\ $v = \dd x/\dd t = 3.0\,t = \SI{12.0}{\metre\per\second}$ at $t = 4$. (c) The cart is speeding up, so its speed at the end of the interval is greater than its average over the interval; in fact for this motion the final speed is exactly twice the average.
-  \item[1.8] (a) $x < 0$, $v_x > 0$: she is left of the flag but her coordinate is increasing toward zero. (b) $x < 0$, $v_x < 0$. (c) $x = 0$, $v_x > 0$: the coordinate is zero, which is neither positive nor negative, while the velocity is positive. (d) $x > 0$, $v_x = 0$: momentarily at rest. (e) $x > 0$, but the velocity cannot be determined --- a \emph{speed} of \SI{2}{\metre\per\second} could be $v_x = +\SI{2}{\metre\per\second}$ or $v_x = \SI{-2}{\metre\per\second}$, since speed carries no direction. Moving the flag \SI{10}{\metre} left adds \SI{10}{\metre} to every coordinate, so the signs in (a) and (b) flip to $x = +\SI{5}{\metre}$ and (c) becomes $x = +\SI{10}{\metre}$; \emph{none} of the velocity answers change, because shifting an origin cannot reverse anybody's direction of travel.
-  \item[1.9] A constant speed, yes. A constant velocity, not necessarily: the car may be turning, in which case its direction, and hence its velocity, is changing even though its speed is not.
-  \item[1.10] The second train's velocity is $\SI{-20}{\metre\per\second}$, and relative to the first it is $-20 - 30 = \SI{-50}{\metre\per\second}$: the gap closes at \SI{50}{\metre\per\second}. They meet after $\SI{5000}{\metre}/(\SI{50}{\metre\per\second}) = \SI{100}{\second}$.
+  \item[1.4] (a) Five dots means \emph{four} intervals, so $t = 4 \times \SI{0.2}{\second} = \SI{0.8}{\second}$. (b) The gap from \num{27} to \num{48} spans \num{21} squares and measures \SI{4.2}{\centi\metre}, so one square is $4.2/21 = \SI{0.2}{\centi\metre}$. (c) The total displacement is \num{48} squares $= 48 \times 0.2 = \SI{9.6}{\centi\metre}$, so $\bar v = \SI{9.6}{\centi\metre}/\SI{0.8}{\second} = \SI{12}{\centi\metre\per\second} = \SI{0.12}{\metre\per\second}$. (d) Two mistakes: the student has read grid squares as metres, skipping the conversion in (b); and has counted \num{5} intervals instead of \num{4}, a fencepost error. The answer \SI{48}{\metre\per\second} is \num{400} times the correct \SI{0.12}{\metre\per\second} --- and it describes a diagram a few centimetres long as moving faster than a motorway car, which is the check that should have stopped it.
+  \item[1.5] Three times faster. In the second case, A covers three times the distance in twice the time, so A is $3/2 = 1.5$ times faster than B.
+  \item[1.6] Into the breeze, toward you, at \SI{3}{\metre\per\second} relative to the air. Its velocity relative to the air then exactly cancels the breeze, so relative to you (and the ground) it is at rest, hovering. This is why a breeze is such an effective deterrent to mosquito bites.
+  \item[1.7] (a) $\SI{40}{\kilo\metre}/\SI{0.5}{\hour} = \SI{80}{\kilo\metre\per\hour}$. (b) No. Starting from rest, the car's instantaneous speed was below \SI{80}{\kilo\metre\per\hour} for some of the time, so it must have exceeded \SI{80}{\kilo\metre\per\hour} at other times to average \num{80}. (c) Instantaneous speed: a radar gun or speed camera measures how fast the car was going at that moment.
+  \item[1.8] (a) $x(4) = \SI{24}{\metre}$, so the average speed is $24/4 = \SI{6.0}{\metre\per\second}$. (b) \elemtag\ $x(4.1) - x(3.9) = 1.5(16.81 - 15.21) = \SI{2.40}{\metre}$ in \SI{0.2}{\second}: \SI{12.0}{\metre\per\second}. \calctag\ $v = \dd x/\dd t = 3.0\,t = \SI{12.0}{\metre\per\second}$ at $t = 4$. (c) The cart is speeding up, so its speed at the end of the interval is greater than its average over the interval; in fact for this motion the final speed is exactly twice the average.
+  \item[1.9] (a) $x < 0$, $v_x > 0$: she is left of the flag but her coordinate is increasing toward zero. (b) $x < 0$, $v_x < 0$. (c) $x = 0$, $v_x > 0$: the coordinate is zero, which is neither positive nor negative, while the velocity is positive. (d) $x > 0$, $v_x = 0$: momentarily at rest. (e) $x > 0$, but the velocity cannot be determined --- a \emph{speed} of \SI{2}{\metre\per\second} could be $v_x = +\SI{2}{\metre\per\second}$ or $v_x = \SI{-2}{\metre\per\second}$, since speed carries no direction. Moving the flag \SI{10}{\metre} left adds \SI{10}{\metre} to every coordinate, so the signs in (a) and (b) flip to $x = +\SI{5}{\metre}$ and (c) becomes $x = +\SI{10}{\metre}$; \emph{none} of the velocity answers change, because shifting an origin cannot reverse anybody's direction of travel.
+  \item[1.10] (a) $v = |v_x| = \SI{4}{\metre\per\second}$. (b) Toward it: the coordinate is negative and the velocity positive, so $x$ is climbing from \SI{-7}{\metre} toward zero. (c) Distance from the origin is $|x| = \SI{7}{\metre}$; the velocity is $v_x$; the change in coordinate is $\Delta x$. (d) Speed is never negative, so ``$v = \SI{-4}{\metre\per\second}$'' cannot be right as written. They almost certainly meant $v_x = \SI{-4}{\metre\per\second}$ --- and in this case even that is wrong, since the object is moving in the $+x$ direction. Dropping a subscript is the commonest way to turn a right idea into a wrong statement.
+  \item[1.11] A constant speed, yes. A constant velocity, not necessarily: the car may be turning, in which case its direction, and hence its velocity, is changing even though its speed is not.
+  \item[1.12] The second train's velocity is $\SI{-20}{\metre\per\second}$, and relative to the first it is $-20 - 30 = \SI{-50}{\metre\per\second}$: the gap closes at \SI{50}{\metre\per\second}. They meet after $\SI{5000}{\metre}/(\SI{50}{\metre\per\second}) = \SI{100}{\second}$.
 \end{description}
 
 \section*{Answers to Selected Exercises}
@@ -1468,58 +1612,70 @@ Exercises marked $\star$ require more thought or more than one step. Wherever an
   \item[1.9] At \num{60} frames per second, frame \num{15} to frame \num{27} is \num{12} intervals, so $12/60 = \SI{0.20}{\second}$; consecutive frames are $1/60 = \SI{0.0167}{\second}$ apart. At \num{240} frames per second the same \num{12} intervals take $12/240 = \SI{0.050}{\second}$, and consecutive frames are $1/240 = \SI{0.0042}{\second}$ apart. Slow motion buys time resolution, which is why it is the right mode for anything fast.
   \item[1.10] (a) $\SI{1.05}{\metre}/84 = \SI{0.0125}{\metre}$, or \SI{12.5}{\milli\metre}, per pixel. (b) $30 \times \SI{0.0125}{\metre} = \SI{0.38}{\metre}$. (c) Because the number of pixels a given length covers depends on how far the object is from the camera. At twice the distance the same bicycle would span about half as many pixels, so the conversion factor would be wrong by a factor of two.
   \item[1.11] (a) The scale is $\SI{2.05}{\metre}/123 = \SI{0.01667}{\metre}$ per pixel, so the displacement is $62 \times 0.01667 = \SI{1.03}{\metre}$; six frame intervals at \num{30} frames per second is \SI{0.20}{\second}, giving $v = 1.03/0.20 = \SI{5.2}{\metre\per\second}$. (b) $3/62 \approx \SI{4.8}{\percent}$, so round to \SI{5}{\percent} and report $v = \SI{5.2 \pm 0.3}{\metre\per\second}$. (c) An average speed over those \SI{0.20}{\second}, not an instantaneous one.
-  \item[1.12] About \SI{1.5}{\kilo\metre} ($343 \times 4.5 \approx \SI{1540}{\metre}$).
-  \item[1.13] \SI{500}{\second}, about \num{8.3} minutes.
-  \item[1.14] (a) \SI{27.8}{\metre\per\second}; (b) \SI{28.8}{\kilo\metre\per\hour}; (c) \SI{17.9}{\mile\per\hour}.
-  \item[1.15] \SI{5.83}{\metre\per\second}; \SI{21.0}{\kilo\metre\per\hour}. (Total time \SI{7235}{\second}.)
-  \item[1.16] \SI{1.4}{\metre\per\second}. $0.75 \times 110 / 60 = 1.375$.
-  \item[1.17] Object A, \num{1.5} times faster ($3/2$).
-  \item[1.18] \SI{240}{\second}, or \num{4} minutes.
-  \item[1.19] \SI{25}{\metre\per\second} in both cases: $100/4 = 50/2$.
-  \item[1.20] $\SI{9600}{\kilo\metre}/\SI{2}{\day} = \SI{4800}{\kilo\metre\per\day} = \SI{200}{\kilo\metre\per\hour} \approx \SI{125}{\mile\per\hour}$. The bill cannot be right: it claims racing speed sustained for \num{48} hours without a single stop.
-  \item[1.21] $\SI{40000}{\kilo\metre}/(\SI{100}{\kilo\metre\per\hour}) = \SI{400}{\hour}$, which is about \SI{17}{\day} of non-stop driving. The rental invoice claims more than one circumnavigation in four days, so it would need a speed several times a highway speed, maintained day and night.
-  \item[1.22] $\SI{3}{\metre\per\day} = \SI{0.125}{\metre\per\hour} = \SI{1.25e-4}{\kilo\metre\per\hour}$, and $\SI{3000}{\milli\metre}/\SI{86400}{\second} = \SI{0.035}{\milli\metre\per\second}$. Metres per day is the most useful here, because the number comes out near \num{1}: it tells you at once that the glacier moves a body-length in a day. The other two units bury the information in zeros. The ``best'' unit is generally the one that makes the number comparable to something you can picture.
-  \item[1.23] \SI{40}{\kilo\metre\per\hour}. The trip out takes \SI{1}{\hour} and the return \SI{2}{\hour}; $\SI{120}{\kilo\metre}/\SI{3}{\hour}$. The harmonic-mean formula gives $2(60)(30)/90 = 40$ as well.
-  \item[1.24] (a) \SI{2.5}{\metre\per\second}. (b) \SI{3.5}{\metre\per\second}. (c) No. The graph is a straight line from $t=0$ to $t=6$ and then bends upward, becoming steeper: the object sped up in the last interval.
-  \item[1.25] Bolt starts from rest and needs several seconds to reach top speed, so for the early part of the race his instantaneous speed is well below \num{12.4}; he also slows slightly at the end. The average over the whole race blends the slow start with the fast middle, so it must be less than the peak.
-  \item[1.26] First \SI{60}{\metre}: $60/6.31 = \SI{9.5}{\metre\per\second}$. Last \SI{40}{\metre}: $40/(9.58 - 6.31) = 40/3.27 = \SI{12.2}{\metre\per\second}$. The second is larger because it contains no start. The race average, \num{10.44}, is a time-weighted blend of the two: $(9.5 \times 6.31 + 12.2 \times 3.27)/9.58$.
-  \item[1.27] \elemtag\ $x(5) - x(2) = 110 - 74 = \SI{36}{\metre}$ in \SI{3}{\second}: \SI{12}{\metre\per\second}. \calctag\ $v = \dd x/\dd t = \SI{12}{\metre\per\second}$, constant. At $t = 0$ the car was at $x = \SI{50}{\metre}$.
-  \item[1.28] (a) $x(2) - x(1) = 16 - 2 = \SI{14}{\metre}$ in \SI{1}{\second}: \SI{14}{\metre\per\second}. (b) $v = 6.0\,t^2$: \SI{6.0}{\metre\per\second} at $t = 1$ and \SI{24}{\metre\per\second} at $t = 2$. (c) The speed rises steadily through the interval, so its average must lie between its smallest and largest values.
-  \item[1.29] $8.0(30) + 4.0(60) = 240 + 240 = \SI{480}{\metre}$ both ways; average speed $480/90 = \SI{5.3}{\metre\per\second}$.
-  \item[1.30] (a) $\int_0^t v_{\max}(1 - e^{-t'/\tau})\,\dd t' = v_{\max}\left[t' + \tau e^{-t'/\tau}\right]_0^t = v_{\max}[t - \tau(1 - e^{-t/\tau})]$. (b) About \SI{10.5}{\second}: $x(10.5) = 11.0\,[10.5 - 1.4(1 - e^{-7.5})] = 11.0 \times 9.10 = \SI{100.1}{\metre}$. (c) Average \SI{9.5}{\metre\per\second}; at the finish $v = 11.0(1 - e^{-7.5}) \approx \SI{11.0}{\metre\per\second}$.
-  \item[1.31] $\dfrac{v_1 + v_2}{2} - \dfrac{2v_1v_2}{v_1 + v_2} = \dfrac{(v_1 + v_2)^2 - 4v_1v_2}{2(v_1 + v_2)} = \dfrac{(v_1 - v_2)^2}{2(v_1 + v_2)} \ge 0$, with equality only when $v_1 = v_2$.
-  \item[1.32] Child: \SI{0.83}{\per\second}; adult: \SI{0.56}{\per\second}. The child has the greater relative speed: at the same speed the child covers more of their own body length each second, which is why the child appears to hurry.
-  \item[1.33] (a) $(4.3 - 2.2)/3.5 = \SI{0.60}{\per\second}$. (b) $0.60 \times 1.70 \approx \SI{1.0}{\metre\per\second}$. (c) Interpolation: \num{0.60} lies within the data range of roughly \num{0.4} to \num{1.2}, and \SI{1.0}{\metre\per\second} is an ordinary walking speed.
-  \item[1.34] About \num{4.5} times ($5.35/1.2$).
-  \item[1.35] Examples: stride length measured imperfectly and strides vary (measurement); footprints may have eroded or deformed over \num{20000} years (measurement); foot length only loosely predicts height (model); the height-and-stride-to-stride-time equations have their own scatter (model); the model was built for walking, not running (model, and the largest problem).
-  \item[1.36] The model makes the hunter the same height as Bolt but with a shorter stride and a much shorter stride time. A person of the same height taking strides a metre shorter than Bolt's and cycling their legs \SI{0.11}{\second} faster than Bolt is not credible; the output contradicts what we know about the fastest runner ever measured.
-  \item[1.37] \SI{0.05}{\second} per stride means \num{20} strides per second. Bolt, at full sprint, manages about two strides per second (\SI{0.467}{\second} each). No jogger turns their legs over ten times faster than Bolt.
-  \item[1.38] (a) \SI{2}{\celsius} per hour, so \SI{34}{\celsius} at 8~p.m. (b) The line was fitted to three morning hours and says nothing about the afternoon; temperature peaks and then falls, so the relationship bends. (c) Negative: the temperature rises in the morning and falls in the evening, so its rate of change must decrease somewhere in between, and a decreasing first derivative means a negative second derivative.
-  \item[1.39] (a) About \SI{14}{\percent}. (b) About \SI{0.1}{\percent}.
-  \item[1.40] \SI{0.52}{\second}, with a range of about \SI{0.45}{\second} to \SI{0.60}{\second}; roughly $\SI{0.52 \pm 0.08}{\second}$.
-  \item[1.41] \elemtag\ $3.68/7.2 = \SI{0.511}{\second}$ and $3.78/7.2 = \SI{0.525}{\second}$, so about $\SI{\pm 0.007}{\second}$. \calctag\ $\delta t \approx 0.518 \times (0.05/3.73) = \SI{0.007}{\second}$. This is roughly ten times smaller than the $\SI{\pm 0.08}{\second}$ from the speed uncertainty, so the speed uncertainty dominates.
-  \item[1.42] \SI{26}{\kilo\metre\per\hour}; \SI{16}{\mile\per\hour}. At \SI{7.2}{\metre\per\second}, \SI{100}{\metre} takes about \SI{14}{\second}, slower than a good high-school sprinter's \SI{11.5}{\second} (\SI{8.7}{\metre\per\second}), though the hunter was barefoot, on mud, and not running a race.
-  \item[1.43] \elemtag\ $100/14.0 = \SI{7.14}{\metre\per\second}$; $100/13.7 = 7.30$ and $100/14.3 = 6.99$, so $\SI{7.14 \pm 0.15}{\metre\per\second}$. \calctag\ $|\dd v/\dd t| = d/t^2 = 100/196 = 0.51$, so $\delta v \approx 0.51 \times 0.3 = \SI{0.15}{\metre\per\second}$; equivalently $\delta v/v = \delta t/t = 2.1\%$. They agree because a \SI{2}{\percent} change is small enough for the tangent approximation to be accurate.
-  \item[1.44] Average speed \SI{8.0}{\metre\per\second}; average velocity \num{0}.
-  \item[1.45] Displacement \SI{-20}{\metre}; average velocity \SI{-5.0}{\metre\per\second}; average speed \SI{5.0}{\metre\per\second}.
-  \item[1.46] No. Distance travelled is always at least as large as the magnitude of displacement, since any back-tracking adds to distance but subtracts from displacement. Dividing both by the same time interval preserves the inequality, so average speed $\ge |\bar v_x|$, with equality only when the object never reverses direction. In integral form, $|\int v_x\,\dd t| \le \int |v_x|\,\dd t$ because cancellation can only reduce a signed sum.
-  \item[1.47] Same speed, \SI{300}{\kilo\metre\per\hour}. Different velocities, because velocity includes direction and the directions are opposite.
-  \item[1.48] (a) No; the speedometer reading, which is the speed, stayed at \SI{90}{\kilo\metre\per\hour}. (b) Yes; the direction changed from north to east, so the velocity changed. (In the next chapter you will see that this means the car accelerated.)
-  \item[1.49] ``She moves at a constant velocity.'' Constant velocity means constant speed and constant direction.
-  \item[1.50] Displacement $3.0(4.0) + (-1.0)(6.0) = \SI{+6.0}{\metre}$; distance $12 + 6 = \SI{18}{\metre}$. The first rectangle (area \num{12}) is above the axis, the second (area \num{6}) below; signed sum \num{6}, unsigned sum \num{18}.
-  \item[1.51] Zero relative to the chair. About \SI{107000}{\kilo\metre\per\hour}, or \SI{30}{\kilo\metre\per\second}, relative to the Sun.
-  \item[1.52] \SI{2}{\kilo\metre\per\hour}. Relative to the slower car, the faster one closes in at the difference of their velocities, $100 - 98$.
-  \item[1.53] Twice the speed limit: with velocities $+v$ and $-v$, the relative velocity is $-2v$. A car ahead of you at the same speed would appear to stand still: relative velocity zero.
-  \item[1.54] Relative to the bank she does not move at all: her \SI{8}{\kilo\metre\per\hour} upstream relative to the water is cancelled by the water's \SI{8}{\kilo\metre\per\hour} downstream. Relative to the water she is moving at \SI{8}{\kilo\metre\per\hour}. An observer on the bank would see all the dots of her dot diagram piled on top of one another at a single point.
-  \item[1.55] Closing speed $7.0 + 5.0 = \SI{12.0}{\metre\per\second}$, so they meet after $600/12 = \SI{50}{\second}$. With $x_1 = 7.0t$ and $x_2 = 600 - 5.0t$, $x_2 - x_1 = 600 - 12t = 0$ at $t = \SI{50}{\second}$. They ride \SI{350}{\metre} and \SI{250}{\metre}.
-  \item[1.56] (a) $x' = 18 - 25 = \SI{-7}{\metre}$. (b) $x' = x - \SI{25}{\metre}$. (c) $\Delta x = 23 - 18 = +\SI{5}{\metre}$ and $\Delta x' = (-2) - (-7) = +\SI{5}{\metre}$: identical, because the $-\SI{25}{\metre}$ cancels in the subtraction. The coordinates disagree; the displacement does not.
-  \item[1.57] (a) $x<0$, $v_x>0$. (b) $x<0$, $v_x<0$. (c) $x>0$, $v_x<0$. (d) $x=0$ (neither positive nor negative), $v_x<0$.
-  \item[1.58] The student has read the sign of the \emph{coordinate} as though it were the sign of the \emph{velocity}. Where the ball is says nothing about which way it is going. The velocity is negative only if the coordinate is \emph{decreasing}; a ball at $x = \SI{-4}{\metre}$ heading toward the origin has a positive velocity.
-  \item[1.59] (a) $\SI{-6}{\metre}$, $\SI{-2}{\metre}$, $+\SI{4}{\metre}$. (b) $x<0$ for $t < \SI{3}{\second}$. (c) Never: $v_x = \dd x/\dd t = +\SI{2}{\metre\per\second}$ at every instant. (d) With $x' = x + \SI{6}{\metre} = (\SI{2}{\metre\per\second})t$, the positions become \SI{0}{}, \SI{4}{}, and \SI{10}{\metre}; $x'$ is never negative for $t \ge 0$; and the velocity is still $+\SI{2}{\metre\per\second}$. The answers to (a) and (b) changed because they are about coordinates; the answer to (c) did not, because velocity is a difference and the shift cancels.
-  \item[1.60] Answers depend on your own measurements. Typical values: stride about \SIrange{1.4}{1.6}{\metre}, time between strides about \SIrange{1.0}{1.2}{\second}, speed about \SIrange{1.2}{1.5}{\metre\per\second} (\SIrange{4.5}{5.5}{\kilo\metre\per\hour}), relative speed roughly \SIrange{0.7}{0.9}{\per\second}, comfortably inside the Charteris range of about \num{0.4} to \num{1.2}.
-  \item[1.61] The constant-speed trail has evenly spaced drops; the speeding-up trail has drops that spread farther apart along the direction of motion. Neither trail, by itself, tells you which way you were walking or how fast the drips were falling.
-  \item[1.62] Typical school sprinters reach \SIrange{7}{9}{\metre\per\second}. Reading times from ordinary video (about \num{30} frames per second) gives an uncertainty of a few hundredths of a second per cone, which for \SI{10}{\metre} segments of about \SI{1.3}{\second} is a few percent in speed.
-  \item[1.64] Answers depend on your own measurements. Two frame pairs from the same walk-past typically differ by a few percent, which should sit comfortably inside a quoted uncertainty of around \SI{5}{\percent}; if they differ by much more, the usual culprits are a scale object at a different distance from the camera than the motion, a camera that moved, or a subject whose speed genuinely changed between the two pairs.
+  \item[1.12] (a) The last gap spans $64 - 36 = 28$ squares and measures \SI{3.5}{\centi\metre}, so one square is $3.5/28 = \SI{0.125}{\centi\metre}$. (b) Five dots give four intervals, so $t = 4 \times 0.25 = \SI{1.0}{\second}$; the total distance is $64 \times 0.125 = \SI{8.0}{\centi\metre}$, and $\bar v = \SI{8.0}{\centi\metre\per\second} = \SI{0.080}{\metre\per\second}$. (c) Centred on the dot at \num{36}, use the dots at \num{16} and \num{64}: $48 \times 0.125 = \SI{6.0}{\centi\metre}$ in $2 \times 0.25 = \SI{0.5}{\second}$, giving \SI{12}{\centi\metre\per\second}, or \SI{0.12}{\metre\per\second}.
+  \item[1.13] They omitted the conversion: they divided \num{64} \emph{grid squares} by the time and wrote the answer in metres per second, which assumes one square is one metre. The five-second check is to convert and compare --- \SI{64}{\metre\per\second} is about \SI{230}{\kilo\metre\per\hour}, and the whole diagram is \SI{8}{\centi\metre} long and records one second of motion.
+  \item[1.14] (a) No. The grid is part of the picture and enlarges with it, so the dots still sit at \num{0}, \num{4}, \num{16}, \num{36}, \num{64}. (b) Yes --- it is \num{2.5} times longer on the page. (c) No. The second reader gets an answer \num{2.5} times too large, because ``ruler centimetres are real centimetres'' was true of one printing and not the other. (d) A stated scale: either a ratio such as $1:1$, or, better, a scale bar labelled with a real length. That is the only thing that ties a distance on the page to a distance in the world, and it is why a diagram without one cannot be measured at all.
+  \item[1.15] Because a grid square is not a length. It is a subdivision of a particular drawing, and its physical size depends on how that drawing was made and printed. To turn grid squares per second into a speed you need one length in the diagram whose real size you know --- a measured gap, a scale bar, or a stated ratio --- which converts squares into metres.
+  \item[1.16] About \SI{1.5}{\kilo\metre} ($343 \times 4.5 \approx \SI{1540}{\metre}$).
+  \item[1.17] \SI{500}{\second}, about \num{8.3} minutes.
+  \item[1.18] (a) \SI{27.8}{\metre\per\second}; (b) \SI{28.8}{\kilo\metre\per\hour}; (c) \SI{17.9}{\mile\per\hour}.
+  \item[1.19] \SI{5.83}{\metre\per\second}; \SI{21.0}{\kilo\metre\per\hour}. (Total time \SI{7235}{\second}.)
+  \item[1.20] \SI{1.4}{\metre\per\second}. $0.75 \times 110 / 60 = 1.375$.
+  \item[1.21] Object A, \num{1.5} times faster ($3/2$).
+  \item[1.22] \SI{240}{\second}, or \num{4} minutes.
+  \item[1.23] \SI{25}{\metre\per\second} in both cases: $100/4 = 50/2$.
+  \item[1.24] $\SI{9600}{\kilo\metre}/\SI{2}{\day} = \SI{4800}{\kilo\metre\per\day} = \SI{200}{\kilo\metre\per\hour} \approx \SI{125}{\mile\per\hour}$. The bill cannot be right: it claims racing speed sustained for \num{48} hours without a single stop.
+  \item[1.25] $\SI{40000}{\kilo\metre}/(\SI{100}{\kilo\metre\per\hour}) = \SI{400}{\hour}$, which is about \SI{17}{\day} of non-stop driving. The rental invoice claims more than one circumnavigation in four days, so it would need a speed several times a highway speed, maintained day and night.
+  \item[1.26] $\SI{3}{\metre\per\day} = \SI{0.125}{\metre\per\hour} = \SI{1.25e-4}{\kilo\metre\per\hour}$, and $\SI{3000}{\milli\metre}/\SI{86400}{\second} = \SI{0.035}{\milli\metre\per\second}$. Metres per day is the most useful here, because the number comes out near \num{1}: it tells you at once that the glacier moves a body-length in a day. The other two units bury the information in zeros. The ``best'' unit is generally the one that makes the number comparable to something you can picture.
+  \item[1.27] (a) $(\si{\metre\per\second})/\si{\second} = \si{\metre\per\second\squared}$: wrong; those are the units of an acceleration (Chapter~2). (b) $\si{\metre}/(\si{\metre\per\second}) = \si{\second}$: correct. (c) $(\si{\metre\per\second})\cdot\si{\second}$ written as $d\,t$ would be $\si{\metre}\cdot\si{\second}$: wrong, and not the units of any quantity we shall meet. (d) $(\si{\metre\per\second})/\si{\metre} = \si{\per\second}$: wrong; that is a rate or frequency, ``so many per second.'' (e) $(\si{\metre\per\second})\cdot\si{\second} = \si{\metre}$: correct.
+  \item[1.28] The written formula contradicts the calculation: the student computed $d/t$, which is right, while writing ``$d/t$'' under the name \emph{distance}. It matters for three reasons. A reader --- or a grader --- can only judge what you wrote. The next time that formula is used, on a problem where the right answer is not obvious, the words will be followed and the answer will be wrong. And a solution is an argument, not just a number: a false statement inside it is a fault even when the final figure survives.
+  \item[1.29] \SI{40}{\kilo\metre\per\hour}. The trip out takes \SI{1}{\hour} and the return \SI{2}{\hour}; $\SI{120}{\kilo\metre}/\SI{3}{\hour}$. The harmonic-mean formula gives $2(60)(30)/90 = 40$ as well.
+  \item[1.30] (a) \SI{2.5}{\metre\per\second}. (b) \SI{3.5}{\metre\per\second}. (c) No. The graph is a straight line from $t=0$ to $t=6$ and then bends upward, becoming steeper: the object sped up in the last interval.
+  \item[1.31] Bolt starts from rest and needs several seconds to reach top speed, so for the early part of the race his instantaneous speed is well below \num{12.4}; he also slows slightly at the end. The average over the whole race blends the slow start with the fast middle, so it must be less than the peak.
+  \item[1.32] First \SI{60}{\metre}: $60/6.31 = \SI{9.5}{\metre\per\second}$. Last \SI{40}{\metre}: $40/(9.58 - 6.31) = 40/3.27 = \SI{12.2}{\metre\per\second}$. The second is larger because it contains no start. The race average, \num{10.44}, is a time-weighted blend of the two: $(9.5 \times 6.31 + 12.2 \times 3.27)/9.58$.
+  \item[1.33] \elemtag\ $x(5) - x(2) = 110 - 74 = \SI{36}{\metre}$ in \SI{3}{\second}: \SI{12}{\metre\per\second}. \calctag\ $v = \dd x/\dd t = \SI{12}{\metre\per\second}$, constant. At $t = 0$ the car was at $x = \SI{50}{\metre}$.
+  \item[1.34] (a) $x(2) - x(1) = 16 - 2 = \SI{14}{\metre}$ in \SI{1}{\second}: \SI{14}{\metre\per\second}. (b) $v = 6.0\,t^2$: \SI{6.0}{\metre\per\second} at $t = 1$ and \SI{24}{\metre\per\second} at $t = 2$. (c) The speed rises steadily through the interval, so its average must lie between its smallest and largest values.
+  \item[1.35] $8.0(30) + 4.0(60) = 240 + 240 = \SI{480}{\metre}$ both ways; average speed $480/90 = \SI{5.3}{\metre\per\second}$.
+  \item[1.36] (a) $\int_0^t v_{\max}(1 - e^{-t'/\tau})\,\dd t' = v_{\max}\left[t' + \tau e^{-t'/\tau}\right]_0^t = v_{\max}[t - \tau(1 - e^{-t/\tau})]$. (b) About \SI{10.5}{\second}: $x(10.5) = 11.0\,[10.5 - 1.4(1 - e^{-7.5})] = 11.0 \times 9.10 = \SI{100.1}{\metre}$. (c) Average \SI{9.5}{\metre\per\second}; at the finish $v = 11.0(1 - e^{-7.5}) \approx \SI{11.0}{\metre\per\second}$.
+  \item[1.37] $\dfrac{v_1 + v_2}{2} - \dfrac{2v_1v_2}{v_1 + v_2} = \dfrac{(v_1 + v_2)^2 - 4v_1v_2}{2(v_1 + v_2)} = \dfrac{(v_1 - v_2)^2}{2(v_1 + v_2)} \ge 0$, with equality only when $v_1 = v_2$.
+  \item[1.38] (a) $(27-14)/0.1 = 130$ squares per second. (b) $(44-27)/0.1 = 170$ squares per second. (c) $(44-14)/0.2 = 150$ squares per second. The centred value is the best estimate. Since the object is speeding up steadily, the interval before the dot lies wholly in slower motion and the one after wholly in faster motion, so (a) and (b) fall on opposite sides of the truth; the centred estimate is their average, and the two errors cancel.
+  \item[1.39] With $x_n = \tfrac12 a (n\tau)^2$,
+  \[
+  \frac{x_{n+1} - x_{n-1}}{2\tau} = \frac{\tfrac12 a\tau^2\left[(n+1)^2 - (n-1)^2\right]}{2\tau} = \frac{\tfrac12 a\tau^2 (4n)}{2\tau} = a n \tau,
+  \]
+  and $a n\tau$ is exactly $v(t_n) = a t_n$ at the instant of dot $n$. The two errors do not merely largely cancel here; they cancel completely, because the position is a quadratic in $t$ and the centred difference of a quadratic is its exact derivative at the midpoint. This is the same special property of parabolas noted in Worked Example~2.3.
+  \item[1.40] Child: \SI{0.83}{\per\second}; adult: \SI{0.56}{\per\second}. The child has the greater relative speed: at the same speed the child covers more of their own body length each second, which is why the child appears to hurry.
+  \item[1.41] (a) $(4.3 - 2.2)/3.5 = \SI{0.60}{\per\second}$. (b) $0.60 \times 1.70 \approx \SI{1.0}{\metre\per\second}$. (c) Interpolation: \num{0.60} lies within the data range of roughly \num{0.4} to \num{1.2}, and \SI{1.0}{\metre\per\second} is an ordinary walking speed.
+  \item[1.42] About \num{4.5} times ($5.35/1.2$).
+  \item[1.43] Examples: stride length measured imperfectly and strides vary (measurement); footprints may have eroded or deformed over \num{20000} years (measurement); foot length only loosely predicts height (model); the height-and-stride-to-stride-time equations have their own scatter (model); the model was built for walking, not running (model, and the largest problem).
+  \item[1.44] The model makes the hunter the same height as Bolt but with a shorter stride and a much shorter stride time. A person of the same height taking strides a metre shorter than Bolt's and cycling their legs \SI{0.11}{\second} faster than Bolt is not credible; the output contradicts what we know about the fastest runner ever measured.
+  \item[1.45] \SI{0.05}{\second} per stride means \num{20} strides per second. Bolt, at full sprint, manages about two strides per second (\SI{0.467}{\second} each). No jogger turns their legs over ten times faster than Bolt.
+  \item[1.46] (a) \SI{2}{\celsius} per hour, so \SI{34}{\celsius} at 8~p.m. (b) The line was fitted to three morning hours and says nothing about the afternoon; temperature peaks and then falls, so the relationship bends. (c) Negative: the temperature rises in the morning and falls in the evening, so its rate of change must decrease somewhere in between, and a decreasing first derivative means a negative second derivative.
+  \item[1.47] (a) About \SI{14}{\percent}. (b) About \SI{0.1}{\percent}.
+  \item[1.48] \SI{0.52}{\second}, with a range of about \SI{0.45}{\second} to \SI{0.60}{\second}; roughly $\SI{0.52 \pm 0.08}{\second}$.
+  \item[1.49] \elemtag\ $3.68/7.2 = \SI{0.511}{\second}$ and $3.78/7.2 = \SI{0.525}{\second}$, so about $\SI{\pm 0.007}{\second}$. \calctag\ $\delta t \approx 0.518 \times (0.05/3.73) = \SI{0.007}{\second}$. This is roughly ten times smaller than the $\SI{\pm 0.08}{\second}$ from the speed uncertainty, so the speed uncertainty dominates.
+  \item[1.50] \SI{26}{\kilo\metre\per\hour}; \SI{16}{\mile\per\hour}. At \SI{7.2}{\metre\per\second}, \SI{100}{\metre} takes about \SI{14}{\second}, slower than a good high-school sprinter's \SI{11.5}{\second} (\SI{8.7}{\metre\per\second}), though the hunter was barefoot, on mud, and not running a race.
+  \item[1.51] \elemtag\ $100/14.0 = \SI{7.14}{\metre\per\second}$; $100/13.7 = 7.30$ and $100/14.3 = 6.99$, so $\SI{7.14 \pm 0.15}{\metre\per\second}$. \calctag\ $|\dd v/\dd t| = d/t^2 = 100/196 = 0.51$, so $\delta v \approx 0.51 \times 0.3 = \SI{0.15}{\metre\per\second}$; equivalently $\delta v/v = \delta t/t = 2.1\%$. They agree because a \SI{2}{\percent} change is small enough for the tangent approximation to be accurate.
+  \item[1.52] Average speed \SI{8.0}{\metre\per\second}; average velocity \num{0}.
+  \item[1.53] Displacement \SI{-20}{\metre}; average velocity \SI{-5.0}{\metre\per\second}; average speed \SI{5.0}{\metre\per\second}.
+  \item[1.54] No. Distance travelled is always at least as large as the magnitude of displacement, since any back-tracking adds to distance but subtracts from displacement. Dividing both by the same time interval preserves the inequality, so average speed $\ge |\bar v_x|$, with equality only when the object never reverses direction. In integral form, $|\int v_x\,\dd t| \le \int |v_x|\,\dd t$ because cancellation can only reduce a signed sum.
+  \item[1.55] Same speed, \SI{300}{\kilo\metre\per\hour}. Different velocities, because velocity includes direction and the directions are opposite.
+  \item[1.56] (a) No; the speedometer reading, which is the speed, stayed at \SI{90}{\kilo\metre\per\hour}. (b) Yes; the direction changed from north to east, so the velocity changed. (In the next chapter you will see that this means the car accelerated.)
+  \item[1.57] ``She moves at a constant velocity.'' Constant velocity means constant speed and constant direction.
+  \item[1.58] Displacement $3.0(4.0) + (-1.0)(6.0) = \SI{+6.0}{\metre}$; distance $12 + 6 = \SI{18}{\metre}$. The first rectangle (area \num{12}) is above the axis, the second (area \num{6}) below; signed sum \num{6}, unsigned sum \num{18}.
+  \item[1.59] Zero relative to the chair. About \SI{107000}{\kilo\metre\per\hour}, or \SI{30}{\kilo\metre\per\second}, relative to the Sun.
+  \item[1.60] \SI{2}{\kilo\metre\per\hour}. Relative to the slower car, the faster one closes in at the difference of their velocities, $100 - 98$.
+  \item[1.61] Twice the speed limit: with velocities $+v$ and $-v$, the relative velocity is $-2v$. A car ahead of you at the same speed would appear to stand still: relative velocity zero.
+  \item[1.62] Relative to the bank she does not move at all: her \SI{8}{\kilo\metre\per\hour} upstream relative to the water is cancelled by the water's \SI{8}{\kilo\metre\per\hour} downstream. Relative to the water she is moving at \SI{8}{\kilo\metre\per\hour}. An observer on the bank would see all the dots of her dot diagram piled on top of one another at a single point.
+  \item[1.63] Closing speed $7.0 + 5.0 = \SI{12.0}{\metre\per\second}$, so they meet after $600/12 = \SI{50}{\second}$. With $x_1 = 7.0t$ and $x_2 = 600 - 5.0t$, $x_2 - x_1 = 600 - 12t = 0$ at $t = \SI{50}{\second}$. They ride \SI{350}{\metre} and \SI{250}{\metre}.
+  \item[1.64] (a) $x' = 18 - 25 = \SI{-7}{\metre}$. (b) $x' = x - \SI{25}{\metre}$. (c) $\Delta x = 23 - 18 = +\SI{5}{\metre}$ and $\Delta x' = (-2) - (-7) = +\SI{5}{\metre}$: identical, because the $-\SI{25}{\metre}$ cancels in the subtraction. The coordinates disagree; the displacement does not.
+  \item[1.65] (a) $x<0$, $v_x>0$. (b) $x<0$, $v_x<0$. (c) $x>0$, $v_x<0$. (d) $x=0$ (neither positive nor negative), $v_x<0$.
+  \item[1.66] The student has read the sign of the \emph{coordinate} as though it were the sign of the \emph{velocity}. Where the ball is says nothing about which way it is going. The velocity is negative only if the coordinate is \emph{decreasing}; a ball at $x = \SI{-4}{\metre}$ heading toward the origin has a positive velocity.
+  \item[1.67] (a) $\SI{-6}{\metre}$, $\SI{-2}{\metre}$, $+\SI{4}{\metre}$. (b) $x<0$ for $t < \SI{3}{\second}$. (c) Never: $v_x = \dd x/\dd t = +\SI{2}{\metre\per\second}$ at every instant. (d) With $x' = x + \SI{6}{\metre} = (\SI{2}{\metre\per\second})t$, the positions become \SI{0}{}, \SI{4}{}, and \SI{10}{\metre}; $x'$ is never negative for $t \ge 0$; and the velocity is still $+\SI{2}{\metre\per\second}$. The answers to (a) and (b) changed because they are about coordinates; the answer to (c) did not, because velocity is a difference and the shift cancels.
+  \item[1.68] Answers depend on your own measurements. Typical values: stride about \SIrange{1.4}{1.6}{\metre}, time between strides about \SIrange{1.0}{1.2}{\second}, speed about \SIrange{1.2}{1.5}{\metre\per\second} (\SIrange{4.5}{5.5}{\kilo\metre\per\hour}), relative speed roughly \SIrange{0.7}{0.9}{\per\second}, comfortably inside the Charteris range of about \num{0.4} to \num{1.2}.
+  \item[1.69] The constant-speed trail has evenly spaced drops; the speeding-up trail has drops that spread farther apart along the direction of motion. Neither trail, by itself, tells you which way you were walking or how fast the drips were falling.
+  \item[1.70] Typical school sprinters reach \SIrange{7}{9}{\metre\per\second}. Reading times from ordinary video (about \num{30} frames per second) gives an uncertainty of a few hundredths of a second per cone, which for \SI{10}{\metre} segments of about \SI{1.3}{\second} is a few percent in speed.
+  \item[1.72] Answers depend on your own measurements. Two frame pairs from the same walk-past typically differ by a few percent, which should sit comfortably inside a quoted uncertainty of around \SI{5}{\percent}; if they differ by much more, the usual culprits are a scale object at a different distance from the camera than the motion, a camera that moved, or a subject whose speed genuinely changed between the two pairs.
 \end{description}
 
 \section*{Sources and Further Reading}
